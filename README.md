@@ -1,25 +1,25 @@
-# Objective : first time, load EU4(Paradox game) savedgame Data and change savedgame Data.
-#              now, load any data(satisfy following grammar) and change data and save data.
+# Objective : 
+              first time, load EU4(Paradox game) savedgame Data and change savedgame Data.
+              now, load any data(satisfy following grammar) and change data and save data.
               
-# precautions : 1. this source code has maybe many bugs!. and maybe need many memory.
-#                      ex) input.eu4 was about 60MB, and this program used about 900MB memory, (- bug?)
-#                      and in my computer, program take about 60seconds.
+# precautions :
+                1. this source code has maybe many bugs!. and maybe need many memory.
+                      ex) input.eu4 was about 60MB, and this program used about 900MB memory, (- bug?)
+                      and in my computer, program take about 60seconds.
                 
-#                2. put wiz folder to your std header file location(include).
+                2. put wiz folder to your std header file location(include).
                 
-#                3. need more speed up! ( ex) linear search -> binary search? )
+                3. need more speed up! ( ex) linear search -> binary search? )
                 
-#                4. some notation is korean!.
+                4. some notation is korean!.
                 
 # Using C++11, VisualStudio2015, Windows10
 
 # LoadData
-# LoadData From File or std::string!
+ LoadData From File or std::string!
 
 # Grammar(byacc style)
-#LEFT {
-#RIGHT }
-#EQ =
+LEFT { RIGHT }  EQ =
 
 program:
     | program _list
