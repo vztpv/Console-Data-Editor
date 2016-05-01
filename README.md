@@ -13,6 +13,8 @@
                 
                 4. some notation is korean!.
                 
+# ToDo - File Open Fail Processing, fix bug, and apeed up and etc.. 
+
 # Using C++11, VisualStudio2015, Windows10
 
 # LoadData
