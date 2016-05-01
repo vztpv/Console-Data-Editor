@@ -13,7 +13,7 @@
                 
                 4. some notation is korean!.
                 
-# ToDo - File Open Fail Processing, fix bug, and apeed up and etc.. 
+# ToDo - File Open Fail Processing, fix bug, and speed up and etc.. 
 
 # Using C++11, VisualStudio2015, Windows10
 
