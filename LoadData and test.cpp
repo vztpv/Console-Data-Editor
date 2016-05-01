@@ -1257,7 +1257,7 @@ private:
 		}
 		return Find(*utTemp, valTemp);
 	}
-	string GetValue(const string& op, const string& var, const string& val, wiz::UserType* utPosition, wiz::UserType* global, const int option=0)
+	string GetValue(const string& op, const string& var, const string& val, wiz::UserType* utPosition, wiz::UserType* global, const string& option="0")
 	{	
 		if (NULL == utPosition) { return "ERROR"; }
 		if ("EXIST" == op) { /// option == 1?	
@@ -1293,7 +1293,7 @@ private:
 		return "ERROR";
 	}
 	string GetValue(const string& op, const string& var1, const string& position1, const string& var2, const string& position2,
-		wiz::UserType* utPosition, wiz::UserType* global, int option=0) 
+		wiz::UserType* utPosition, wiz::UserType* global, const string& option="0") 
 	{
 		// COMP<, COMP>, EQ, NOTEQ
 		if (NULL == utPosition) { return "ERROR"; }
@@ -1315,24 +1315,24 @@ private:
 			value2.Push(var2);
 		}
 
-		if (option == 0 && (value1.GetCount() > 1 || value2.GetCount() > 1)) {
+		if (option == "0" && (value1.GetCount() > 1 || value2.GetCount() > 1)) {
 			return "ERROR";
 		}
 		
 		if ("COMP<" == op) {
-			if (0 != option) { /// ToDo.. // 0. just 1-1, // 1. for any case // 2. for all case
+			if ("0" != option) { /// ToDo.. // 0. just 1-1, // 1. for any case // 2. for all case
 				for (int i = 0; i < value1.GetCount(); ++i) {
 					for (int j = 0; j < value2.GetCount(); ++j) {
 						if (Compare(value1.Get(i), value2.Get(j)) == "< 0") {
-							if (1 == option) { return "TRUE"; }
+							if ("1" == option) { return "TRUE"; }
 						}
 						else {
-							if (2 == option) { return "FALSE"; }
+							if ("2" == option) { return "FALSE"; }
 						}
 					}
 				}
-				if (1 == option) { return "FALSE"; }
-				else if (2 == option) {
+				if ("1" == option) { return "FALSE"; }
+				else if ("2" == option) {
 					return "TRUE";
 				}
 			}
@@ -1344,19 +1344,19 @@ private:
 			return "FALSE";
 		}
 		else if ("COMP>" == op) {
-			if (0 != option) { /// ToDo.. // 0. just 1-1, // 1. for any case // 2. for all case
+			if ("0" != option) { /// ToDo.. // 0. just 1-1, // 1. for any case // 2. for all case
 				for (int i = 0; i < value1.GetCount(); ++i) {
 					for (int j = 0; j < value2.GetCount(); ++j) {
 						if (Compare(value1.Get(i), value2.Get(j)) == "> 0") {
-							if (1 == option) { return "TRUE"; }
+							if ("1" == option) { return "TRUE"; }
 						}
 						else {
-							if (2 == option) { return "FALSE"; }
+							if ("2" == option) { return "FALSE"; }
 						}
 					}
 				}
-				if (1 == option) { return "FALSE"; }
-				else if (2 == option) {
+				if ("1" == option) { return "FALSE"; }
+				else if ("2" == option) {
 					return "TRUE";
 				}
 			}
@@ -1368,19 +1368,19 @@ private:
 			return "FALSE";
 		}
 		else if ("EQ" == op) {
-			if (0 != option) { /// ToDo.. // 0. just 1-1, // 1. for any case // 2. for all case
+			if ("0" != option) { /// ToDo.. // 0. just 1-1, // 1. for any case // 2. for all case
 				for (int i = 0; i < value1.GetCount(); ++i) {
 					for (int j = 0; j < value2.GetCount(); ++j) {
 						if (Compare(value1.Get(i), value2.Get(j)) == "== 0") {
-							if (1 == option) { return "TRUE"; }
+							if ("1" == option) { return "TRUE"; }
 						}
 						else {
-							if (2 == option) { return "FALSE"; }
+							if ("2" == option) { return "FALSE"; }
 						}
 					}
 				}
-				if (1 == option) { return "FALSE"; }
-				else if (2 == option) {
+				if ("1" == option) { return "FALSE"; }
+				else if ("2" == option) {
 					return "TRUE";
 				}
 			}
@@ -1392,19 +1392,19 @@ private:
 			return "FALSE";
 		}
 		else if ("NOTEQ" == op) {
-			if (0 != option) { /// ToDo.. // 0. just 1-1, // 1. for any case // 2. for all case
+			if ("0" != option) { /// ToDo.. // 0. just 1-1, // 1. for any case // 2. for all case
 				for (int i = 0; i < value1.GetCount(); ++i) {
 					for (int j = 0; j < value2.GetCount(); ++j) {
 						if (Compare(value1.Get(i), value2.Get(j)) != "== 0") {
-							if (1 == option) { return "TRUE"; }
+							if ("1" == option) { return "TRUE"; }
 						}
 						else {
-							if (2 == option) { return "FALSE"; }
+							if ("2" == option) { return "FALSE"; }
 						}
 					}
 				}
-				if (1 == option) { return "FALSE"; }
-				else if (2 == option) {
+				if ("1" == option) { return "FALSE"; }
+				else if ("2" == option) {
 					return "TRUE";
 				}
 			}
@@ -1471,17 +1471,18 @@ public:
 					braceNum--;
 
 					// COMP<, COMP>, EQ, NOTEQ
-					if (tokenStack.size() >= 5 && ("COMP<" == tokenStack[tokenStack.size() - 5]
-						|| "COMP>" == tokenStack[tokenStack.size() - 5]
-						|| "EQ" == tokenStack[tokenStack.size() - 5]
-						|| "NOTEQ" == tokenStack[tokenStack.size() - 5]))
+					if (tokenStack.size() >= 6 && ("COMP<" == tokenStack[tokenStack.size() - 6]
+						|| "COMP>" == tokenStack[tokenStack.size() - 6]
+						|| "EQ" == tokenStack[tokenStack.size() - 6]
+						|| "NOTEQ" == tokenStack[tokenStack.size() - 6]))
 					{
-						const string op = tokenStack[tokenStack.size() - 5];
-						const string var1 = tokenStack[tokenStack.size() - 4];
-						const string position1 = tokenStack[tokenStack.size() - 3];
-						const string var2 = tokenStack[tokenStack.size() - 2];
-						const string position2 = tokenStack[tokenStack.size() - 1];
-
+						const string op = tokenStack[tokenStack.size() - 6];
+						const string var1 = tokenStack[tokenStack.size() - 5];
+						const string position1 = tokenStack[tokenStack.size() - 4];
+						const string var2 = tokenStack[tokenStack.size() - 3];
+						const string position2 = tokenStack[tokenStack.size() - 2];
+						const string option = tokenStack[tokenStack.size() - 1];
+						tokenStack.pop();
 						tokenStack.pop();
 						tokenStack.pop();
 						tokenStack.pop();
@@ -1572,7 +1573,7 @@ namespace lib_load_data
 		return true;
 	}
 	// AddQuery AddData, AddUserTypeData?
-	bool AddData(const string& position, const string& data, const string& condition="", const int option=0) {
+	bool AddData(const string& position, const string& data, const string& condition="") {
 		wiz::UserType utTemp;
 
 		if (false == LoadDataFromString(data, utTemp))
@@ -1589,7 +1590,7 @@ namespace lib_load_data
 				//if (finded.second[i]->GetItem("base_tax").GetCount() > 0) { continue; }
 				///~end
 				if (false == condition.empty()) {
-					Condition cond(condition, finded.second[i], &global, option);
+					Condition cond(condition, finded.second[i], &global);
 
 					while (cond.Next());
 
@@ -1618,7 +1619,7 @@ namespace lib_load_data
 		}
 	}
 	// SetQuery
-	bool SetData(const string& position, const string& varName, const string& data, const string& condition="", const int option=0)
+	bool SetData(const string& position, const string& varName, const string& data, const string& condition="")
 	{
 		auto finded = Find(global, position);
 
@@ -1632,7 +1633,7 @@ namespace lib_load_data
 				const int n = utTemp.GetItem("").GetCount();
 				for (int i = 0; i < finded.second.size(); ++i) {
 					if (false == condition.empty()) {
-						Condition cond(condition, finded.second[i], &global, option);
+						Condition cond(condition, finded.second[i], &global);
 
 						while (cond.Next());
 
@@ -1654,7 +1655,7 @@ namespace lib_load_data
 			else {
 				for (int i = 0; i < finded.second.size(); ++i) {
 					if (false == condition.empty()) {
-						Condition cond(condition, finded.second[i], &global, option);
+						Condition cond(condition, finded.second[i], &global);
 
 						while (cond.Next());
 
@@ -1675,13 +1676,13 @@ namespace lib_load_data
 		}
 	}
 	/// 
-	string GetData(const string& position, const string& condition, const int option=0) {
+	string GetData(const string& position, const string& condition) {
 		string str;
 		auto finded = Find(global, position);
 		if (finded.first) {
 			for (int i = 0; i < finded.second.size(); ++i) {
 				if (false == condition.empty()) {
-					Condition cond(condition, finded.second[i], &global, option);
+					Condition cond(condition, finded.second[i], &global);
 
 					while (cond.Next());
 
@@ -1703,14 +1704,14 @@ namespace lib_load_data
 	/// varName = val - do
 	/// varName = { val val val } - GetData(position+"/varName", ""); 
 	/// varName = { var = val } - GetData(position+"/varname", var);
-	string GetData(const string& position, const string& varName, const string& condition, const int option=0) // ??
+	string GetData(const string& position, const string& varName, const string& condition) // ??
 	{
 		string str;
 		auto finded = Find(global, position);
 		if(finded.first) {
 			for (int i = 0; i < finded.second.size(); ++i) {
 				if (false == condition.empty()) {
-					Condition cond(condition, finded.second[i], &global, option);
+					Condition cond(condition, finded.second[i], &global);
 
 					while (cond.Next());
 
@@ -1740,14 +1741,14 @@ namespace lib_load_data
 		}
 	}
 	*/
-	bool Remove(const string& position, const string& var, const string& condition, const int option=0) {
+	bool Remove(const string& position, const string& var, const string& condition) {
 		auto finded = Find(global, position);
 		if (finded.first) {
 			for (int i = 0; i < finded.second.size(); ++i) {
 				wiz::UserType* temp = finded.second[i];
 				
 				if (false == condition.empty()) {
-					Condition cond(condition, finded.second[i], &global, option);
+					Condition cond(condition, finded.second[i], &global);
 
 					while (cond.Next());
 
@@ -2036,7 +2037,9 @@ int main(void)
 		cout << "no found.." << endl;
 	}
 	
-	lib_load_data::Remove("provinces/$/", "history", "NOTEQ = { core / \"RUS\" / }", 2); // 모든 경우에 다 다른다면?
+	//lib_load_data::Remove("provinces/$/", "history", "NOTEQ = { core / \"RUS\" / }", 2); // 모든 경우에 다 다른다면?
+	lib_load_data::Remove("provinces/$/", "history", "\AND = { EQ = { core / \"RUS\" / 1 }"
+														   "NOTEQ = { core / \"PLT\" / 2 } }");
 
 	lib_load_data::SaveWizDB("result.eu4");
 
