@@ -2016,7 +2016,7 @@ void test2() {
 	lib_load_data::AllRemoveWizDB();
 }
 
-
+#include <conio.h>
 
 
 int main(void)
@@ -2033,14 +2033,15 @@ int main(void)
 	//if (false == lib_load_data::AddData("provinces/$/", "base_tax = 1.000", /// 1.000
 	//						"NOTEXIST = { base_tax / }"))
 	if( false == lib_load_data::AddData("provinces/$/", "base_tax_is_5.000 = yes", 
-							"COMP> = { base_tax / 5.000 / }")) {
+							"COMP> = { base_tax / 5.000 / 0 }")) {
 		cout << "no found.." << endl;
+		_getch();
 	}
 	
 	//lib_load_data::Remove("provinces/$/", "history", "NOTEQ = { core / \"RUS\" / }", 2); // 모든 경우에 다 다른다면?
 	lib_load_data::Remove("provinces/$/", "history", "\AND = { EQ = { core / \"RUS\" / 1 }"
 														   "NOTEQ = { core / \"PLT\" / 2 } }");
-
+	cout << lib_load_data::GetData("provinces/-1", "TRUE") << endl;
 	lib_load_data::SaveWizDB("result.eu4");
 
 	lib_load_data::AllRemoveWizDB();
