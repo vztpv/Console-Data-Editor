@@ -1,5 +1,3 @@
-// A = { B C D } 도 받아들일수있도록 소스변경
-// A = { 1 = B 2 = C 3 = D } 와 같이 입력한 것처럼 동작한다.
 
 #ifndef LOAD_DATA_H_INCLUDED
 #define LOAD_DATA_H_INCLUDED
