@@ -13,7 +13,7 @@ template <class T>
 class Array{
 private:
     T* p; // array
-    int N; // array ì‚¬ì´ì¦ˆ
+    int N; // array »çÀÌÁî
 private:
     static T sBegin; /// static -> s, /// to not static?
     static T sEnd;
@@ -213,7 +213,7 @@ public:
         for( int i=0;i< N;i++ )//
             p[i] = resetValue;
     }
-    bool operator==( const Array<T>& arr ) const /// ì£¼ì˜í•  ê²ƒ..
+    bool operator==( const Array<T>& arr ) const /// ÁÖÀÇÇÒ °Í..
     {
         return this->p == arr.p;
     }
@@ -232,7 +232,7 @@ public:
         }
         return true;
     }
-    // í¬ê¸°
+    // Å©±â
     int size()const{ return N; }
     int length()const{ return N; }
     //
@@ -299,7 +299,7 @@ public:
             // data copy!
 		    for( int i=0; i < N; i++ )
 			{
-				temp[i] = std::move( p[i] ); // cf)  ê°„ë‹¨í•œê²ƒì€ p[i]ê°€ ë” ë¹ ë¥´ë‹¤???
+				temp[i] = std::move( p[i] ); // cf)  °£´ÜÇÑ°ÍÀº p[i]°¡ ´õ ºü¸£´Ù???
 			}
 			for( int i=N; i < newN; i++ )
 			{
@@ -311,6 +311,7 @@ public:
             p = temp; N = newN;
 		}
 	}
+
 public: /// Done-swap..
     void swap( Array<T>& arr )
     {
@@ -348,7 +349,7 @@ template <class T>
 class SecondArray{ /// To Do Add bool isSameValue?
 private:
     Array<T>** p;
-    int row_N; // array ì‚¬ì´ì¦ˆ
+    int row_N; // array »çÀÌÁî
     int column_N;
 
 private:
@@ -402,7 +403,7 @@ public:
     {
         Delete();
     }
-    // ìµœëŒ€ í¬ê¸°ë¥¼ ë°›ëŠ”ë‹¤.
+    // ÃÖ´ë Å©±â¸¦ ¹Ş´Â´Ù.
     SecondArray( const SecondArray<T>& dap )
     : p( NULL ), row_N( 0 ), column_N( 0 )
     {
@@ -448,7 +449,7 @@ public:
         return *this;
     }
 
-    /// DONE 2014.3.7 - ì´ë™ìƒì„±ì, ì´ë™ëŒ€ì…ì—°ì‚°ì ì¶”ê°€.
+    /// DONE 2014.3.7 - ÀÌµ¿»ı¼ºÀÚ, ÀÌµ¿´ëÀÔ¿¬»êÀÚ Ãß°¡.
     SecondArray<T>& operator=( SecondArray<T>&& arr )
     {
         if( p == arr.p ) { return *this; }
@@ -560,7 +561,7 @@ public:
     }
 };// end double array
 template <typename T>
-class SquareSecondArray : public SecondArray<T> /// row_expand -> err. ìƒì†???
+class SquareSecondArray : public SecondArray<T> /// row_expand -> err. »ó¼Ó???
 {
 public:
     virtual bool isSquareSecondArray(){ return true; }

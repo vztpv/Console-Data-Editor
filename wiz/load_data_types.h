@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 using namespace std;
 
 #include <wiz/newArrays.h>
@@ -60,7 +61,6 @@ namespace wiz {
 				arr = move( ta.arr );
 				count = ta.count;
 
-				ta.arr = Array<T>();
 				ta.count = 0;
 			}
 		public:
@@ -68,8 +68,7 @@ namespace wiz {
 			virtual ~TypeArray() { }
 		public:
 			void Remove() {
-				//arr = Array<T>();
-				arr = vector<T>();
+				arr = Array<T>();
 				count = 0;
 			}
 			void Push(const T& val) { /// do not change..!!
@@ -115,6 +114,23 @@ namespace wiz {
 				return count;
 			}
 		public:
+			void Shrink()
+			{
+				if (count == arr.size()) { return; }
+				if (count > 0) {
+					Array<T> temp(count);
+					
+					for (int i = 0; i < count; ++i) {
+						temp[i] = move( this->arr[i] );
+					}
+
+					this->arr = move(temp);
+				}
+				else {
+					arr = Array<T>();
+				}
+			}
+		public:
 			TypeArray<T>& operator=(const TypeArray<T>& ta)
 			{
 				Type::operator=(ta);
@@ -129,7 +145,7 @@ namespace wiz {
 				Type::operator=(ta);
 				if (arr == ta.arr) { return *this; }
 
-				arr = ta.arr;
+				arr = move( ta.arr );
 				count = ta.count;
 
 				ta.count = 0;
@@ -149,21 +165,45 @@ namespace wiz {
 
 		class UserType : public Type {
 		public:
+			void ShrinkItemList()
+			{
+				itemList.Shrink();
+				wiz::Dictionary< TypeArray<string> > temp;
+				for (int i = 0; i < itemList.GetCount(); ++i) {
+					if (itemList[i].GetCount() > 0) {
+						temp.PushBack(itemList[i]);
+					}
+				}
+				itemList = move(temp);
+			}
+			void ShrinkUserTypeList()
+			{
+				userTypeList.Shrink();
+
+				wiz::Dictionary< TypeArray<shared_ptr<UserType>> > temp;
+				for (int i = 0; i < userTypeList.GetCount(); ++i) {
+					if (userTypeList[i].GetCount() > 0) {
+						temp.PushBack(userTypeList[i]);
+					}
+				}
+				userTypeList = move(temp);
+			}
+		public:
 			const vector<int>& GetIList() const { return ilist; }
 			vector<int>& GetIList() { return ilist; }
 			int GetItemListSize()const { return itemList.GetCount(); }
 			int GetUserTypeListSize()const { return userTypeList.GetCount(); }
 			TypeArray<string>& GetItemList(const int idx) { return itemList[idx]; }
 			const TypeArray<string>& GetItemList(const int idx) const { return itemList[idx]; }
-			TypeArray<UserType*>& GetUserTypeList(const int idx) { return userTypeList[idx]; }
-			const TypeArray<UserType*>& GetUserTypeList(const int idx) const { return userTypeList[idx]; }
+			TypeArray<shared_ptr<UserType>>& GetUserTypeList(const int idx) { return userTypeList[idx]; }
+			const TypeArray<shared_ptr<UserType>>& GetUserTypeList(const int idx) const { return userTypeList[idx]; }
 			void AddItemList(const TypeArray<string>& strTa)
 			{
 				for (int i = 0; i < strTa.GetCount(); ++i) {
 					this->AddItem(strTa.GetName(), strTa.Get(i));
 				}
 			}
-			void AddUserTypeList(const TypeArray<UserType*>& utTa)
+			void AddUserTypeList(const TypeArray<shared_ptr<UserType>>& utTa)
 			{
 				for (int i = 0; i < utTa.GetCount(); ++i) {
 					this->AddUserTypeItem(*utTa.Get(i));
@@ -172,7 +212,8 @@ namespace wiz {
 		private:
 			vector<int> ilist;
 			Dictionary< TypeArray<string> > itemList;
-			Dictionary< TypeArray<UserType*> > userTypeList;
+			//Dictionary< TypeArray<shared_ptr<UserType>> > userTypeList;
+			Dictionary< TypeArray<shared_ptr<UserType>>> userTypeList;
 		public:
 			explicit UserType(const string& name = "") : Type(name) { }
 			UserType(const UserType& ut) : Type(ut.GetName()) {
@@ -206,9 +247,9 @@ namespace wiz {
 				itemList = ut.itemList;
 
 				for (int i = 0; i < ut.userTypeList.GetCount(); i++) {
-					TypeArray<UserType*> temp(ut.userTypeList[i].GetName());
+					TypeArray<shared_ptr<UserType>> temp(ut.userTypeList[i].GetName());
 					for (int j = 0; j < ut.userTypeList[i].GetCount(); j++) {
-						temp.Push(new UserType(*ut.userTypeList[i].Get(j)));
+						temp.Push(shared_ptr<UserType>( new UserType(*ut.userTypeList[i].Get(j))) );
 					}
 					userTypeList.PushBack(move(temp));
 				}
@@ -280,13 +321,13 @@ namespace wiz {
 				for (int i = 0; i < userTypeList.GetCount(); i++) {
 					for (int j = 0; j < userTypeList[i].GetCount(); j++) {
 						if (NULL != userTypeList[i].Get(j)) {
-							delete userTypeList[i].Get(j); //
+							// delete userTypeList[i].Get(j); //
 							userTypeList[i].Set(j, NULL);
 						}
 					}
 				}
 				// DO Empty..
-				userTypeList = Dictionary< TypeArray<UserType*> >();
+				userTypeList = Dictionary< TypeArray<shared_ptr<UserType>> >();
 
 				vector<int> temp;
 				for (int i = 0; i < ilist.size(); ++i) {
@@ -300,7 +341,7 @@ namespace wiz {
 			void RemoveUserTypeList(const string varName)
 			{
 				int k = _GetIndex(ilist, 2, 0);
-				Dictionary<TypeArray<UserType*>> tempDic;
+				Dictionary<TypeArray<shared_ptr<UserType>>> tempDic;
 				for (int i = 0; i < userTypeList.GetCount(); ++i) {
 					if (varName != userTypeList[i].GetName()) {
 						tempDic.PushBack(userTypeList[i]);
@@ -332,14 +373,14 @@ namespace wiz {
 			}
 			void AddUserTypeItem(const UserType& item) {
 				int index = -1;
-				if (!userTypeList.Search(TypeArray<UserType*>(item.GetName()), &index))
+				if (!userTypeList.Search(TypeArray<shared_ptr<UserType>>(item.GetName()), &index))
 				{
 					ilist.push_back(2);
 
-					userTypeList.PushBack(TypeArray<UserType*>(item.GetName()));//
-					userTypeList.Search(TypeArray<UserType*>(item.GetName()), &index);
+					userTypeList.PushBack(TypeArray<shared_ptr<UserType>>(item.GetName()));//
+					userTypeList.Search(TypeArray<shared_ptr<UserType>>(item.GetName()), &index);
 				}
-				UserType* temp = new UserType(item);
+				shared_ptr<UserType> temp( new UserType(item) );
 				userTypeList[index].Push(temp);
 			}
 
@@ -366,7 +407,7 @@ namespace wiz {
 				TypeArray<UserType> temp;
 
 				int index = -1;
-				if (userTypeList.Search(TypeArray<UserType*>(name), &index))
+				if (userTypeList.Search(TypeArray<shared_ptr<UserType>>(name), &index))
 				{
 					temp.SetName(userTypeList[index].GetName());
 					for (int i = 0; i < userTypeList[index].GetCount(); i++) {
@@ -376,9 +417,9 @@ namespace wiz {
 				return temp;
 			}
 		public:
-			bool GetUserTypeItemRef(const string& name, TypeArray<UserType*>& ref) {
+			bool GetUserTypeItemRef(const string& name, TypeArray<shared_ptr<UserType>>& ref) {
 				int index = -1;
-				if (userTypeList.Search(TypeArray<UserType*>(name), &index))
+				if (userTypeList.Search(TypeArray<shared_ptr<UserType>>(name), &index))
 				{
 					ref = userTypeList[index];
 					return true;

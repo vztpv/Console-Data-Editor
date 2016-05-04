@@ -120,21 +120,41 @@ namespace wiz {
 
 		class LoadData
 		{
+		private:
+			void Shrink(shared_ptr<UserType> utTemp ) {
+				const int itemListSize = utTemp->GetItemListSize();
+				for (int i = 0; i < itemListSize; ++i) {
+					utTemp->GetItemList(i).Shrink();
+				}
+				utTemp->ShrinkItemList();
+		
+				const int UserTypeSize = utTemp->GetUserTypeListSize();
+				for (int i = 0; i < UserTypeSize; ++i) {
+					const int UserType_itemListSize = utTemp->GetUserTypeList(i).GetCount();
+					for (int j = 0; j < UserType_itemListSize; ++j) {
+ 						Shrink(utTemp->GetUserTypeList(i).Get(j));
+					}
+					utTemp->GetUserTypeList(i).Shrink();
+				}
+				utTemp->ShrinkUserTypeList();
+			}
+		public:
+			void Shrink() { Shrink(global); }
 			/// core
 		private:
 			template <class Reserver>
-			static void _LoadData(ArrayQueue<string>& strVec, Reserver& vecReserver, UserType& global) // first, strVec.empty() must be true!!?
+			static void _LoadData(ArrayQueue<string>& strVec, Reserver& vecReserver, shared_ptr<UserType>& global) // first, strVec.empty() must be true!!?
 			{
 				int state = 0;
 				int braceNum = 0;
 				stack<int> state_reserve;
 				stack<int> do_reserve;
-				vector< UserType* > nestedUT(1);
+				vector< shared_ptr<UserType> > nestedUT(1);
 				string var1, var2, val;
 
 				bool varOn = false;
 
-				nestedUT[0] = &global;
+				nestedUT[0] = global;
 				{
 					vecReserver(strVec);
 
@@ -192,7 +212,7 @@ namespace wiz {
 
 							///
 							nestedUT[braceNum]->AddUserTypeItem(UserType(var2));
-							TypeArray<UserType*> pTemp;
+							TypeArray<shared_ptr<UserType>> pTemp;
 							nestedUT[braceNum]->GetUserTypeItemRef(var2, pTemp);
 
 							braceNum++;
@@ -254,7 +274,7 @@ namespace wiz {
 							Utility::Pop(strVec);
 
 							nestedUT[braceNum]->AddUserTypeItem(UserType(""));
-							TypeArray<UserType*> pTemp;
+							TypeArray<shared_ptr<UserType>> pTemp;
 							nestedUT[braceNum]->GetUserTypeItemRef("", pTemp);
 
 							braceNum++;
@@ -357,7 +377,7 @@ namespace wiz {
 							///
 							{
 								nestedUT[braceNum]->AddUserTypeItem(UserType(var2));
-								TypeArray<UserType*> pTemp;
+								TypeArray<shared_ptr<UserType>> pTemp;
 								nestedUT[braceNum]->GetUserTypeItemRef(var2, pTemp);
 
 								braceNum++;
@@ -473,7 +493,7 @@ namespace wiz {
 			}
 
 		public:
-			static bool LoadDataFromFile(const string& fileName, UserType& global) /// global should be empty?
+			static bool LoadDataFromFile(const string& fileName, shared_ptr<UserType>& global) /// global should be empty?
 			{
 				ifstream inFile;
 				inFile.open(fileName, ios::binary);
@@ -481,7 +501,7 @@ namespace wiz {
 				{
 					inFile.close(); return false;
 				}
-				UserType globalTemp = global;
+				shared_ptr<UserType> globalTemp = global;
 				ArrayQueue<string> strVec;
 
 				try {
@@ -502,11 +522,11 @@ namespace wiz {
 				return true;
 			}
 
-			static bool LoadDataFromString(string str, UserType& ut)
+			static bool LoadDataFromString(string str, shared_ptr<UserType>& ut)
 			{
-				UserType utTemp = ut;
-				str = Utility::AddSpace(str);
+				shared_ptr<UserType> utTemp = ut;
 				str = Utility::PassSharp(str);
+				str = Utility::AddSpace(str);
 				str = Utility::ChangeSpace(str, '^');
 				/// ToDp - ""안에 여백이 있을 떄 다른 것으로 대체후 다시 변경
 				/// ToDo -  #주석이 있다면? 없애는 함수 제작? - using str.find, String::Substr.
@@ -520,7 +540,7 @@ namespace wiz {
 				}
 				try {
 					_LoadData(strVec, NoneReserver(), utTemp);
-					Utility::ReplaceAll(&utTemp, '^', ' ');
+					Utility::ReplaceAll(utTemp, '^', ' ');
 				}
 				catch (Error& e) { cout << e << endl; return false; }
 				catch (const char* err) { cout << err << endl; return false; }
@@ -531,24 +551,24 @@ namespace wiz {
 				return true;
 			}
 		private:
-			UserType global; // ToDo - remove!!
+			shared_ptr<UserType> global; // ToDo - remove!!
 		public:
 			// InitQuery or LoadQuery
 			LoadData() { InitWizDB(); }
-			virtual ~LoadData() { }
+			virtual ~LoadData() { AllRemoveWizDB(); }
 			//
 			bool InitWizDB() {
-				global = UserType("global");
+				global = shared_ptr<UserType>(new UserType("global"));
 				return true;
 			}
 			// allRemove Query 
 			bool AllRemoveWizDB() {
-				global = UserType("");
+				global = shared_ptr<UserType>(NULL);
 				return true;
 			}
 			// AddQuery AddData, AddUserTypeData?
 			bool AddData(const string& position, const string& data, const string& condition = "") {
-				UserType utTemp;
+				shared_ptr<UserType> utTemp(new UserType("global"));
 
 				if (false == LoadDataFromString(data, utTemp))
 				{
@@ -564,7 +584,7 @@ namespace wiz {
 						//if (finded.second[i]->GetItem("base_tax").GetCount() > 0) { continue; }
 						///~end
 						if (false == condition.empty()) {
-							Condition cond(condition, finded.second[i], &global);
+							Condition cond(condition, finded.second[i], global);
 
 							while (cond.Next());
 
@@ -575,13 +595,13 @@ namespace wiz {
 							}
 						}
 
-						for (int k = 0; k < utTemp.GetIList().size(); ++k) {
-							if (utTemp.GetIList()[k] == 1) {
-								finded.second[i]->AddItemList(utTemp.GetItemList(item_n));
+						for (int k = 0; k < utTemp->GetIList().size(); ++k) {
+							if (utTemp->GetIList()[k] == 1) {
+								finded.second[i]->AddItemList(utTemp->GetItemList(item_n));
 								item_n++;
 							}
-							else if (utTemp.GetIList()[k] == 2) {
-								finded.second[i]->AddUserTypeList(utTemp.GetUserTypeList(user_n));
+							else if (utTemp->GetIList()[k] == 2) {
+								finded.second[i]->AddUserTypeList(utTemp->GetUserTypeList(user_n));
 								user_n++;
 							}
 						}
@@ -600,14 +620,14 @@ namespace wiz {
 				if (finded.first) {
 					/// todo - if varName is "" then data : val val val ... 
 					if (varName == "") {
-						UserType utTemp;
+						shared_ptr<UserType> utTemp( new UserType);
 						if (false == LoadDataFromString(data, utTemp)) {
 							return false;
 						}
-						const int n = utTemp.GetItem("").GetCount();
+						const int n = utTemp->GetItem("").GetCount();
 						for (int i = 0; i < finded.second.size(); ++i) {
 							if (false == condition.empty()) {
-								Condition cond(condition, finded.second[i], &global);
+								Condition cond(condition, finded.second[i], global);
 
 								while (cond.Next());
 
@@ -620,7 +640,7 @@ namespace wiz {
 							finded.second[i]->RemoveItemList("");
 
 							for (int j = 0; j < n; ++j) {
-								finded.second[i]->AddItem("", utTemp.GetItem("").Get(j));
+								finded.second[i]->AddItem("", utTemp->GetItem("").Get(j));
 							}
 						}
 
@@ -629,7 +649,7 @@ namespace wiz {
 					else {
 						for (int i = 0; i < finded.second.size(); ++i) {
 							if (false == condition.empty()) {
-								Condition cond(condition, finded.second[i], &global);
+								Condition cond(condition, finded.second[i], global);
 
 								while (cond.Next());
 
@@ -656,7 +676,7 @@ namespace wiz {
 				if (finded.first) {
 					for (int i = 0; i < finded.second.size(); ++i) {
 						if (false == condition.empty()) {
-							Condition cond(condition, finded.second[i], &global);
+							Condition cond(condition, finded.second[i], global);
 
 							while (cond.Next());
 
@@ -685,7 +705,7 @@ namespace wiz {
 				if (finded.first) {
 					for (int i = 0; i < finded.second.size(); ++i) {
 						if (false == condition.empty()) {
-							Condition cond(condition, finded.second[i], &global);
+							Condition cond(condition, finded.second[i], global);
 
 							while (cond.Next());
 
@@ -719,10 +739,10 @@ namespace wiz {
 				auto finded = Utility::Find(global, position);
 				if (finded.first) {
 					for (int i = 0; i < finded.second.size(); ++i) {
-						UserType* temp = finded.second[i];
+						shared_ptr<UserType> temp = finded.second[i];
 
 						if (false == condition.empty()) {
-							Condition cond(condition, finded.second[i], &global);
+							Condition cond(condition, finded.second[i], global);
 
 							while (cond.Next());
 
@@ -744,7 +764,7 @@ namespace wiz {
 			}
 		
 			bool LoadWizDB(const string& fileName) {
-				UserType globalTemp;
+				shared_ptr<UserType> globalTemp(new UserType("global"));
 				// preprocessing
 				Utility::PassSharp(fileName, "output.txt");
 				cout << "PassSharp End" << endl;
@@ -811,10 +831,10 @@ namespace wiz {
 				/// ToDo - Change ^ to ' '
 				{
 					// for all, remove ^ in val
-					Utility::ReplaceAll(&globalTemp, '^', ' ');
+					Utility::ReplaceAll(globalTemp, '^', ' ');
 				}
 				cout << "remove ^ end" << endl;
-				global = std::move( globalTemp );
+				global = move( globalTemp );
 				return true;
 			}
 			// SaveQuery
@@ -866,7 +886,7 @@ namespace wiz {
 
 			bool ChkData()
 			{
-				return Utility::ChkData(&global);
+				return Utility::ChkData(global);
 			}
 		};
 	}

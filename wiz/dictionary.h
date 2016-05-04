@@ -21,6 +21,23 @@ namespace wiz {
 			stream << "\n";
 			return stream;
 		}
+	public:
+		void Shrink()
+		{
+			if (count == arr.size()) { return; }
+			if (count > 0) {
+				Array<T> temp(count);
+
+				for (int i = 0; i < count; ++i) {
+					temp[i] = move( this->arr[i] );
+				}
+
+				this->arr = move(temp);
+			}
+			else {
+				arr = Array<T>();
+			}
+		}
 	private:
 		COMP comp;
 		Array <T> arr;
@@ -43,7 +60,7 @@ namespace wiz {
 			arr = std::move(dic.arr);
 			count = dic.count;
 
-			dic.arr = std::vector<T>(); //1
+			dic.arr = Array<T>(1); //1
 			dic.count = 0;
 		}
 		Dictionary<T, COMP, EE>& operator=(const Dictionary<T, COMP, EE>& dic) {
