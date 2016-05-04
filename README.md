@@ -4,7 +4,7 @@
               
 # precautions :
                 1. this source code has maybe many bugs!. and maybe need many memory.
-                      ex) input.eu4 was about 60MB, and this program used about 500MB memory, (- bug?)
+                      ex) input.eu4 was about 60MB, and this program used about 450MB memory, (- bug?)
                       and in my computer, program take about 60seconds.
                 
                 2. put wiz folder to your std header file location(include).
