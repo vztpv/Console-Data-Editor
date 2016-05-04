@@ -55,6 +55,14 @@ namespace wiz {
 				arr = ta.arr;
 				count = ta.count;
 			}
+			TypeArray(TypeArray<T>&& ta) : Type(ta)
+			{
+				arr = move( ta.arr );
+				count = ta.count;
+
+				ta.arr = Array<T>();
+				ta.count = 0;
+			}
 		public:
 			explicit TypeArray(const string& name = "") : Type(name), count(0) { }
 		public:
@@ -104,6 +112,17 @@ namespace wiz {
 				count = temp.count;
 				return *this;
 			}
+			TypeArray<T>& operator=(TypeArray<T>&& ta)
+			{
+				Type::operator=(ta);
+				if (arr == ta.arr) { return *this; }
+
+				arr = ta.arr;
+				count = ta.count;
+
+				ta.count = 0;
+				return *this;
+			}
 			string ToString()const
 			{
 				string temp;
@@ -147,6 +166,9 @@ namespace wiz {
 			UserType(const UserType& ut) : Type(ut.GetName()) {
 				Reset(ut);  // Initial
 			}
+			UserType(UserType&& ut) : Type(ut.GetName()) {
+				Reset2(move(ut));
+			}
 			virtual ~UserType() {
 				_Remove();
 			}
@@ -156,6 +178,14 @@ namespace wiz {
 
 				RemoveUserTypeList();
 				Reset(ut);
+				return *this;
+			}
+			UserType& operator=(UserType&& ut) {
+				if (this == &ut) { return *this;  }
+
+				Type::operator=(ut);
+				RemoveUserTypeList();
+				Reset2(move(ut));
 				return *this;
 			}
 		private:
@@ -170,6 +200,11 @@ namespace wiz {
 					}
 					userTypeList.PushBack(temp);
 				}
+			}
+			void Reset2(UserType&& ut) {
+				ilist = std::move(ut.ilist);
+				itemList = std::move(ut.itemList);
+				userTypeList = std::move(ut.userTypeList);
 			}
 
 			void _Remove()
