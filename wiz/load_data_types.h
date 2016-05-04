@@ -65,6 +65,7 @@ namespace wiz {
 			}
 		public:
 			explicit TypeArray(const string& name = "") : Type(name), count(0) { }
+			virtual ~TypeArray() { }
 		public:
 			void Remove() {
 				//arr = Array<T>();
@@ -252,7 +253,7 @@ namespace wiz {
 					}
 					k = _GetIndex(ilist, 1, k + 1);
 				}
-				itemList = tempDic;
+				itemList = move( tempDic );
 			}
 			void RemoveItemList() /// ALL
 			{
@@ -265,7 +266,7 @@ namespace wiz {
 						temp.push_back(2);
 					}
 				}
-				ilist = temp;
+				ilist = move( temp );
 			}
 			void Remove()
 			{
@@ -294,7 +295,7 @@ namespace wiz {
 						temp.push_back(1);
 					}
 				}
-				ilist = temp;
+				ilist = move( temp );
 			}
 			void RemoveUserTypeList(const string varName)
 			{
@@ -313,7 +314,7 @@ namespace wiz {
 					}
 					k = _GetIndex(ilist, 2, k + 1);
 				}
-				userTypeList = tempDic;
+				userTypeList = move( tempDic );
 			}
 
 		public:
