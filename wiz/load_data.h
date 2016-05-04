@@ -10,7 +10,6 @@
 using namespace std;
 
 #include <wiz/global.h>
-#include <wiz/newArrays.h>
 #include <wiz/Dictionary.h> /// change to map?
 
 #include <wiz/cpp_string.h>

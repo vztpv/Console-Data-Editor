@@ -2,7 +2,9 @@
 #ifndef DICTIONARY_H_INCLUDED
 #define DICTIONARY_H_INCLUDED
 
+
 #include <wiz/global.h>
+#include <wiz/wizardError.h>
 #include <wiz/newArrays.h>
 #define wizArray wiz::Array
 #include <wiz/binary_search.h>
@@ -21,13 +23,13 @@ namespace wiz {
 		}
 	private:
 		COMP comp;
-		wiz::Array<T> arr;
+		Array <T> arr;
 		int count;
 	public:
 		// size ÁöÁ¤? const int size = 1
 		explicit Dictionary(const int size = 1) : count(0) {
 			if (size > 0) {
-				arr = wizArray<T>(size);
+				arr = Array<T>(size);
 			}
 			else {
 				throw wiz::Error(__FILE__, __LINE__, "size <= 0");
@@ -41,14 +43,13 @@ namespace wiz {
 			arr = std::move(dic.arr);
 			count = dic.count;
 
-			dic.arr = Array<T>(1);
+			dic.arr = std::vector<T>(); //1
 			dic.count = 0;
 		}
 		Dictionary<T, COMP, EE>& operator=(const Dictionary<T, COMP, EE>& dic) {
 			if (dic.arr == arr ) {
 				return *this;
 			}
-			arr.DoEmpty();
 			arr = dic.arr;
 			count = dic.count;
 			return *this;
@@ -63,7 +64,6 @@ namespace wiz {
 			count = dic.count;
 
 			dic.count = 0;
-			dic.arr = Array<T>(1);
 			return *this;
 		}
 	public:
@@ -139,7 +139,8 @@ namespace wiz {
 		}
 		void Remove()  { /// chk....
 			count = 0;
-			for (int i = 0; i < arr.size(); i++) {
+			for (int i = 0; i < arr.size(); ++i)
+			{
 				arr[i] = T();
 			}
 		}

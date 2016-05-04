@@ -67,7 +67,8 @@ namespace wiz {
 			explicit TypeArray(const string& name = "") : Type(name), count(0) { }
 		public:
 			void Remove() {
-				arr = Array<T>();
+				//arr = Array<T>();
+				arr = vector<T>();
 				count = 0;
 			}
 			void Push(const T& val) { /// do not change..!!

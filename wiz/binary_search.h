@@ -2,6 +2,7 @@
 #ifndef BINARY_SEARCH_H_INCLUDED
 #define BINARY_SEARCH_H_INCLUDED
 
+
 namespace wiz{
 	template <class T, class COMP = ASC<T>, class EE = EE<T> >
 	class BinarySearch {
