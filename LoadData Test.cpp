@@ -2,6 +2,8 @@
 #include <iostream>
 using namespace std;
 
+
+#include <memory>
 #include <wiz/load_data.h>
 
 
@@ -64,28 +66,34 @@ void test2() {
 
 int main(void)
 {
-	// test2();
 	wiz::load_data::LoadData global;
-	global.InitWizDB();
 
-	global.LoadWizDB("input.eu4");
-	cout << "load end" << endl;
+		global.InitWizDB();
 
-	//if (false == LoadData::AddData("provinces/$/", "base_tax = 1.000", /// 1.000
-	//						"NOTEXIST = { base_tax / }"))
-	if( false == global.AddData("provinces/$/", "base_tax_is_5.000 = yes",
-							"COMP> = { base_tax / 5.000 / 0 }")) {
-		cout << "no found.." << endl;
+		global.LoadWizDB("input.eu4");
+		cout << "load end" << endl;
+		//_getch();
+		//global.Shrink();
+		//cout << "shrink end" << endl;
+		//_getch();
+
+		//if (false == LoadData::AddData("provinces/$/", "base_tax = 1.000", /// 1.000
+		//						"NOTEXIST = { base_tax / }"))
+		if (false == global.AddData("provinces/$/", "base_tax_is_5.000 = yes",
+			"COMP> = { base_tax / 5.000 / 0 }")) {
+			cout << "no found.." << endl;
+			_getch();
+		}
+
+		//LoadData::Remove("provinces/$/", "history", "NOTEQ = { core / \"RUS\" / }", 2); // 모든 경우에 다 다른다면?
+		global.Remove("provinces/$/", "history", "AND = { EQ = { core / \"RUS\" / 1 }"
+			"NOTEQ = { core / \"PLT\" / 2 } }");
+		cout << global.GetData("provinces/-1", "TRUE") << endl;
+		global.SaveWizDB("result.eu4");
+		cout << "save end" << endl;
+		global.AllRemoveWizDB();
+
+		cout << "all end" << endl;
 		_getch();
-	}
-	
-	//LoadData::Remove("provinces/$/", "history", "NOTEQ = { core / \"RUS\" / }", 2); // 모든 경우에 다 다른다면?
-	global.Remove("provinces/$/", "history", "AND = { EQ = { core / \"RUS\" / 1 }"
-														   "NOTEQ = { core / \"PLT\" / 2 } }");
-	cout << global.GetData("provinces/-1", "TRUE") << endl;
-	global.SaveWizDB("result.eu4");
-
-	global.AllRemoveWizDB();
-	
 	return 0;
 }
