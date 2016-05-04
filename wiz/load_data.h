@@ -743,6 +743,7 @@ namespace wiz {
 					return false;
 				}
 			}
+		
 			bool LoadWizDB(const string& fileName) {
 				UserType globalTemp;
 				// preprocessing

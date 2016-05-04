@@ -24,7 +24,7 @@ namespace wiz {
 		wiz::Array<T> arr;
 		int count;
 	public:
-		// size ì§€ì •? const int size = 1
+		// size ÁöÁ¤? const int size = 1
 		explicit Dictionary(const int size = 1) : count(0) {
 			if (size > 0) {
 				arr = wizArray<T>(size);
@@ -78,6 +78,19 @@ namespace wiz {
 		}
 
 		void PushBack(const T& val) {
+			// if already exist then pass??
+			if (Search(val)) { /// to linear search?
+				return;
+			}
+			if (IsFull()) {
+				arr.expand();
+			}
+			arr[count] = val;
+			count++;
+			// not sort!
+			///mini_insertSort(); // sorted items + new item.
+		}
+		void PushBack(const T&& val) {
 			// if already exist then pass??
 			if (Search(val)) { /// to linear search?
 				return;

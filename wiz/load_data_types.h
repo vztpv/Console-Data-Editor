@@ -80,6 +80,16 @@ namespace wiz {
 				arr[count] = val;
 				count++;
 			}
+			void Push(T&& val) {
+				if (arr.empty()) {
+					arr = Array<T>(1);
+				}
+				if (count >= arr.size()) {
+					arr.expand();
+				}
+				arr[count] = val;
+				count++;
+			}
 			T& Get(const int index) {
 				return arr[index];
 			}
@@ -198,7 +208,7 @@ namespace wiz {
 					for (int j = 0; j < ut.userTypeList[i].GetCount(); j++) {
 						temp.Push(new UserType(*ut.userTypeList[i].Get(j)));
 					}
-					userTypeList.PushBack(temp);
+					userTypeList.PushBack(move(temp));
 				}
 			}
 			void Reset2(UserType&& ut) {
