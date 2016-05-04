@@ -729,7 +729,7 @@ namespace wiz {
 
 							if ("TRUE" != cond.Now()[0])
 							{
-								cout << cond.Now()[0] << endl;
+								// cout << cond.Now()[0] << endl;
 								continue;
 							}
 						}
