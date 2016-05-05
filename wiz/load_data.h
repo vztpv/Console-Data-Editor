@@ -843,7 +843,7 @@ namespace wiz {
 				outFile.open(fileName + "temp", ios::binary);
 				if (outFile.fail()) { return false; }
 
-				outFile << global; /// SaveFile( fileName, data, use option 1 or 2? )
+				outFile << *global; /// SaveFile( fileName, data, use option 1 or 2? )
 
 				outFile.close();
 
