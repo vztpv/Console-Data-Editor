@@ -121,6 +121,7 @@ namespace wiz {
 		class LoadData
 		{
 		private:
+			// need to fix??
 			void Shrink(shared_ptr<UserType> utTemp ) {
 				const int itemListSize = utTemp->GetItemListSize();
 				for (int i = 0; i < itemListSize; ++i) {
@@ -501,7 +502,7 @@ namespace wiz {
 				{
 					inFile.close(); return false;
 				}
-				shared_ptr<UserType> globalTemp = global;
+				shared_ptr<UserType> globalTemp = shared_ptr<UserType>( new UserType(*global));
 				ArrayQueue<string> strVec;
 
 				try {
@@ -518,13 +519,13 @@ namespace wiz {
 				catch (const string& e) { cout << e << endl; inFile.close(); return false; }
 				catch (exception e) { cout << e.what() << endl; inFile.close(); return false; }
 				catch (...) { cout << "예기치 못한 에러" << endl; inFile.close(); return false; }
-				global = std::move( globalTemp );
+				global = ( globalTemp );
 				return true;
 			}
 
 			static bool LoadDataFromString(string str, shared_ptr<UserType>& ut)
 			{
-				shared_ptr<UserType> utTemp = ut;
+				shared_ptr<UserType> utTemp = shared_ptr<UserType>(new UserType(*ut));
 				str = Utility::PassSharp(str);
 				str = Utility::AddSpace(str);
 				str = Utility::ChangeSpace(str, '^');
@@ -547,7 +548,7 @@ namespace wiz {
 				catch (exception& e) { cout << e.what() << endl; return false; }
 				catch (...) { cout << "예기치 못한 에러" << endl; return  false; }
 
-				ut = std::move(utTemp);
+				ut = (utTemp);
 				return true;
 			}
 		private:
@@ -834,7 +835,7 @@ namespace wiz {
 					Utility::ReplaceAll(globalTemp, '^', ' ');
 				}
 				cout << "remove ^ end" << endl;
-				global = move( globalTemp );
+				global = ( globalTemp );
 				return true;
 			}
 			// SaveQuery
