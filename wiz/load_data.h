@@ -514,12 +514,13 @@ namespace wiz {
 
 					inFile.close();
 				}
-				catch (Error e) { cout << e << endl; inFile.close(); return false; }
-				catch (const char* err) { cout << err << endl; inFile.close(); return false; }
-				catch (const string& e) { cout << e << endl; inFile.close(); return false; }
-				catch (exception e) { cout << e.what() << endl; inFile.close(); return false; }
-				catch (...) { cout << "예기치 못한 에러" << endl; inFile.close(); return false; }
+				catch (Error e) { cout << e << endl; inFile.close(); delete globalTemp; return false; }
+				catch (const char* err) { cout << err << endl; inFile.close(); delete globalTemp; return false; }
+				catch (const string& e) { cout << e << endl; inFile.close(); delete globalTemp; return false; }
+				catch (exception e) { cout << e.what() << endl; inFile.close(); delete globalTemp; return false; }
+				catch (...) { cout << "예기치 못한 에러" << endl; inFile.close(); delete globalTemp; return false; }
 				*global = move( *globalTemp );
+				delete globalTemp;
 				return true;
 			}
 
@@ -543,12 +544,13 @@ namespace wiz {
 					_LoadData(strVec, NoneReserver(), utTemp);
 					Utility::ReplaceAll(utTemp, '^', ' ');
 				}
-				catch (Error& e) { cout << e << endl; return false; }
-				catch (const char* err) { cout << err << endl; return false; }
-				catch (exception& e) { cout << e.what() << endl; return false; }
-				catch (...) { cout << "예기치 못한 에러" << endl; return  false; }
+				catch (Error& e) { cout << e << endl; delete utTemp; return false; }
+				catch (const char* err) { cout << err << endl; delete utTemp; return false; }
+				catch (exception& e) { cout << e.what() << endl; delete utTemp; return false; }
+				catch (...) { cout << "예기치 못한 에러" << endl; delete utTemp; return  false; }
 
 				*ut = move(*utTemp);
+				delete utTemp;
 				return true;
 			}
 		private:
@@ -576,6 +578,7 @@ namespace wiz {
 
 				if (false == LoadDataFromString(data, utTemp))
 				{
+					delete utTemp;
 					return false;
 				}
 				auto finded = Utility::Find(global, position);
@@ -610,9 +613,11 @@ namespace wiz {
 							}
 						}
 					}
+					delete utTemp;
 					return true;
 				}
 				else {
+					delete utTemp;
 					return false;
 				}
 			}
@@ -626,7 +631,7 @@ namespace wiz {
 					if (varName == "") {
 						UserType* utTemp( new UserType);
 						if (false == LoadDataFromString(data, utTemp)) {
-							return false;
+							delete utTemp;  return false;
 						}
 						const int n = utTemp->GetItem("").GetCount();
 						for (int i = 0; i < finded.second.size(); ++i) {
@@ -647,7 +652,7 @@ namespace wiz {
 								finded.second[i]->AddItem("", utTemp->GetItem("").Get(j));
 							}
 						}
-
+						delete utTemp;
 						return true;
 					}
 					else {
@@ -665,7 +670,6 @@ namespace wiz {
 							}
 							finded.second[i]->SetItem(varName, data); /// chk??
 						}
-
 						return true;
 					}
 				}
@@ -829,7 +833,7 @@ namespace wiz {
 				//	getch();
 
 				// Scan + Parse
-				if (false == LoadDataFromFile("output3.txt", globalTemp)) { return false; }
+				if (false == LoadDataFromFile("output3.txt", globalTemp)) { delete globalTemp; return false; }
 				cout << "LoadData End" << endl;
 
 				/// ToDo - Change ^ to ' '
@@ -839,6 +843,7 @@ namespace wiz {
 				}
 				cout << "remove ^ end" << endl;
 				*global = move( *globalTemp );
+				delete globalTemp;
 				return true;
 			}
 			// SaveQuery
