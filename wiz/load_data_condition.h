@@ -241,7 +241,7 @@ namespace wiz {
 			auto Get(const string& var, const string& position, UserType* utPosition, UserType* global) {
 				string valTemp = position;
 				StringTokenizer tokenizer(position, "/");
-				UserType* utTemp = NULL;
+				UserType* utTemp;
 				if (false == tokenizer.hasMoreTokens()) {
 					utTemp = utPosition;
 				}

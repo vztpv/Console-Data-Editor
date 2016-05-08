@@ -229,7 +229,7 @@ namespace wiz {
 				return chk;
 			}
 			/// find userType! not itemList!
-			static std::pair<bool, vector< UserType*> > Find(UserType*& global, const string& position) /// option, option_offset
+			static std::pair<bool, vector< UserType*> > Find(UserType* global, const string& position) /// option, option_offset
 			{
 				vector< UserType* > temp;
 				if (position.empty()) { temp.push_back(global); return{ true, temp }; }

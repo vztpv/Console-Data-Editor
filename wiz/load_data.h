@@ -140,11 +140,11 @@ namespace wiz {
 				utTemp->ShrinkUserTypeList();
 			}
 		public:
-			void Shrink() { Shrink(global); }
+			void Shrink() { Shrink(&global); }
 			/// core
 		private:
 			template <class Reserver>
-			static void _LoadData(ArrayQueue<string>& strVec, Reserver& vecReserver, UserType*& global) // first, strVec.empty() must be true!!?
+			static void _LoadData(ArrayQueue<string>& strVec, Reserver& vecReserver, UserType& global) // first, strVec.empty() must be true!!?
 			{
 				int state = 0;
 				int braceNum = 0;
@@ -155,7 +155,7 @@ namespace wiz {
 
 				bool varOn = false;
 
-				nestedUT[0] = global;
+				nestedUT[0] = &global;
 				{
 					vecReserver(strVec);
 
@@ -494,7 +494,7 @@ namespace wiz {
 			}
 
 		public:
-			static bool LoadDataFromFile(const string& fileName, UserType*& global) /// global should be empty?
+			static bool LoadDataFromFile(const string& fileName, UserType& global) /// global should be empty?
 			{
 				ifstream inFile;
 				inFile.open(fileName, ios::binary);
@@ -502,11 +502,10 @@ namespace wiz {
 				{
 					inFile.close(); return false;
 				}
-				UserType* globalTemp = ( new UserType(*global));
+				UserType globalTemp = global;
 				ArrayQueue<string> strVec;
 
 				try {
-					Utility::Reserve2(inFile, strVec, 10000);
 					InFIleReserver ifReserver(inFile);
 
 					ifReserver.Num = 10000;
@@ -514,19 +513,19 @@ namespace wiz {
 
 					inFile.close();
 				}
-				catch (Error e) { cout << e << endl; inFile.close(); delete globalTemp; return false; }
-				catch (const char* err) { cout << err << endl; inFile.close(); delete globalTemp; return false; }
-				catch (const string& e) { cout << e << endl; inFile.close(); delete globalTemp; return false; }
-				catch (exception e) { cout << e.what() << endl; inFile.close(); delete globalTemp; return false; }
-				catch (...) { cout << "예기치 못한 에러" << endl; inFile.close(); delete globalTemp; return false; }
-				*global = move( *globalTemp );
-				delete globalTemp;
+				catch (Error e) { cout << e << endl; inFile.close(); return false; }
+				catch (const char* err) { cout << err << endl; inFile.close(); return false; }
+				catch (const string& e) { cout << e << endl; inFile.close(); return false; }
+				catch (exception e) { cout << e.what() << endl; inFile.close(); return false; }
+				catch (...) { cout << "예기치 못한 에러" << endl; inFile.close(); return false; }
+				
+				global = move( globalTemp );
 				return true;
 			}
 
-			static bool LoadDataFromString(string str, UserType*& ut)
+			static bool LoadDataFromString(string str, UserType& ut)
 			{
-				UserType* utTemp = (new UserType(*ut));
+				UserType utTemp = ut;
 				str = Utility::PassSharp(str);
 				str = Utility::AddSpace(str);
 				str = Utility::ChangeSpace(str, '^');
@@ -542,32 +541,26 @@ namespace wiz {
 				}
 				try {
 					_LoadData(strVec, NoneReserver(), utTemp);
-					Utility::ReplaceAll(utTemp, '^', ' ');
+					Utility::ReplaceAll(&utTemp, '^', ' ');
 				}
-				catch (Error& e) { cout << e << endl; delete utTemp; return false; }
-				catch (const char* err) { cout << err << endl; delete utTemp; return false; }
-				catch (exception& e) { cout << e.what() << endl; delete utTemp; return false; }
-				catch (...) { cout << "예기치 못한 에러" << endl; delete utTemp; return  false; }
+				catch (Error& e) { cout << e << endl; return false; }
+				catch (const char* err) { cout << err << endl; return false; }
+				catch (exception& e) { cout << e.what() << endl; return false; }
+				catch (...) { cout << "예기치 못한 에러" << endl; return  false; }
 
-				*ut = move(*utTemp);
-				delete utTemp;
+				ut = move(utTemp);
 				return true;
 			}
 		private:
-			UserType* global; // ToDo - remove!!
+			UserType global; // ToDo - remove!!
 		public:
 			// InitQuery or LoadQuery
-			explicit LoadData() : global(NULL) { InitWizDB(); }
+			explicit LoadData() { InitWizDB(); }
 
 			/// need testing!
 			LoadData(const LoadData& ld)
 			{
-				if (ld.global) {
-					global = new UserType(*ld.global);
-				}
-				else {
-					global = NULL;
-				}
+				global = ld.global;
 			}
 			virtual ~LoadData() { AllRemoveWizDB(); }
 
@@ -576,46 +569,28 @@ namespace wiz {
 			{
 				if (this == &ld) { return *this; }
 
-				if (NULL == global && NULL != ld.global)
-				{
-					global = new UserType(*ld.global);
-				}
-				else if (NULL == global && NULL == ld.global) {
-					//
-				}
-				else if (NULL != global && NULL == ld.global) {
-					delete global;
-				}
-				else {
-					*global = *ld.global;
-				}
-
+				global = ld.global;
 				return *this;
 			}
 			//
 			bool InitWizDB() {
-				if (global) { delete global; }
-				global = (new UserType("global"));
+				global = UserType("global");
 				return true;
 			}
 			// allRemove Query 
 			bool AllRemoveWizDB() {
-				if (global) {
-					delete global;
-					global = NULL;
-				}
+				global = UserType("");
 				return true;
 			}
 			// AddQuery AddData, AddUserTypeData?
 			bool AddData(const string& position, const string& data, const string& condition = "") {
-				UserType* utTemp(new UserType("global"));
+				UserType utTemp = UserType("global");
 
 				if (false == LoadDataFromString(data, utTemp))
 				{
-					delete utTemp;
 					return false;
 				}
-				auto finded = Utility::Find(global, position);
+				auto finded = Utility::Find(&global, position);
 				if (finded.first) {
 					for (int i = 0; i < finded.second.size(); ++i) {
 						int item_n = 0;
@@ -625,7 +600,7 @@ namespace wiz {
 						//if (finded.second[i]->GetItem("base_tax").GetCount() > 0) { continue; }
 						///~end
 						if (false == condition.empty()) {
-							Condition cond(condition, finded.second[i], global);
+							Condition cond(condition, finded.second[i], &global);
 
 							while (cond.Next());
 
@@ -636,41 +611,39 @@ namespace wiz {
 							}
 						}
 
-						for (int k = 0; k < utTemp->GetIList().size(); ++k) {
-							if (utTemp->GetIList()[k] == 1) {
-								finded.second[i]->AddItemList(utTemp->GetItemList(item_n));
+						for (int k = 0; k < utTemp.GetIList().size(); ++k) {
+							if (utTemp.GetIList()[k] == 1) {
+								finded.second[i]->AddItemList(utTemp.GetItemList(item_n));
 								item_n++;
 							}
-							else if (utTemp->GetIList()[k] == 2) {
-								finded.second[i]->AddUserTypeList(utTemp->GetUserTypeList(user_n));
+							else if (utTemp.GetIList()[k] == 2) {
+								finded.second[i]->AddUserTypeList(utTemp.GetUserTypeList(user_n));
 								user_n++;
 							}
 						}
 					}
-					delete utTemp;
 					return true;
 				}
 				else {
-					delete utTemp;
 					return false;
 				}
 			}
 			// SetQuery
 			bool SetData(const string& position, const string& varName, const string& data, const string& condition = "")
 			{
-				auto finded = Utility::Find(global, position);
+				auto finded = Utility::Find(&global, position);
 
 				if (finded.first) {
 					/// todo - if varName is "" then data : val val val ... 
 					if (varName == "") {
-						UserType* utTemp( new UserType);
+						UserType utTemp;
 						if (false == LoadDataFromString(data, utTemp)) {
-							delete utTemp;  return false;
+							return false;
 						}
-						const int n = utTemp->GetItem("").GetCount();
+						const int n = utTemp.GetItem("").GetCount();
 						for (int i = 0; i < finded.second.size(); ++i) {
 							if (false == condition.empty()) {
-								Condition cond(condition, finded.second[i], global);
+								Condition cond(condition, finded.second[i], &global);
 
 								while (cond.Next());
 
@@ -683,16 +656,15 @@ namespace wiz {
 							finded.second[i]->RemoveItemList("");
 
 							for (int j = 0; j < n; ++j) {
-								finded.second[i]->AddItem("", utTemp->GetItem("").Get(j));
+								finded.second[i]->AddItem("", utTemp.GetItem("").Get(j));
 							}
 						}
-						delete utTemp;
 						return true;
 					}
 					else {
 						for (int i = 0; i < finded.second.size(); ++i) {
 							if (false == condition.empty()) {
-								Condition cond(condition, finded.second[i], global);
+								Condition cond(condition, finded.second[i], &global);
 
 								while (cond.Next());
 
@@ -714,11 +686,11 @@ namespace wiz {
 			/// 
 			string GetData(const string& position, const string& condition) {
 				string str;
-				auto finded = Utility::Find(global, position);
+				auto finded = Utility::Find(&global, position);
 				if (finded.first) {
 					for (int i = 0; i < finded.second.size(); ++i) {
 						if (false == condition.empty()) {
-							Condition cond(condition, finded.second[i], global);
+							Condition cond(condition, finded.second[i], &global);
 
 							while (cond.Next());
 
@@ -743,11 +715,11 @@ namespace wiz {
 			string GetData(const string& position, const string& varName, const string& condition) // ??
 			{
 				string str;
-				auto finded = Utility::Find(global, position);
+				auto finded = Utility::Find(&global, position);
 				if (finded.first) {
 					for (int i = 0; i < finded.second.size(); ++i) {
 						if (false == condition.empty()) {
-							Condition cond(condition, finded.second[i], global);
+							Condition cond(condition, finded.second[i], &global);
 
 							while (cond.Next());
 
@@ -778,13 +750,13 @@ namespace wiz {
 			}
 			*/
 			bool Remove(const string& position, const string& var, const string& condition) {
-				auto finded = Utility::Find(global, position);
+				auto finded = Utility::Find(&global, position);
 				if (finded.first) {
 					for (int i = 0; i < finded.second.size(); ++i) {
 						UserType* temp = finded.second[i];
 
 						if (false == condition.empty()) {
-							Condition cond(condition, finded.second[i], global);
+							Condition cond(condition, finded.second[i], &global);
 
 							while (cond.Next());
 
@@ -806,7 +778,7 @@ namespace wiz {
 			}
 		
 			bool LoadWizDB(const string& fileName) {
-				UserType* globalTemp(new UserType("global"));
+				UserType globalTemp = UserType("global");
 				// preprocessing
 				Utility::PassSharp(fileName, "output.txt");
 				cout << "PassSharp End" << endl;
@@ -867,17 +839,16 @@ namespace wiz {
 				//	getch();
 
 				// Scan + Parse
-				if (false == LoadDataFromFile("output3.txt", globalTemp)) { delete globalTemp; return false; }
+				if (false == LoadDataFromFile("output3.txt", globalTemp)) { return false; }
 				cout << "LoadData End" << endl;
 
 				/// ToDo - Change ^ to ' '
 				{
 					// for all, remove ^ in val
-					Utility::ReplaceAll(globalTemp, '^', ' ');
+					Utility::ReplaceAll(&globalTemp, '^', ' ');
 				}
 				cout << "remove ^ end" << endl;
-				*global = move( *globalTemp );
-				delete globalTemp;
+				global = move( globalTemp );
 				return true;
 			}
 			// SaveQuery
@@ -886,7 +857,7 @@ namespace wiz {
 				outFile.open(fileName + "temp", ios::binary);
 				if (outFile.fail()) { return false; }
 
-				outFile << *global; /// SaveFile( fileName, data, use option 1 or 2? )
+				outFile << global; /// SaveFile( fileName, data, use option 1 or 2? )
 
 				outFile.close();
 
@@ -929,7 +900,7 @@ namespace wiz {
 
 			bool ChkData()
 			{
-				return Utility::ChkData(global);
+				return Utility::ChkData(&global);
 			}
 		};
 	}
