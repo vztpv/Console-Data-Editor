@@ -557,10 +557,44 @@ namespace wiz {
 			UserType* global; // ToDo - remove!!
 		public:
 			// InitQuery or LoadQuery
-			LoadData() { InitWizDB(); }
+			explicit LoadData() : global(NULL) { InitWizDB(); }
+
+			/// need testing!
+			LoadData(const LoadData& ld)
+			{
+				if (ld.global) {
+					global = new UserType(*ld.global);
+				}
+				else {
+					global = NULL;
+				}
+			}
 			virtual ~LoadData() { AllRemoveWizDB(); }
+
+			/// need testing!
+			LoadData& operator=(const LoadData& ld)
+			{
+				if (this == &ld) { return *this; }
+
+				if (NULL == global && NULL != ld.global)
+				{
+					global = new UserType(*ld.global);
+				}
+				else if (NULL == global && NULL == ld.global) {
+					//
+				}
+				else if (NULL != global && NULL == ld.global) {
+					delete global;
+				}
+				else {
+					*global = *ld.global;
+				}
+
+				return *this;
+			}
 			//
 			bool InitWizDB() {
+				if (global) { delete global; }
 				global = (new UserType("global"));
 				return true;
 			}
