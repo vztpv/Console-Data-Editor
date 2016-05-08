@@ -208,7 +208,7 @@ namespace wiz {
 				return{ false, -1 };
 			}
 
-			static bool ChkData(const shared_ptr<UserType> utTemp)
+			static bool ChkData(const UserType* utTemp)
 			{
 				bool chk = true;
 				const int itemListSize = utTemp->GetItemListSize();
@@ -229,18 +229,18 @@ namespace wiz {
 				return chk;
 			}
 			/// find userType! not itemList!
-			static std::pair<bool, vector< shared_ptr<UserType>> > Find(shared_ptr<UserType>& global, const string& position) /// option, option_offset
+			static std::pair<bool, vector< UserType*> > Find(UserType*& global, const string& position) /// option, option_offset
 			{
-				vector< shared_ptr<UserType> > temp;
+				vector< UserType* > temp;
 				if (position.empty()) { temp.push_back(global); return{ true, temp }; }
 
 				StringTokenizer tokenizer(position, "/");
 				vector<string> strVec;
-				Deck<pair< shared_ptr<UserType>, int>> utDeck;
-				pair<shared_ptr<UserType>, int> utTemp;
+				Deck<pair< UserType*, int>> utDeck;
+				pair<UserType*, int> utTemp;
 				utTemp.first = global;
 				utTemp.second = 0;
-				TypeArray<shared_ptr<UserType>> utTemp2;
+				TypeArray<UserType*> utTemp2;
 
 				for (int i = 0; i < tokenizer.countTokens(); ++i) {
 					strVec.push_back(tokenizer.nextToken());
@@ -257,13 +257,13 @@ namespace wiz {
 
 					//	if (false == exist && utDeck.empty() && utTemp.second < strVec.size()  && false == utTemp.first->GetUserTypeItemRef(strVec[utTemp.second], utTemp2))
 					//	{
-					//		return{ false, vector<shared_ptr<UserType>>() };
+					//		return{ false, vector<UserType*>() };
 					//	}
 					if (utTemp.second < strVec.size() && strVec[utTemp.second] == "$")
 					{
 						for (int j = utTemp.first->GetUserTypeListSize() - 1; j >= 0; --j) {
 							for (int k = utTemp.first->GetUserTypeList(j).GetCount() - 1; k >= 0; --k) {
-								shared_ptr<UserType> x = utTemp.first->GetUserTypeList(j).Get(k);
+								UserType* x = utTemp.first->GetUserTypeList(j).Get(k);
 								utDeck.push_front(make_pair(x, utTemp.second + 1));
 							}
 						}
@@ -279,7 +279,7 @@ namespace wiz {
 						temp.push_back(utTemp.first);
 					}
 				}
-				if (false == exist) { return{ false, vector<shared_ptr<UserType>>() }; }
+				if (false == exist) { return{ false, vector<UserType*>() }; }
 				return{ true, temp };
 			}
 		public:
@@ -367,7 +367,7 @@ namespace wiz {
 				}
 			}
 
-			static void ReplaceAll(shared_ptr<UserType> temp, const char target_ch, const char result_ch) {
+			static void ReplaceAll(UserType* temp, const char target_ch, const char result_ch) {
 				const int itemListSize = temp->GetItemListSize();
 				const int userTypeListSize = temp->GetUserTypeListSize();
 

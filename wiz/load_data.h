@@ -122,7 +122,7 @@ namespace wiz {
 		{
 		private:
 			// need to fix??
-			void Shrink(shared_ptr<UserType> utTemp ) {
+			void Shrink(UserType* utTemp ) {
 				const int itemListSize = utTemp->GetItemListSize();
 				for (int i = 0; i < itemListSize; ++i) {
 					utTemp->GetItemList(i).Shrink();
@@ -144,13 +144,13 @@ namespace wiz {
 			/// core
 		private:
 			template <class Reserver>
-			static void _LoadData(ArrayQueue<string>& strVec, Reserver& vecReserver, shared_ptr<UserType>& global) // first, strVec.empty() must be true!!?
+			static void _LoadData(ArrayQueue<string>& strVec, Reserver& vecReserver, UserType*& global) // first, strVec.empty() must be true!!?
 			{
 				int state = 0;
 				int braceNum = 0;
 				stack<int> state_reserve;
 				stack<int> do_reserve;
-				vector< shared_ptr<UserType> > nestedUT(1);
+				vector< UserType* > nestedUT(1);
 				string var1, var2, val;
 
 				bool varOn = false;
@@ -213,7 +213,7 @@ namespace wiz {
 
 							///
 							nestedUT[braceNum]->AddUserTypeItem(UserType(var2));
-							TypeArray<shared_ptr<UserType>> pTemp;
+							TypeArray<UserType*> pTemp;
 							nestedUT[braceNum]->GetUserTypeItemRef(var2, pTemp);
 
 							braceNum++;
@@ -275,7 +275,7 @@ namespace wiz {
 							Utility::Pop(strVec);
 
 							nestedUT[braceNum]->AddUserTypeItem(UserType(""));
-							TypeArray<shared_ptr<UserType>> pTemp;
+							TypeArray<UserType*> pTemp;
 							nestedUT[braceNum]->GetUserTypeItemRef("", pTemp);
 
 							braceNum++;
@@ -378,7 +378,7 @@ namespace wiz {
 							///
 							{
 								nestedUT[braceNum]->AddUserTypeItem(UserType(var2));
-								TypeArray<shared_ptr<UserType>> pTemp;
+								TypeArray<UserType*> pTemp;
 								nestedUT[braceNum]->GetUserTypeItemRef(var2, pTemp);
 
 								braceNum++;
@@ -494,7 +494,7 @@ namespace wiz {
 			}
 
 		public:
-			static bool LoadDataFromFile(const string& fileName, shared_ptr<UserType>& global) /// global should be empty?
+			static bool LoadDataFromFile(const string& fileName, UserType*& global) /// global should be empty?
 			{
 				ifstream inFile;
 				inFile.open(fileName, ios::binary);
@@ -502,7 +502,7 @@ namespace wiz {
 				{
 					inFile.close(); return false;
 				}
-				shared_ptr<UserType> globalTemp = shared_ptr<UserType>( new UserType(*global));
+				UserType* globalTemp = ( new UserType(*global));
 				ArrayQueue<string> strVec;
 
 				try {
@@ -519,13 +519,13 @@ namespace wiz {
 				catch (const string& e) { cout << e << endl; inFile.close(); return false; }
 				catch (exception e) { cout << e.what() << endl; inFile.close(); return false; }
 				catch (...) { cout << "예기치 못한 에러" << endl; inFile.close(); return false; }
-				global = ( globalTemp );
+				*global = move( *globalTemp );
 				return true;
 			}
 
-			static bool LoadDataFromString(string str, shared_ptr<UserType>& ut)
+			static bool LoadDataFromString(string str, UserType*& ut)
 			{
-				shared_ptr<UserType> utTemp = shared_ptr<UserType>(new UserType(*ut));
+				UserType* utTemp = (new UserType(*ut));
 				str = Utility::PassSharp(str);
 				str = Utility::AddSpace(str);
 				str = Utility::ChangeSpace(str, '^');
@@ -548,28 +548,31 @@ namespace wiz {
 				catch (exception& e) { cout << e.what() << endl; return false; }
 				catch (...) { cout << "예기치 못한 에러" << endl; return  false; }
 
-				ut = (utTemp);
+				*ut = move(*utTemp);
 				return true;
 			}
 		private:
-			shared_ptr<UserType> global; // ToDo - remove!!
+			UserType* global; // ToDo - remove!!
 		public:
 			// InitQuery or LoadQuery
 			LoadData() { InitWizDB(); }
 			virtual ~LoadData() { AllRemoveWizDB(); }
 			//
 			bool InitWizDB() {
-				global = shared_ptr<UserType>(new UserType("global"));
+				global = (new UserType("global"));
 				return true;
 			}
 			// allRemove Query 
 			bool AllRemoveWizDB() {
-				global = shared_ptr<UserType>(NULL);
+				if (global) {
+					delete global;
+					global = NULL;
+				}
 				return true;
 			}
 			// AddQuery AddData, AddUserTypeData?
 			bool AddData(const string& position, const string& data, const string& condition = "") {
-				shared_ptr<UserType> utTemp(new UserType("global"));
+				UserType* utTemp(new UserType("global"));
 
 				if (false == LoadDataFromString(data, utTemp))
 				{
@@ -621,7 +624,7 @@ namespace wiz {
 				if (finded.first) {
 					/// todo - if varName is "" then data : val val val ... 
 					if (varName == "") {
-						shared_ptr<UserType> utTemp( new UserType);
+						UserType* utTemp( new UserType);
 						if (false == LoadDataFromString(data, utTemp)) {
 							return false;
 						}
@@ -740,7 +743,7 @@ namespace wiz {
 				auto finded = Utility::Find(global, position);
 				if (finded.first) {
 					for (int i = 0; i < finded.second.size(); ++i) {
-						shared_ptr<UserType> temp = finded.second[i];
+						UserType* temp = finded.second[i];
 
 						if (false == condition.empty()) {
 							Condition cond(condition, finded.second[i], global);
@@ -765,7 +768,7 @@ namespace wiz {
 			}
 		
 			bool LoadWizDB(const string& fileName) {
-				shared_ptr<UserType> globalTemp(new UserType("global"));
+				UserType* globalTemp(new UserType("global"));
 				// preprocessing
 				Utility::PassSharp(fileName, "output.txt");
 				cout << "PassSharp End" << endl;
@@ -835,7 +838,7 @@ namespace wiz {
 					Utility::ReplaceAll(globalTemp, '^', ' ');
 				}
 				cout << "remove ^ end" << endl;
-				global = ( globalTemp );
+				*global = move( *globalTemp );
 				return true;
 			}
 			// SaveQuery

@@ -18,11 +18,11 @@ namespace wiz {
 			ArrayStack<string> tokenStack;
 			string condition;
 			int i;
-			shared_ptr<UserType> position; // need set, get ter!!
-			shared_ptr<UserType> global;
+			UserType* position; // need set, get ter!!
+			UserType* global;
 			int option;
 		public:
-			explicit Condition(const string& condition, shared_ptr<UserType> position, shared_ptr<UserType> global, const int option = 0)
+			explicit Condition(const string& condition, UserType* position, UserType* global, const int option = 0)
 				: braceNum(0), condition(condition), i(0), position(position), option(option)
 			{
 				Init(condition);
@@ -238,10 +238,10 @@ namespace wiz {
 				return "ERROR";
 			}
 
-			auto Get(const string& var, const string& position, shared_ptr<UserType> utPosition, shared_ptr<UserType> global) {
+			auto Get(const string& var, const string& position, UserType* utPosition, UserType* global) {
 				string valTemp = position;
 				StringTokenizer tokenizer(position, "/");
-				shared_ptr<UserType> utTemp = NULL;
+				UserType* utTemp = NULL;
 				if (false == tokenizer.hasMoreTokens()) {
 					utTemp = utPosition;
 				}
@@ -256,7 +256,7 @@ namespace wiz {
 				}
 				return Utility::Find(utTemp, valTemp);
 			}
-			string GetValue(const string& op, const string& var, const string& val, shared_ptr<UserType> utPosition, shared_ptr<UserType> global, const string& option = "0")
+			string GetValue(const string& op, const string& var, const string& val, UserType* utPosition, UserType* global, const string& option = "0")
 			{
 				if (NULL == utPosition) { return "ERROR"; }
 				if ("EXIST" == op) { /// option == 1?	
@@ -292,7 +292,7 @@ namespace wiz {
 				return "ERROR";
 			}
 			string GetValue(const string& op, const string& var1, const string& position1, const string& var2, const string& position2,
-				shared_ptr<UserType> utPosition, shared_ptr<UserType> global, const string& option = "0")
+				UserType* utPosition, UserType* global, const string& option = "0")
 			{
 				// COMP<, COMP>, EQ, NOTEQ
 				if (NULL == utPosition) { return "ERROR"; }
