@@ -114,23 +114,6 @@ namespace wiz {
 				return count;
 			}
 		public:
-			void Shrink()
-			{
-				if (count == arr.size()) { return; }
-				if (count > 0) {
-					Array<T> temp(count);
-					
-					for (int i = 0; i < count; ++i) {
-						temp[i] = move( this->arr[i] );
-					}
-
-					this->arr = move(temp);
-				}
-				else {
-					arr = Array<T>();
-				}
-			}
-		public:
 			TypeArray<T>& operator=(const TypeArray<T>& ta)
 			{
 				Type::operator=(ta);
@@ -164,30 +147,6 @@ namespace wiz {
 		};
 
 		class UserType : public Type {
-		public:
-			void ShrinkItemList()
-			{
-				itemList.Shrink();
-				wiz::Dictionary< TypeArray<string> > temp;
-				for (int i = 0; i < itemList.GetCount(); ++i) {
-					if (itemList[i].GetCount() > 0) {
-						temp.PushBack(itemList[i]);
-					}
-				}
-				itemList = move(temp);
-			}
-			void ShrinkUserTypeList()
-			{
-				userTypeList.Shrink();
-
-				wiz::Dictionary< TypeArray<UserType*> > temp;
-				for (int i = 0; i < userTypeList.GetCount(); ++i) {
-					if (userTypeList[i].GetCount() > 0) {
-						temp.PushBack(userTypeList[i]);
-					}
-				}
-				userTypeList = move(temp);
-			}
 		public:
 			const vector<int>& GetIList() const { return ilist; }
 			vector<int>& GetIList() { return ilist; }

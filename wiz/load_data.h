@@ -120,27 +120,6 @@ namespace wiz {
 
 		class LoadData
 		{
-		private:
-			// need to fix??
-			void Shrink(UserType* utTemp ) {
-				const int itemListSize = utTemp->GetItemListSize();
-				for (int i = 0; i < itemListSize; ++i) {
-					utTemp->GetItemList(i).Shrink();
-				}
-				utTemp->ShrinkItemList();
-		
-				const int UserTypeSize = utTemp->GetUserTypeListSize();
-				for (int i = 0; i < UserTypeSize; ++i) {
-					const int UserType_itemListSize = utTemp->GetUserTypeList(i).GetCount();
-					for (int j = 0; j < UserType_itemListSize; ++j) {
- 						Shrink(utTemp->GetUserTypeList(i).Get(j));
-					}
-					utTemp->GetUserTypeList(i).Shrink();
-				}
-				utTemp->ShrinkUserTypeList();
-			}
-		public:
-			void Shrink() { Shrink(&global); }
 			/// core
 		private:
 			template <class Reserver>
