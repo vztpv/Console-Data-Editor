@@ -772,19 +772,34 @@ namespace wiz {
 					outFile.open("output3.txt");
 
 					string temp;
-					vector<string> strVec;
-					
-					//while (getline(inFile, temp))
+
+					/// chk maybe has bugs!, - "abcd" - ok, "abc""def" - not ok.
 					while (inFile >> temp)
 					{
-						if (temp.empty() || temp == " ") { continue; }
-						for (int i = 0; i < temp.size(); ++i) {
-							if (temp[i] == '^') {
-								outFile << ' ';
+						if (temp.empty()) { continue; }
+						int idx = 0;
+						if ((idx = temp.find('\"')) != string::npos) {
+							if ((idx = temp.find('\"', idx + 1)) != string::npos) {
+								outFile << temp;
 							}
 							else {
-								outFile << temp[i];
+								outFile << temp;
+								outFile << '^';
+								
+								while (inFile >> temp) {
+									if ((idx = temp.find('\"')) != string::npos) {
+										outFile << temp; outFile << " ";
+										break;
+									}
+									else {
+										outFile << temp;
+										outFile << '^';
+									}
+								}
 							}
+						}
+						else {
+							outFile << temp;
 						}
 						outFile << " ";
 					}
