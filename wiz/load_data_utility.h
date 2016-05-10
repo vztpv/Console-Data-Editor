@@ -18,8 +18,8 @@ namespace wiz {
 				ifstream inFile;
 				ofstream outFile;
 
-				inFile.open(file1Name, ios::binary);
-				outFile.open(file2Name, ios::binary);
+				inFile.open(file1Name);
+				outFile.open(file2Name);
 
 				string temp;
 				vector<string> strVec;
@@ -56,9 +56,9 @@ namespace wiz {
 				ifstream inFile;
 				ofstream outFile;
 
-				inFile.open(file1Name, ios::binary);
+				inFile.open(file1Name);
 				if (inFile.fail()) { return false; }
-				outFile.open(file2Name, ios::binary);
+				outFile.open(file2Name);
 				if (outFile.fail()) { inFile.close(); return false; }
 
 				string temp;

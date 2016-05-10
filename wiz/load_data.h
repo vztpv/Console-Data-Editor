@@ -476,7 +476,7 @@ namespace wiz {
 			static bool LoadDataFromFile(const string& fileName, UserType& global) /// global should be empty?
 			{
 				ifstream inFile;
-				inFile.open(fileName, ios::binary);
+				inFile.open(fileName);
 				if (true == inFile.fail())
 				{
 					inFile.close(); return false;
@@ -768,8 +768,8 @@ namespace wiz {
 					ifstream inFile;
 					ofstream outFile;
 
-					inFile.open("output2.txt", ios::binary);
-					outFile.open("output3.txt", ios::binary);
+					inFile.open("output2.txt");
+					outFile.open("output3.txt");
 
 					string temp;
 					vector<string> strVec;
@@ -795,7 +795,7 @@ namespace wiz {
 
 			/*	{
 					ifstream inFile;
-					inFile.open("output3.txt", ios::binary); // ~2
+					inFile.open("output3.txt"); // ~2
 
 					int count = 0;
 					int count2 = 0;
@@ -831,20 +831,26 @@ namespace wiz {
 				return true;
 			}
 			// SaveQuery
-			bool SaveWizDB(const string& fileName) {
+			bool SaveWizDB(const string& fileName, const int option=0) { /// , int option
 				ofstream outFile;
-				outFile.open(fileName + "temp", ios::binary);
+				outFile.open(fileName + "temp");
 				if (outFile.fail()) { return false; }
 
-				outFile << global; /// SaveFile( fileName, data, use option 1 or 2? )
+				/// saveFile
+				if (option == 0)
+					outFile << global; /// SaveFile( fileName, data, use option 1 or 2? )
+				else if (option == 1)
+					global.Save1(outFile); // cf) friend?
+				else if (option == 2)
+					global.Save2(outFile);
 
 				outFile.close();
 
 				{ // for eu4
 					ifstream inFile;
 					ofstream outFile;
-					inFile.open(fileName + "temp", ios::binary);
-					outFile.open(fileName, ios::binary);
+					inFile.open(fileName + "temp");
+					outFile.open(fileName);
 					string temp;
 					int line_size = 0;
 					int line_count = 0;
@@ -852,7 +858,7 @@ namespace wiz {
 						while (getline(inFile, temp)) { line_size++; }
 						inFile.close();
 					}
-					inFile.open(fileName + "temp", ios::binary);
+					inFile.open(fileName + "temp");
 					for (int i = 0; i < line_size; ++i)
 					{
 						getline(inFile, temp);

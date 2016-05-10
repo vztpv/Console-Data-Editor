@@ -388,7 +388,78 @@ namespace wiz {
 				}
 				return false;
 			}
+		private:
+			/// save1 - like EU4 savefiles.
+			void Save1(ostream& stream, UserType* ut) {
+				int itemListCount = 0;
+				int userTypeListCount = 0;
+
+				for (int i = 0; i < ut->ilist.size(); ++i) {
+					//cout << "ItemList" << endl;
+					if (ut->ilist[i] == 1) {
+						for (int j = 0; j < ut->itemList[itemListCount].GetCount(); j++) {
+							if (ut->itemList[itemListCount].GetName() != "")
+								stream << ut->itemList[itemListCount].GetName() << "=";
+							stream << ut->itemList[itemListCount].Get(j);
+							if (j != ut->itemList[itemListCount].GetCount() - 1)
+								stream << " ";
+						}
+						stream << "\n";
+						itemListCount++;
+					}
+					else if (ut->ilist[i] == 2) {
+						// cout << "UserTypeList" << endl;
+						for (int j = 0; j < ut->userTypeList[userTypeListCount].GetCount(); j++) {
+							if (ut->userTypeList[userTypeListCount].GetName() != "")
+								stream << ut->userTypeList[userTypeListCount].GetName() << "=";
+							stream << "{\n";
+							Save1(stream, ut->userTypeList[userTypeListCount].Get(j));
+							stream << "\n";
+							stream << " } " << "\n";
+						}
+						userTypeListCount++;
+					}
+				}
+			}
+			/// savw2 - for more seed loading data!
+			void Save2(ostream& stream, UserType* ut) {
+				int itemListCount = 0;
+				int userTypeListCount = 0;
+
+				for (int i = 0; i < ut->ilist.size(); ++i) {
+					//cout << "ItemList" << endl;
+					if (ut->ilist[i] == 1) {
+						for (int j = 0; j < ut->itemList[itemListCount].GetCount(); j++) {
+							if (ut->itemList[itemListCount].GetName() != "")
+								stream << ut->itemList[itemListCount].GetName() << " = ";
+							stream << ut->itemList[itemListCount].Get(j);
+							if (j != ut->itemList[itemListCount].GetCount() - 1)
+								stream << " ";
+						}
+						stream << "\n";
+						itemListCount++;
+					}
+					else if (ut->ilist[i] == 2) {
+						// cout << "UserTypeList" << endl;
+						for (int j = 0; j < ut->userTypeList[userTypeListCount].GetCount(); j++) {
+							if (ut->userTypeList[userTypeListCount].GetName() != "")
+								stream << ut->userTypeList[userTypeListCount].GetName() << " = ";
+							stream << " {\n";
+							Save2(stream, ut->userTypeList[userTypeListCount].Get(j));
+							stream << "\n";
+							stream << " } " << "\n";
+						}
+						userTypeListCount++;
+					}
+				}
+			}
 		public:
+			void Save1(ostream& stream) {
+				Save1(stream, this);
+			}
+			void Save2(ostream& stream) {
+				Save2(stream, this);
+			}
 			string ToString()const
 			{
 				string temp;
