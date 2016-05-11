@@ -2,6 +2,7 @@
 #ifndef LOAD_DATA_H_INCLUDED
 #define LOAD_DATA_H_INCLUDED
 
+
 #include <vector>
 #include <stack>
 #include <fstream>
@@ -564,6 +565,7 @@ namespace wiz {
 			// AddQuery AddData, AddUserTypeData?
 			bool AddData(const string& position, const string& data, const string& condition = "") {
 				UserType utTemp = UserType("global");
+				bool isTrue = false;
 
 				if (false == LoadDataFromString(data, utTemp))
 				{
@@ -600,8 +602,9 @@ namespace wiz {
 								user_n++;
 							}
 						}
+						isTrue = true;
 					}
-					return true;
+					return isTrue;
 				}
 				else {
 					return false;
@@ -611,6 +614,7 @@ namespace wiz {
 			bool SetData(const string& position, const string& varName, const string& data, const string& condition = "")
 			{
 				auto finded = Utility::Find(&global, position);
+				bool isTrue = false;
 
 				if (finded.first) {
 					/// todo - if varName is "" then data : val val val ... 
@@ -637,8 +641,9 @@ namespace wiz {
 							for (int j = 0; j < n; ++j) {
 								finded.second[i]->AddItem("", utTemp.GetItem("").Get(j));
 							}
+							isTrue = true;
 						}
-						return true;
+						return isTrue;
 					}
 					else {
 						for (int i = 0; i < finded.second.size(); ++i) {
@@ -654,8 +659,9 @@ namespace wiz {
 								}
 							}
 							finded.second[i]->SetItem(varName, data); /// chk??
+							isTrue = true;
 						}
-						return true;
+						return isTrue;
 					}
 				}
 				else {
@@ -730,6 +736,8 @@ namespace wiz {
 			*/
 			bool Remove(const string& position, const string& var, const string& condition) {
 				auto finded = Utility::Find(&global, position);
+				bool isTrue = false;
+
 				if (finded.first) {
 					for (int i = 0; i < finded.second.size(); ++i) {
 						UserType* temp = finded.second[i];
@@ -748,8 +756,9 @@ namespace wiz {
 
 						temp->RemoveItemList(var);
 						temp->RemoveUserTypeList(var);
+						isTrue = true;
 					}
-					return true;
+					return isTrue;
 				}
 				else {
 					return false;
@@ -846,22 +855,22 @@ namespace wiz {
 				return true;
 			}
 			// SaveQuery
-			bool SaveWizDB(const string& fileName, const int option=0) { /// , int option
+			bool SaveWizDB(const string& fileName, const string option="0") { /// , int option
 				ofstream outFile;
 				outFile.open(fileName + "temp");
 				if (outFile.fail()) { return false; }
 
 				/// saveFile
-				if (option == 0)
+				if (option == "0")
 					outFile << global; /// SaveFile( fileName, data, use option 1 or 2? )
-				else if (option == 1)
+				else if (option == "1") // for eu4.
 					global.Save1(outFile); // cf) friend?
-				else if (option == 2)
+				else if (option == "2")
 					global.Save2(outFile);
 
 				outFile.close();
 
-				{ // for eu4
+				{ // for eu4, last line remove!
 					ifstream inFile;
 					ofstream outFile;
 					inFile.open(fileName + "temp");
@@ -898,6 +907,29 @@ namespace wiz {
 				return true;
 			}
 
+			/// To Do - ExistItem, ExistUserType, SetUserType? GetUserType?
+			bool ExistData(const string& position, const string& varName, const string& condition) // ??
+			{
+				int count = 0;
+				auto finded = Utility::Find(&global, position);
+				if (finded.first) {
+					for (int i = 0; i < finded.second.size(); ++i) {
+						if (false == condition.empty()) {
+							Condition cond(condition, finded.second[i], &global);
+
+							while (cond.Next());
+
+							if ("TRUE" != cond.Now()[0])
+							{
+								//	cout << cond.Now()[0] << endl;
+								continue;
+							}
+						}
+						count = count + ( finded.second[i]->GetItem(varName).GetCount() );
+					}
+				}
+				return 0 != count;
+			}
 			bool ChkData()
 			{
 				return Utility::ChkData(&global);
