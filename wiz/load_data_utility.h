@@ -110,8 +110,27 @@ namespace wiz {
 				return{ chk, false };
 			}
 
-			/// must lineNum > 0
+
 			static pair<bool, int> Reserve2(ifstream& inFile, ArrayQueue<string>& strVec, const int num = 1)
+			{
+				string temp;
+				int count = 0;
+
+				for (int i = 0; i < num && (inFile >> temp); ++i) {
+					temp = PassSharp(temp);
+					temp = AddSpace(temp);
+					temp = ChangeSpace(temp, '^');
+					StringTokenizer tokenizer(temp);
+					while (tokenizer.hasMoreTokens()) {
+						strVec.push(tokenizer.nextToken());
+					}
+					count++;
+				}
+				return{ count > 0, count };
+			}
+
+			/// must lineNum > 0
+			static pair<bool, int> Reserve(ifstream& inFile, ArrayQueue<string>& strVec, const int num = 1)
 			{
 				string temp;
 				int count = 0;

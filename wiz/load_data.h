@@ -817,11 +817,11 @@ namespace wiz {
 			bool LoadWizDB(const string& fileName) {
 				UserType globalTemp = UserType("global");
 				// preprocessing
-				Utility::PassSharp(fileName, "output.txt");
-				cout << "PassSharp End" << endl;
-				Utility::AddSpace("output.txt", "output2.txt");
-				cout << "AddSpace End" << endl;
-
+				//Utility::PassSharp(fileName, "output.txt");
+				//cout << "PassSharp End" << endl;
+				//Utility::AddSpace("output.txt", "output2.txt");
+				//cout << "AddSpace End" << endl;
+				/*
 				{
 					ifstream inFile;
 					ofstream outFile;
@@ -865,7 +865,7 @@ namespace wiz {
 					outFile.close();
 				}
 				cout << "space in \"~\" -> ^ End" << endl;
-
+				*/
 			/*	{
 					ifstream inFile;
 					inFile.open("output3.txt"); // ~2
@@ -890,8 +890,8 @@ namespace wiz {
 				*/
 				//	getch();
 
-				// Scan + Parse
-				if (false == LoadDataFromFile("output3.txt", globalTemp)) { return false; }
+				// Scan + Parse  // output3.txt
+				if (false == LoadDataFromFile(fileName, globalTemp)) { return false; }
 				cout << "LoadData End" << endl;
 
 				/// ToDo - Change ^ to ' '
