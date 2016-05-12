@@ -139,7 +139,10 @@ namespace wiz {
 				string temp;
 
 				for (int i = 0; i < GetCount(); ++i) {
-					temp = temp + arr[i] + "\n";
+					temp = temp + arr[i];
+					if (i != GetCount() - 1) {
+						temp = temp + "/";
+					}
 				}
 
 				return temp;
@@ -491,6 +494,8 @@ namespace wiz {
 					for (int j = 0; j < userTypeList[userTypeListCount].GetCount(); j++) {
 						if (userTypeList[userTypeListCount].GetName() != "")
 							temp = temp + userTypeList[userTypeListCount].GetName();
+						else
+							temp = temp + " "; // chk!! cf) wiz::load_data::Utility::Find function...
 						if (j != userTypeList[userTypeListCount].GetCount() - 1)
 							temp = temp + "/";
 					}

@@ -244,7 +244,7 @@ namespace wiz {
 
 				for (int i = 0; i < tokenizer.countTokens(); ++i) {
 					strVec.push_back(tokenizer.nextToken());
-					if (" " == strVec[strVec.size() - 1])
+					if (" " == strVec[strVec.size() - 1]) /// chk!!
 					{
 						strVec[strVec.size() - 1] = "";
 					}
