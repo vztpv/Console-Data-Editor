@@ -693,7 +693,56 @@ namespace wiz {
 					return "";
 				}
 			}
+			string GetItemListData(const string& position, const string& condition)
+			{
+				string str;
+				auto finded = Utility::Find(&global, position);
+				if (finded.first) {
+					for (int i = 0; i < finded.second.size(); ++i) {
+						if (false == condition.empty()) {
+							Condition cond(condition, finded.second[i], &global);
 
+							while (cond.Next());
+
+							if ("TRUE" != cond.Now()[0])
+							{
+								//	cout << cond.Now()[0] << endl;
+								continue;
+							}
+						}
+						str = str + finded.second[i]->ItemListToString() + "\n";
+					}
+					return str;
+				}
+				else {
+					return "";
+				}
+			}
+			string GetUserTypeListData(const string& position, const string& condition) 
+			{
+				string str;
+				auto finded = Utility::Find(&global, position);
+				if (finded.first) {
+					for (int i = 0; i < finded.second.size(); ++i) {
+						if (false == condition.empty()) {
+							Condition cond(condition, finded.second[i], &global);
+
+							while (cond.Next());
+
+							if ("TRUE" != cond.Now()[0])
+							{
+								//	cout << cond.Now()[0] << endl;
+								continue;
+							}
+						}
+						str = str + finded.second[i]->UserTypeListToString() + "\n";
+					}
+					return str;
+				}
+				else {
+					return "";
+				}
+			}
 			/// varName = val - do
 			/// varName = { val val val } - GetData(position+"/varName", ""); 
 			/// varName = { var = val } - GetData(position+"/varname", var);

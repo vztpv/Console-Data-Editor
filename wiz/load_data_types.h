@@ -460,6 +460,48 @@ namespace wiz {
 			void Save2(ostream& stream) {
 				Save2(stream, this);
 			}
+			string ItemListToString()const
+			{
+				string temp;
+				int itemListCount = 0;
+				
+				for (int i = 0; i < itemList.GetCount(); ++i) {
+					for (int j = 0; j < itemList[itemListCount].GetCount(); j++) {
+						if (itemList[itemListCount].GetName() != "")
+							temp = temp + itemList[itemListCount].GetName() + " = ";
+						temp = temp + itemList[itemListCount].Get(j);
+						if (j != itemList[itemListCount].GetCount() - 1) {
+							temp = temp + "/";
+						}
+					}
+					if (i != itemList.GetCount() - 1)
+					{
+						temp = temp + "/";
+					}
+					itemListCount++;
+				}
+				return temp;
+			}
+			string UserTypeListToString()const
+			{
+				string temp;
+				int userTypeListCount = 0;
+
+				for (int i = 0; i < userTypeList.GetCount(); ++i) {
+					for (int j = 0; j < userTypeList[userTypeListCount].GetCount(); j++) {
+						if (userTypeList[userTypeListCount].GetName() != "")
+							temp = temp + userTypeList[userTypeListCount].GetName();
+						if (j != userTypeList[userTypeListCount].GetCount() - 1)
+							temp = temp + "/";
+					}
+					if (i != itemList.GetCount() - 1)
+					{
+						temp = temp + "/";
+					}
+					userTypeListCount++;
+				}
+				return temp;
+			}
 			string ToString()const
 			{
 				string temp;
