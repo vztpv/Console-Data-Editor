@@ -116,7 +116,7 @@ namespace wiz {
 				string temp;
 				int count = 0;
 
-				for (int i = 0; i < num && (inFile >> temp); ++i) {
+				for (int i = 0; i < num && (getline(inFile,temp)); ++i) {
 					temp = PassSharp(temp);
 					temp = AddSpace(temp);
 					temp = ChangeSpace(temp, '^');
@@ -347,7 +347,7 @@ namespace wiz {
 				}
 				return temp;
 			}
-			/// need to rename!
+			/// need to rename!, has bug..
 			static string ChangeSpace(const string& str, const char result_ch) {
 				string temp;
 				int state = 0;
