@@ -62,10 +62,8 @@ void test2() {
 
 #include <conio.h>
 
-
-int main(void)
+void eu4Test()
 {
-//	test2();
 
 	wiz::load_data::LoadData global;
 	for (int i = 0; i < 1; ++i) {
@@ -79,19 +77,40 @@ int main(void)
 		if (false == global.AddData("provinces/$/", "base_tax_is_5.000 = yes",
 			"COMP> = { base_tax / 5.000 / 0 }")) {
 			cout << "no found.." << endl;
-			_getch();
+			//_getch();
 		}
 
 		//LoadData::Remove("provinces/$/", "history", "NOTEQ = { core / \"RUS\" / }", 2); // 모든 경우에 다 다른다면?
 		global.Remove("provinces/$/", "history", "AND = { EQ = { core / \"RUS\" / 1 }"
 			"NOTEQ = { core / \"PLT\" / 2 } }");
-		cout << global.GetData("provinces/-1", "TRUE") << endl;
+		cout << global.GetData("provinces/-100", "TRUE") << endl;
 
-		cout << global.GetItemListData("provinces/-1", "TRUE") << endl;
+		cout << global.GetItemListData("provinces/-100", "TRUE") << endl;
 
-		cout << global.GetUserTypeListData("provinces/-1", "TRUE") << endl;
+		cout << global.GetUserTypeListData("provinces/-100", "TRUE") << endl;
 
 		global.SaveWizDB("result.eu4", "1"); /// , 0
+		cout << "save end" << endl;
+
+		global.AllRemoveWizDB();
+
+		cout << "all end" << endl;
+	}
+}
+int main(void)
+{
+//	test2();
+
+	wiz::load_data::LoadData global;
+	for (int i = 0; i < 1; ++i) {
+		global.InitWizDB();
+
+		global.LoadWizDB("gamestate"); // eu4
+		cout << "load end" << endl;
+		
+		cout << global.GetData("species/ /", "TRUE") << endl;
+
+		global.SaveWizDB("gamestate_result", "1"); /// , 0
 		cout << "save end" << endl;
 		
 		global.AllRemoveWizDB();
