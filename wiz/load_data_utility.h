@@ -119,7 +119,7 @@ namespace wiz {
 				for (int i = 0; i < num && (getline(inFile,temp)); ++i) {
 					temp = PassSharp(temp);
 					temp = AddSpace(temp);
-					temp = ChangeSpace(temp, '^');
+					temp = ChangeSpace(temp, '^'); 
 					StringTokenizer tokenizer(temp);
 					while (tokenizer.hasMoreTokens()) {
 						strVec.push(tokenizer.nextToken());
@@ -347,7 +347,7 @@ namespace wiz {
 				}
 				return temp;
 			}
-			/// need to rename!, has bug..
+			/// need to rename!, has bug.., line ±âÁØ..
 			static string ChangeSpace(const string& str, const char result_ch) {
 				string temp;
 				int state = 0;
