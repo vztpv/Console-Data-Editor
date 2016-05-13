@@ -477,7 +477,7 @@ namespace wiz {
 			static bool LoadDataFromFile(const string& fileName, UserType& global) /// global should be empty?
 			{
 				ifstream inFile;
-				inFile.open(fileName);
+				inFile.open(fileName, ios::binary);
 				if (true == inFile.fail())
 				{
 					inFile.close(); return false;
@@ -906,7 +906,7 @@ namespace wiz {
 			// SaveQuery
 			bool SaveWizDB(const string& fileName, const string option="0") { /// , int option
 				ofstream outFile;
-				outFile.open(fileName + "temp");
+				outFile.open(fileName + "temp", ios::binary);
 				if (outFile.fail()) { return false; }
 
 				/// saveFile
