@@ -418,7 +418,7 @@ namespace wiz {
 							stream << "{\n";
 							Save1(stream, ut->userTypeList[userTypeListCount].Get(j));
 							stream << "\n";
-							stream << " } " << "\n";
+							stream << " }" << "\n";
 						}
 						userTypeListCount++;
 					}
@@ -450,7 +450,7 @@ namespace wiz {
 							stream << " {\n";
 							Save2(stream, ut->userTypeList[userTypeListCount].Get(j));
 							stream << "\n";
-							stream << " } " << "\n";
+							stream << " }" << "\n";
 						}
 						userTypeListCount++;
 					}
@@ -565,7 +565,7 @@ namespace wiz {
 								stream << ut.userTypeList[userTypeListCount].GetName() << "=";
 							stream << "{\n";
 							stream << *ut.userTypeList[userTypeListCount].Get(j) << "\n";
-							stream << " } " << "\n";
+							stream << " }" << "\n";
 						}
 						userTypeListCount++;
 					}
