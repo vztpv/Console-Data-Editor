@@ -102,16 +102,22 @@ void eu4Test()
 int main(void)
 {
 //	test2();
-	eu4Test();
-	/*
+	//eu4Test();
+	
 	wiz::load_data::LoadData global;
 	for (int i = 0; i < 1; ++i) {
 		global.InitWizDB();
 
-		global.LoadWizDB("gamestate"); // eu4
+		global.LoadWizDB("gamestate"); // stellaris
 		cout << "load end" << endl;
 		
-		cout << global.GetData("species/ /", "TRUE") << endl;
+	//	cout << global.GetData("species/ /", "TRUE") << endl;
+
+		// cout << global.SearchItem("name", "TRUE") << endl;
+		cout << "chk"<<endl;
+		cout << global.GetData("species/ ", 
+					"EQ = { portrait /identity \"human\" / 2 }") << endl;
+		cout << "chk_" << endl;
 
 		global.SaveWizDB("gamestate_result", "1"); /// , 0
 		cout << "save end" << endl;
@@ -120,7 +126,7 @@ int main(void)
 
 		cout << "all end" << endl;
 	}
-	*/
+	
 	_getch();
 	return 0;
 }
