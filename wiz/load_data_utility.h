@@ -262,8 +262,14 @@ namespace wiz {
 				TypeArray<UserType*> utTemp2;
 
 				for (int i = 0; i < tokenizer.countTokens(); ++i) {
-					strVec.push_back(tokenizer.nextToken());
-					if (" " == strVec[strVec.size() - 1]) /// chk!!
+					string strTemp = tokenizer.nextToken();
+					if (strTemp == "root" && i == 0) {
+					}
+					else {
+						strVec.push_back(strTemp);
+					}
+					
+					if ((strVec.size() >= 1) && (" " == strVec[strVec.size() - 1])) /// chk!!
 					{
 						strVec[strVec.size() - 1] = "";
 					}

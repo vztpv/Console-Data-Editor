@@ -983,6 +983,93 @@ namespace wiz {
 			{
 				return Utility::ChkData(&global);
 			}
+			
+			/// ToDo - recursive function??
+			string SearchItem(const string& var, const string& condition)
+			{
+				vector<string> positionVec;
+				string temp;
+
+				SearchItem(positionVec, var, "root", &global, condition);
+
+				for (int i = 0; i < positionVec.size(); ++i)
+				{
+					temp = temp + positionVec[i] + "\n";
+				}
+
+				return temp;
+			}
+			string SearchUserType(const string& var, const string& condition)
+			{
+				vector<string> positionVec;
+				string temp;
+
+				SearchUserType(positionVec, var, "root", &global, condition);
+
+				for (int i = 0; i < positionVec.size(); ++i)
+				{
+					temp = temp + positionVec[i] + "\n";
+				}
+
+				return temp;
+			}
+		private:
+			void SearchItem(vector<string>& positionVec, const string& var, const string& nowPosition,
+				UserType* ut, const string& condition)
+			{
+				if (ut->GetItem(var).GetCount() > 0) {
+					Condition cond(condition, ut, &global);
+
+					while (cond.Next());
+
+					if ("TRUE" == cond.Now()[0])
+					{
+						positionVec.push_back(nowPosition);
+					}
+				}
+
+				for (int i = 0; i < ut->GetUserTypeListSize(); ++i) {
+					string temp = ut->GetUserTypeList(i).GetName();
+					if (temp.empty()) { temp = " "; }
+					for (int j = 0; j < ut->GetUserTypeList(i).GetCount(); ++j) {
+						SearchItem(
+							positionVec, 
+							var, 
+							nowPosition + "/" + temp + "/", 
+							ut->GetUserTypeList(i).Get(j), 
+							condition
+						);
+					}
+				}
+			}
+			void SearchUserType(vector<string>& positionVec, const string& var, const string& nowPosition,
+				UserType* ut, const string& condition)
+			{
+				if (ut->GetName() == var) {
+					Condition cond(condition, ut, &global);
+
+					while (cond.Next());
+
+					if ("TRUE" == cond.Now()[0])
+					{
+						positionVec.push_back(nowPosition);
+					}
+				}
+
+				for (int i = 0; i < ut->GetUserTypeListSize(); ++i) {
+					string temp = ut->GetUserTypeList(i).GetName();
+					if (temp.empty()) { temp = " "; }
+					for (int j = 0; j < ut->GetUserTypeList(i).GetCount(); ++j) {
+						SearchUserType(
+							positionVec,
+							var,
+							nowPosition + "/" + temp + "/",
+							ut->GetUserTypeList(i).Get(j),
+							condition
+						);
+					}
+				}
+			}
 		};
 	}
 }
