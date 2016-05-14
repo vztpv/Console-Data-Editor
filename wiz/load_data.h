@@ -1030,12 +1030,12 @@ namespace wiz {
 
 				for (int i = 0; i < ut->GetUserTypeListSize(); ++i) {
 					string temp = ut->GetUserTypeList(i).GetName();
-					if (temp.empty()) { temp = " "; }
+					if (temp == "") { temp = " "; }
 					for (int j = 0; j < ut->GetUserTypeList(i).GetCount(); ++j) {
 						SearchItem(
 							positionVec, 
 							var, 
-							nowPosition + "/" + temp + "/", 
+							nowPosition + "/" + temp, 
 							ut->GetUserTypeList(i).Get(j), 
 							condition
 						);
@@ -1058,12 +1058,13 @@ namespace wiz {
 
 				for (int i = 0; i < ut->GetUserTypeListSize(); ++i) {
 					string temp = ut->GetUserTypeList(i).GetName();
-					if (temp.empty()) { temp = " "; }
+					
+					if (temp=="") { temp = " "; }
 					for (int j = 0; j < ut->GetUserTypeList(i).GetCount(); ++j) {
 						SearchUserType(
 							positionVec,
 							var,
-							nowPosition + "/" + temp + "/",
+							nowPosition + "/" + temp,
 							ut->GetUserTypeList(i).Get(j),
 							condition
 						);
