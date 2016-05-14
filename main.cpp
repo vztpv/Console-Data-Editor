@@ -85,9 +85,11 @@ void eu4Test()
 			"NOTEQ = { core / \"PLT\" / 2 } }");
 		cout << global.GetData("provinces/-100", "TRUE") << endl;
 
-		cout << global.GetItemListData("provinces/-100", "TRUE") << endl;
+		cout << global.GetItemListData("root/provinces/-100", "TRUE") << endl;
 
-		cout << global.GetUserTypeListData("provinces/-100", "TRUE") << endl;
+		cout << global.GetUserTypeListData("root/provinces/-100", "TRUE") << endl;
+
+		cout << global.SearchUserType("history", "TRUE") << endl;
 
 		global.SaveWizDB("result.eu4", "1"); /// , 0
 		cout << "save end" << endl;
@@ -100,7 +102,8 @@ void eu4Test()
 int main(void)
 {
 //	test2();
-
+	eu4Test();
+	/*
 	wiz::load_data::LoadData global;
 	for (int i = 0; i < 1; ++i) {
 		global.InitWizDB();
@@ -117,6 +120,7 @@ int main(void)
 
 		cout << "all end" << endl;
 	}
-	//_getch();
+	*/
+	_getch();
 	return 0;
 }
