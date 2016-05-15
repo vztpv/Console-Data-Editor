@@ -75,14 +75,14 @@ void eu4Test()
 		//if (false == LoadData::AddData("provinces/$/", "base_tax = 1.000", /// 1.000
 		//						"NOTEXIST = { base_tax / }"))
 		if (false == global.AddData("provinces/$/", "base_tax_is_5.000 = yes",
-			"COMP> = { base_tax / 5.000 / 0 }")) {
+			"COMP> = { base_tax / 5.000 ~ 0 }")) {
 			cout << "no found.." << endl;
 			//_getch();
 		}
 
 		//LoadData::Remove("provinces/$/", "history", "NOTEQ = { core / \"RUS\" / }", 2); // 모든 경우에 다 다른다면?
-		global.Remove("provinces/$/", "history", "AND = { EQ = { core / \"RUS\" / 1 }"
-			"NOTEQ = { core / \"PLT\" / 2 } }");
+		global.Remove("provinces/$/", "history", "AND = { EQ = { core / \"RUS\" ~ 1 }"
+			"NOTEQ = { core / \"PLT\" ~ 2 } }");
 		cout << global.GetData("provinces/-100", "TRUE") << endl;
 
 		cout << global.GetItemListData("root/provinces/-100", "TRUE") << endl;
