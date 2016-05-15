@@ -116,7 +116,7 @@ int main(void)
 		// cout << global.SearchItem("name", "TRUE") << endl;
 		cout << "chk"<<endl;
 		cout << global.GetData("species/ ", 
-					"EQ = { portrait /identity \"human\" / 2 }") << endl;
+					"EQ = { portrait /identity \"human\" ~ 2 }") << endl;
 		cout << "chk_" << endl;
 
 		global.SaveWizDB("gamestate_result", "1"); /// , 0
