@@ -242,6 +242,7 @@ namespace wiz {
 				string valTemp = position;
 				StringTokenizer tokenizer(position, "/");
 				UserType* utTemp;
+
 				if (false == tokenizer.hasMoreTokens()) {
 					utTemp = utPosition;
 				}
@@ -300,13 +301,30 @@ namespace wiz {
 				auto x = Get(var1, position1, utPosition, global);
 				auto y = Get(var2, position2, utPosition, global);
 
+				if ("~" != position1 && false == x.first)
+				{
+					return "ERROR";
+				}
+				if ("~" != position2 && false == y.first)
+				{
+					return "ERROR";
+				}
+				//
 				if (((x.first && x.second.size() > 1) || (y.first && y.second.size() > 1))) {
 					return "ERROR";
 				}
 
-				TypeArray<string> value1 = x.second[0]->GetItem(var1);
-				TypeArray<string> value2 = y.second[0]->GetItem(var2);
-
+				TypeArray<string> value1; 
+				TypeArray<string> value2;
+				
+				// added..
+				if (position1 != "~") {
+					value1 = x.second[0]->GetItem(var1);
+				}
+				if (position2 != "~") {
+					value2 = y.second[0]->GetItem(var2);
+				}
+				//
 				if (value1.GetCount() == 0) {
 					value1.Push(var1);
 				}
