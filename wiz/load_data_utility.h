@@ -351,6 +351,7 @@ namespace wiz {
 				return{ true, temp };
 			}
 		public:
+
 			// To Do
 			// AddSpace : return string?
 			static string AddSpace(const string& str)
@@ -359,6 +360,7 @@ namespace wiz {
 
 				for (int i = 0; i < str.size(); ++i)
 				{
+					/// To Do - chabnge to switch statement.
 					if ('=' == str[i]) {
 						temp.push_back(' ');
 						temp.push_back('=');

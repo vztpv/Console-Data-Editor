@@ -51,7 +51,7 @@ namespace wiz {
 
 		UserType LoadData(const string& fileName) {
 			vector< UserType* > nestedUT;
-			UserType global("global"); /// fileNameì„ ë°›ì•„ì™€ì„œ globalë¥¼ ë¦¬í„´í•˜ëŠ” dllë“±ì„ í•´ë³´ì??
+			UserType global("global"); /// fileNameÀ» ¹Ş¾Æ¿Í¼­ global¸¦ ¸®ÅÏÇÏ´Â dllµîÀ» ÇØº¸ÀÚ??
 			ifstream inFile;
 			int state = 0;
 			string id;
@@ -98,7 +98,7 @@ namespace wiz {
 								nestedUT.push_back(NULL);
 
 							/// initial new nestedUT.
-							nestedUT[braceNum] = pTemp.Get(pTemp.GetCount() - 1); /// TypeArrayëŠ” ë“¤ì–´ì˜¨ ìˆœì„œëŒ€ë¡œ ...
+							nestedUT[braceNum] = pTemp.Get(pTemp.GetCount() - 1); /// TypeArray´Â µé¾î¿Â ¼ø¼­´ë·Î ...
 						}
 						else {
 							val = str;
@@ -497,7 +497,7 @@ namespace wiz {
 				catch (const char* err) { cout << err << endl; inFile.close(); return false; }
 				catch (const string& e) { cout << e << endl; inFile.close(); return false; }
 				catch (exception e) { cout << e.what() << endl; inFile.close(); return false; }
-				catch (...) { cout << "ì˜ˆê¸°ì¹˜ ëª»í•œ ì—ëŸ¬" << endl; inFile.close(); return false; }
+				catch (...) { cout << "¿¹±âÄ¡ ¸øÇÑ ¿¡·¯" << endl; inFile.close(); return false; }
 				
 				global = move( globalTemp );
 				return true;
@@ -509,9 +509,9 @@ namespace wiz {
 				str = Utility::PassSharp(str);
 				str = Utility::AddSpace(str);
 				str = Utility::ChangeSpace(str, '^');
-				/// ToDp - ""ì•ˆì— ì—¬ë°±ì´ ìˆì„ Â‹Âš ë‹¤ë¥¸ ê²ƒìœ¼ë¡œ ëŒ€ì²´í›„ ë‹¤ì‹œ ë³€ê²½
-				/// ToDo -  #ì£¼ì„ì´ ìˆë‹¤ë©´? ì—†ì• ëŠ” í•¨ìˆ˜ ì œì‘? - using str.find, String::Substr.
-				/// ToDo - error ì²˜ë¦¬..
+				/// ToDp - ""¾È¿¡ ¿©¹éÀÌ ÀÖÀ» ‹š ´Ù¸¥ °ÍÀ¸·Î ´ëÃ¼ÈÄ ´Ù½Ã º¯°æ
+				/// ToDo -  #ÁÖ¼®ÀÌ ÀÖ´Ù¸é? ¾ø¾Ö´Â ÇÔ¼ö Á¦ÀÛ? - using str.find, String::Substr.
+				/// ToDo - error Ã³¸®..
 				StringTokenizer tokenizer(str, vector<string>{" ", "\t", "\r", "\n"});
 				ArrayQueue<string> strVec;
 
@@ -526,7 +526,7 @@ namespace wiz {
 				catch (Error& e) { cout << e << endl; return false; }
 				catch (const char* err) { cout << err << endl; return false; }
 				catch (exception& e) { cout << e.what() << endl; return false; }
-				catch (...) { cout << "ì˜ˆê¸°ì¹˜ ëª»í•œ ì—ëŸ¬" << endl; return  false; }
+				catch (...) { cout << "¿¹±âÄ¡ ¸øÇÑ ¿¡·¯" << endl; return  false; }
 
 				ut = move(utTemp);
 				return true;
@@ -799,7 +799,7 @@ namespace wiz {
 			auto finded = Find(global, position);
 			if (finded.first) {
 			for (int i = 0; i < finded.second.size(); ++i) {
-			finded.second[i]->Remove(); // todo - ë‚´ë¶€..
+			finded.second[i]->Remove(); // todo - ³»ºÎ..
 			}
 			return true;
 			}
