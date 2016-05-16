@@ -48,70 +48,54 @@ namespace wiz {
 		template < class T >
 		class TypeArray : public Type {
 		private:
-			Array<T> arr;
-			int count;
+			std::vector<T> arr;
 		public:
 			TypeArray(const TypeArray<T>& ta) : Type(ta)
 			{
 				arr = ta.arr;
-				count = ta.count;
 			}
 			TypeArray(TypeArray<T>&& ta) : Type(ta)
 			{
 				arr = move( ta.arr );
-				count = ta.count;
-
-				ta.count = 0;
 			}
 		public:
-			explicit TypeArray(const string& name = "") : Type(name), count(0) { }
+			explicit TypeArray(const string& name = "") : Type(name) { }
 			virtual ~TypeArray() { }
 		public:
 			void Remove() {
 				arr = Array<T>();
-				count = 0;
 			}
 			void Push(const T& val) { /// do not change..!!
-				if (arr.empty()) {
-					arr = Array<T>(1);
-				}
-				if (count >= arr.size()) {
-					arr.expand();
-				}
-				arr[count] = val;
-				count++;
+				arr.push_back(val);
 			}
 			void Push(T&& val) {
-				if (arr.empty()) {
-					arr = Array<T>(1);
-				}
-				if (count >= arr.size()) {
-					arr.expand();
-				}
-				arr[count] = val;
-				count++;
+				arr.push_back(val);
 			}
 			T& Get(const int index) {
 				return arr[index];
 			}
 			const T& Get(const int index) const {
-				if (index < 0 || index >= count || arr.size() <= 0) {
+				// #ifdef DEBUG ??
+				/*if (index < 0 || index >= count || arr.size() <= 0) {
 					cout << "index " << index << endl;
 					throw "index not valid";
-				}
+				}*/
 				return arr[index];
 			}
 			void Set(const int index, const T& val) {
-				if (index >= 0 && index < count) {
+				//if (index >= 0 && index < count) {
 					arr[index] = val;
-				}
-				else
-				{
-					cout << "error " << index << " " << count << endl;
-				}
+				//}
+				//else
+			//	{
+			//		cout << "error " << index << " " << count << endl;
+			//	}
 			}
 			int GetCount()const {
-				return count;
+				return arr.size();
+			}
+			auto size()const {
+				return arr.size();
 			}
 		public:
 			TypeArray<T>& operator=(const TypeArray<T>& ta)
@@ -120,7 +104,6 @@ namespace wiz {
 				TypeArray<T> temp = ta;
 
 				arr = std::move(temp.arr);
-				count = temp.count;
 				return *this;
 			}
 			TypeArray<T>& operator=(TypeArray<T>&& ta)
@@ -129,9 +112,6 @@ namespace wiz {
 				if (arr == ta.arr) { return *this; }
 
 				arr = move( ta.arr );
-				count = ta.count;
-
-				ta.count = 0;
 				return *this;
 			}
 			string ToString()const

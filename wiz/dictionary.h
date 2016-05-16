@@ -5,9 +5,6 @@
 
 #include <wiz/global.h>
 #include <wiz/wizardError.h>
-#include <wiz/newArrays.h>
-#define wizArray wiz::Array
-#include <wiz/binary_search.h>
 
 
 namespace wiz {
@@ -21,54 +18,24 @@ namespace wiz {
 			stream << "\n";
 			return stream;
 		}
-	public:
-		void Shrink()
-		{
-			if (count == arr.size()) { return; }
-			if (count > 0) {
-				Array<T> temp(count);
-
-				for (int i = 0; i < count; ++i) {
-					temp[i] = move( this->arr[i] );
-				}
-
-				this->arr = move(temp);
-			}
-			else {
-				arr = Array<T>();
-			}
-		}
 	private:
 		COMP comp;
-		Array <T> arr;
-		int count;
+		std::vector<T> arr;
 	public:
 		// size ÁöÁ¤? const int size = 1
-		explicit Dictionary(const int size = 1) : count(0) {
-			if (size > 0) {
-				arr = Array<T>(size);
-			}
-			else {
-				throw wiz::Error(__FILE__, __LINE__, "size <= 0");
-			}
+		explicit Dictionary() {
 		}
 		Dictionary(const Dictionary<T, COMP, EE>& dic) {
 			arr = dic.arr;
-			count = dic.count;
 		}
 		Dictionary(Dictionary<T, COMP, EE>&& dic){
 			arr = std::move(dic.arr);
-			count = dic.count;
-
-			dic.arr = Array<T>(1); //1
-			dic.count = 0;
 		}
 		Dictionary<T, COMP, EE>& operator=(const Dictionary<T, COMP, EE>& dic) {
-			if (dic.arr == arr ) {
+			if (this == &dic ) {
 				return *this;
 			}
 			arr = dic.arr;
-			count = dic.count;
 			return *this;
 		}
 		Dictionary<T, COMP, EE>& operator=(Dictionary<T, COMP, EE>&& dic)
@@ -78,13 +45,10 @@ namespace wiz {
 			}
 
 			arr = move(dic.arr);
-			count = dic.count;
-
-			dic.count = 0;
 			return *this;
 		}
 	public:
-		void operator=(const Array<T>& arr)
+		void operator=(const vector<T>& arr)
 		{
 		    Remove();
 			if( arr.empty() ) { return; }
@@ -99,11 +63,7 @@ namespace wiz {
 			if (Search(val)) { /// to linear search?
 				return;
 			}
-			if (IsFull()) {
-				arr.expand();
-			}
-			arr[count] = val;
-			count++;
+			arr.push_back(val);
 			// not sort!
 			///mini_insertSort(); // sorted items + new item.
 		}
@@ -112,20 +72,27 @@ namespace wiz {
 			if (Search(val)) { /// to linear search?
 				return;
 			}
-			if (IsFull()) {
-				arr.expand();
-			}
-			arr[count] = val;
-			count++;
+			arr.push_back(val);
 			// not sort!
 			///mini_insertSort(); // sorted items + new item.
 		}
 		bool IsFull() const{
-			return arr.size() == count;
+			return arr.size() == GetCount();
+		}
+		bool Search(const T&& key, int* index = NULL) const {
+			/// linear serach
+			for (int i = 0; i < GetCount(); ++i) {
+				if (arr[i] == key)
+				{
+					if (index) { *index = i; }
+					return true;
+				}
+			}
+			return false;
 		}
 		bool Search(const T& key, int* index = NULL) const {
 			/// linear serach
-			for (int i = 0; i < count; ++i) {
+			for (int i = 0; i < GetCount(); ++i) {
 				if (arr[i] == key)
 				{
 					if (index) { *index = i;   }
@@ -136,7 +103,7 @@ namespace wiz {
 			//return BinarySearch< T, COMP, EE >::search(arr, key, 0, count - 1, index); // return existence
 		}
 		int GetCount() const {
-			return count;
+			return arr.size();
 		}
 		bool RemoveItem(const T& key) {
 			int index = -1;
@@ -155,11 +122,7 @@ namespace wiz {
 			}
 		}
 		void Remove()  { /// chk....
-			count = 0;
-			for (int i = 0; i < arr.size(); ++i)
-			{
-				arr[i] = T();
-			}
+			arr.clear();
 		}
 	public:
 		const T& operator[](const int i) const {
