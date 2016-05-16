@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <thread>
 using namespace std;
 
 namespace wiz {
@@ -109,23 +110,65 @@ namespace wiz {
 				}
 				return{ chk, false };
 			}
-
-
-			static pair<bool, int> Reserve2(ifstream& inFile, ArrayQueue<string>& strVec, const int num = 1)
+		private:
+			class DoThread
 			{
-				string temp;
+			private:
+				vector<string>* strVec;
+				ArrayQueue<string>* aq;
+				int strVecStart;
+				int strVecEnd;
+			public:
+				DoThread( vector<string>* strVec, ArrayQueue<string>* aq, int strVecStart, int strVecEnd ) 
+					: strVec(strVec), aq(aq), strVecStart(strVecStart), strVecEnd(strVecEnd)
+				{
+				}
+				void operator() () {
+					for (int i = strVecStart; i <= strVecEnd; ++i)
+					{
+						StringTokenizer tokenizer((*strVec)[i]);
+						while (tokenizer.hasMoreTokens()) {
+							aq->push(tokenizer.nextToken());
+						}
+					}
+				}
+			};
+		public:
+			static pair<bool, int> Reserve2(ifstream& inFile, ArrayQueue<string>& aq, const int num = 1)
+			{
 				int count = 0;
-
+				string temp;
+				vector<string> strVecTemp;
+				ArrayQueue<string> arrayQueue[4];
+				
 				for (int i = 0; i < num && (getline(inFile,temp)); ++i) {
 					temp = PassSharp(temp);
 					temp = AddSpace(temp);
 					temp = ChangeSpace(temp, '^'); 
-					StringTokenizer tokenizer(temp);
-					while (tokenizer.hasMoreTokens()) {
-						strVec.push(tokenizer.nextToken());
-					}
+
+					strVecTemp.push_back(temp);
 					count++;
 				}
+
+				if (count > 0) {
+					DoThread dtA(&strVecTemp, &arrayQueue[0], 0, count / 4 - 1),
+						dtB(&strVecTemp, &arrayQueue[1], count / 4, (count / 4) * 2 - 1),
+						dtC(&strVecTemp, &arrayQueue[2], (count / 4) * 2, (count / 4) * 3 - 1),
+						dtD(&strVecTemp, &arrayQueue[3], (count / 4) * 3, count - 1);
+					std::thread _threadA(dtA), _threadB(dtB), _threadC(dtC), _threadD(dtD);
+
+					_threadA.join();
+					_threadB.join();
+					_threadC.join();
+					_threadD.join();
+
+					for (int i = 0; i < 4; ++i) {
+						for (int j = 0; j < arrayQueue[i].size(); ++j) {
+							aq.push(arrayQueue[i][j]);
+						}
+					}
+				}
+
 				return{ count > 0, count };
 			}
 
