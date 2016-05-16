@@ -111,7 +111,7 @@ namespace wiz {
 				return{ chk, false };
 			}
 		private:
-			class DoThread
+			class DoThread // need to rename!
 			{
 			private:
 				vector<string>* strVec;
@@ -150,7 +150,7 @@ namespace wiz {
 					count++;
 				}
 
-				if (count > 0) {
+				if (count >= 4) {
 					DoThread dtA(&strVecTemp, &arrayQueue[0], 0, count / 4 - 1),
 						dtB(&strVecTemp, &arrayQueue[1], count / 4, (count / 4) * 2 - 1),
 						dtC(&strVecTemp, &arrayQueue[2], (count / 4) * 2, (count / 4) * 3 - 1),
@@ -167,6 +167,10 @@ namespace wiz {
 							aq.push(arrayQueue[i][j]);
 						}
 					}
+				}
+				else if (count > 0) {
+					DoThread dtA(&strVecTemp, &aq, 0, count - 1);
+					dtA();
 				}
 
 				return{ count > 0, count };
