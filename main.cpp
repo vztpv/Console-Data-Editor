@@ -83,13 +83,14 @@ void eu4Test()
 		//LoadData::Remove("provinces/$/", "history", "NOTEQ = { core / \"RUS\" / }", 2); // 모든 경우에 다 다른다면?
 		global.Remove("provinces/$/", "history", "AND = { EQ = { core / \"RUS\" ~ 1 }"
 			"NOTEQ = { core / \"PLT\" ~ 2 } }");
+		// ToDo - global.Remove("provinces/$/history/", "AND = { ISDATE _COMP> = { 1899.12.31 }  });
 		cout << global.GetData("provinces/-100", "TRUE") << endl;
 
-		cout << global.GetItemListData("root/provinces/-100", "TRUE") << endl;
+		cout << global.GetItemListNamesData("root/countries/C60/map_color", "TRUE") << endl;
 
-		cout << global.GetUserTypeListData("root/provinces/-100", "TRUE") << endl;
+		cout << global.GetUserTypeListNamesData("root/provinces/-100", "TRUE") << endl; 
 
-		cout << global.SearchUserType("history", "TRUE") << endl;
+		//cout << global.SearchUserType("history", "TRUE") << endl;
 
 		global.SaveWizDB("result.eu4", "1"); /// , 0
 		cout << "save end" << endl;
@@ -102,8 +103,8 @@ void eu4Test()
 int main(void)
 {
 //	test2();
-	//eu4Test();
-	
+	eu4Test();
+	/*
 	wiz::load_data::LoadData global;
 	for (int i = 0; i < 1; ++i) {
 		global.InitWizDB();
@@ -126,7 +127,7 @@ int main(void)
 
 		cout << "all end" << endl;
 	}
-	
+	*/
 	_getch();
 	return 0;
 }
