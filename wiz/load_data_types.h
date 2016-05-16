@@ -485,7 +485,31 @@ namespace wiz {
 				}
 				return temp;
 			}
-			string UserTypeListToString()const
+			string ItemListNamesToString()const
+			{
+				string temp;
+				int itemListCount = 0;
+
+				for (int i = 0; i < itemList.GetCount(); ++i) {
+					for (int j = 0; j < itemList[itemListCount].GetCount(); j++) {
+						if (itemList[itemListCount].GetName() != "")
+							temp = temp + itemList[itemListCount].GetName();
+						else
+							temp = temp + " ";
+
+						if (j != itemList[itemListCount].GetCount() - 1) {
+							temp = temp + "/";
+						}
+					}
+					if (i != itemList.GetCount() - 1)
+					{
+						temp = temp + "/";
+					}
+					itemListCount++;
+				}
+				return temp;
+			}
+			string UserTypeListNamesToString()const
 			{
 				string temp;
 				int userTypeListCount = 0;
