@@ -1,6 +1,5 @@
 
 #include <iostream>
-#include <memory>
 using namespace std;
 
 #include <wiz/load_data.h>
@@ -80,7 +79,7 @@ void eu4Test()
 			//_getch();
 		}
 
-		//LoadData::Remove("provinces/$/", "history", "NOTEQ = { core / \"RUS\" / }", 2); // ��� ��쿡 �� �ٸ��ٸ�?
+		//LoadData::Remove("provinces/$/", "history", "NOTEQ = { core / \"RUS\" / }", 2); // ¸ðµç °æ¿ì¿¡ ´Ù ´Ù¸¥´Ù¸é?
 		global.Remove("provinces/$/", "history", "AND = { EQ = { core / \"RUS\" ~ 1 }"
 			"NOTEQ = { core / \"PLT\" ~ 2 } }");
 		// ToDo - global.Remove("provinces/$/history/", "AND = { ISDATE _COMP> = { 1899.12.31 }  });
