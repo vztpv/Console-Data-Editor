@@ -142,7 +142,9 @@ namespace wiz {
 					while (strVec.empty())
 					{
 						vecReserver(strVec);
-						if (strVec.empty() && vecReserver.end()) {
+						if (//strVec.empty() && 
+							vecReserver.end()
+							) {
 							throw "Err nextToken does not exist";
 						}
 					}
@@ -455,10 +457,13 @@ namespace wiz {
 					if (strVec.size() < 10) {
 						vecReserver(strVec);
 
-						while (strVec.empty())
+						while ( strVec.size() <= 1 ) // (strVec.empty())
 						{
 							vecReserver(strVec);
-							if (strVec.empty() && vecReserver.end()) {
+							if (
+								//strVec.empty() && 
+								vecReserver.end()
+								) {
 								// throw "Err nextToken does not exist2";
 								break;
 							}
