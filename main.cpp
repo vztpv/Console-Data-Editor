@@ -206,9 +206,11 @@ void MStyleTest(const string& fileName)
 					count_item++;
 				}
 			}
-
-			End = min( Start + sizeOfWindow - 1, mdVec.size()-1 );
 			
+			End = min( Start + sizeOfWindow - 1, mdVec.size()-1 );
+			if (mdVec.empty()) {
+				End = Start - 1;
+			}
 			// draw mdVec and cursor - chk!!
 			{
 				for (int i = Start; i <= End; ++i) {
@@ -345,19 +347,22 @@ void MStyleTest(const string& fileName)
 					// itemlist
 					// print
 					system("cls");
-					string strTemp = mdVec[idx].varName;
-					if (strTemp == " ") { strTemp = ""; }
-					const int count = utVec[braceNum].Get(mdVec[idx].no)->GetItem(strTemp).GetCount();
-					setcolor(0, 7);
-					cout << strTemp << " " << count << " " << braceNum << " " << idx << " " << mdVec[idx].no << endl;
-					
-					for (int i = 0; i < count; ++i) {
+					if (mdVec.empty() == false) {
+						string strTemp = mdVec[idx].varName;
+						if (strTemp == " ") { strTemp = ""; }
+						const int count = utVec[braceNum].Get(mdVec[idx].no)->GetItem(strTemp).GetCount();
 						setcolor(0, 7);
-						cout << "  " << utVec[braceNum].Get(mdVec[idx].no)->GetItem(strTemp).Get(i);
-						if (i != count - 1) { cout << endl; }
+						cout << strTemp << " " << count << " " << braceNum << " " << idx << " " << mdVec[idx].no << endl;
+
+						for (int i = 0; i < count; ++i) {
+							setcolor(0, 7);
+							cout << "  " << utVec[braceNum].Get(mdVec[idx].no)->GetItem(strTemp).Get(i);
+							if (i != count - 1) { cout << endl; }
+						}
 					}
 					// To Do- add, set.
 					isFirst = true;
+
 					
 					ch = _getch(); 
 					/// switch( ch );
