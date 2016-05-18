@@ -182,18 +182,21 @@ void MStyleTest(const string& fileName)
 	int count_item = 0;
 
 	while (true) {
+	
+		
+		
 		if (isFirst) {
 			mdVec = std::vector<MData>();
-
 			count_userType = 0;
 			count_item = 0;
+			
 			for (int h = 0; h < utVec[braceNum].GetCount(); ++h) {
 				for (int i = 0; i < utVec[braceNum].Get(h)->GetUserTypeListSize(); ++i) {
 					MData mdTemp{ true, utVec[braceNum].Get(h)->GetUserTypeList(i).GetName(), h };
 					if (mdTemp.varName.empty() && utVec[braceNum].Get(h)->GetUserTypeList(i).valid()) {
 						mdTemp.varName = " ";
 					}
-					if (false == ( utVec[braceNum].Get(h)->GetUserTypeList(i).valid()) )
+					if (false == ( utVec[braceNum].Get(h)->GetUserTypeList(i).valid()))
 					{
 						mdTemp.varName = " ";
 					}
@@ -404,7 +407,7 @@ void MStyleTest(const string& fileName)
 				{
 					// nothing..
 				}
-				else if ( strVec.empty() && idx < count_userType) { // utVec[braceNum].Get(mdVec[idx].no)->GetUserTypeListSize()) {
+				else if (strVec.empty() && idx < count_userType) { // utVec[braceNum].Get(mdVec[idx].no)->GetUserTypeListSize()) {
 					setcolor(0, 0);
 					system("cls");
 
@@ -479,6 +482,9 @@ void MStyleTest(const string& fileName)
 					// idx = 0;
 					End = min(Start + sizeOfWindow - 1, strVec.size() - 1);
 					if (strVec.empty()) { End = Start - 1; }
+
+					count_userType = 0;
+					count_item = 0;
 
 					// To Do - add, set.
 					//ch = _getch();
