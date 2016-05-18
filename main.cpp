@@ -104,7 +104,7 @@ void eu4Test()
 		cout << global.GetItemListNamesData("root/countries/C60/map_color", "TRUE") << endl;
 
 		cout << global.GetUserTypeListNamesData("root/provinces/-100", "TRUE") << endl; 
-
+		 
 		//cout << global.SearchUserType("history", "TRUE") << endl;
 
 		global.SaveWizDB("result.eu4", "1"); /// , 0
@@ -148,7 +148,7 @@ public:
 	int no; /// for UserType that has same name.!, rename?
 public:
 	explicit MData(const bool isDir = false, const string& varName = "", const int no = 0) : isDir(isDir), varName(varName), no(no)
-	{
+	{ 
 
 	}
 };
@@ -157,17 +157,18 @@ void MStyleTest(const string& fileName)
 {
 	std::vector<wiz::load_data::TypeArray<wiz::load_data::UserType*>> utVec;
 	std::vector<MData> mdVec;
-	std::vector<vector<MData>> mdVec2;
+	//std::vector<vector<MData>> mdVec2;
 	wiz::load_data::TypeArray<wiz::load_data::UserType*> global;
 	wiz::load_data::UserType utTemp;
 	std::vector<int> idxVec; //for store before idx
+	std::vector<string> strVec; // for value..
 	int braceNum = 0;
 	int idx = 0;
 	bool isFirst = true;
 	int sizeOfWindow = 30;
 	int Start = 0;
 	int End = 0; 
-
+	int state = 0;
 
 	wiz::load_data::LoadData::LoadDataFromFile(fileName, utTemp);
 	
@@ -189,7 +190,11 @@ void MStyleTest(const string& fileName)
 			for (int h = 0; h < utVec[braceNum].GetCount(); ++h) {
 				for (int i = 0; i < utVec[braceNum].Get(h)->GetUserTypeListSize(); ++i) {
 					MData mdTemp{ true, utVec[braceNum].Get(h)->GetUserTypeList(i).GetName(), h };
-					if (mdTemp.varName.empty()) {
+					if (mdTemp.varName.empty() && utVec[braceNum].Get(h)->GetUserTypeList(i).valid()) {
+						mdTemp.varName = " ";
+					}
+					if (false == ( utVec[braceNum].Get(h)->GetUserTypeList(i).valid()) )
+					{
 						mdTemp.varName = " ";
 					}
 					mdVec.push_back(mdTemp);
@@ -199,7 +204,7 @@ void MStyleTest(const string& fileName)
 			for (int h = 0; h < utVec[braceNum].GetCount(); ++h) {
 				for (int i = 0; i < utVec[braceNum].Get(h)->GetItemListSize(); ++i) {
 					MData mdTemp{ false, utVec[braceNum].Get(h)->GetItemList(i).GetName(), h };
-					if (mdTemp.varName.empty()) {
+					if (mdTemp.varName.empty() && utVec[braceNum].Get(h)->GetItemList(i).valid()) {
 						mdTemp.varName = " ";
 					}
 					mdVec.push_back(mdTemp);
@@ -212,7 +217,7 @@ void MStyleTest(const string& fileName)
 				End = Start - 1;
 			}
 			// draw mdVec and cursor - chk!!
-			{
+			else {
 				for (int i = Start; i <= End; ++i) {
 					if (mdVec[i].isDir) { setcolor(0, 10); }
 					else { setcolor(0, 7); }
@@ -238,10 +243,11 @@ void MStyleTest(const string& fileName)
 		// move and chk enterkey. - todo!!
 		{
 			char ch = _getch();
-
+			
+			if ('q' == ch) { return; }
 
 			// todo - add, remove, save
-			if (idx > 0 && ('w' == ch || 'W' == ch))
+			if ( strVec.empty() && Start <= End && idx > 0 && ('w' == ch || 'W' == ch))
 			{
 				// draw mdVec and cursor - chk!!
 				if (idx == Start) {
@@ -279,8 +285,7 @@ void MStyleTest(const string& fileName)
 				}
 			}
 			else if (
-				// ( idx < (utVec[braceNum].Get(mdVec[idx].no)->GetItemListSize() + utVec[braceNum].Get(mdVec[idx].no)->GetUserTypeListSize() - 1 ) )
-				( idx < mdVec.size() - 1 )
+				strVec.empty() && Start <= End &&  ( idx < mdVec.size() - 1 )
 				&& ('s' == ch || 'S' == ch) 
 			)
 			{
@@ -318,69 +323,188 @@ void MStyleTest(const string& fileName)
 					setcolor(0, 0);
 				}
 			}
+			if (!strVec.empty() && Start <= End && idx > 0 && ('w' == ch || 'W' == ch))
+			{
+				// draw mdVec and cursor - chk!!
+				if (idx == Start) {
+					system("cls");
+
+					int count = 0;
+					int newEnd = Start - 1;
+					int newStart = max(0, newEnd - sizeOfWindow + 1);
+
+					Start = newStart; End = newEnd;
+					idx--;
+
+					for (int i = Start; i <= End; ++i) {
+						setcolor(0, 7);
+						cout << "  " << strVec[i];
+						if (i != strVec.size() - 1) { cout << endl; }
+						count++;
+					}
+					gotoxy(0, idx - Start);
+					setcolor(0, 12);
+					cout << "¡Ü";
+					setcolor(0, 0);
+				}
+				else {
+					gotoxy(0, idx - Start);
+					setcolor(0, 0);
+					cout << "  ";
+					idx--;
+
+					gotoxy(0, idx - Start);
+					setcolor(0, 12);
+					cout << "¡Ü";
+					setcolor(0, 0);
+				}
+			}
+			else if (
+				!strVec.empty() && Start <= End && (idx < strVec.size() - 1)
+				&& ('s' == ch || 'S' == ch)
+				)
+			{
+				if (idx == End) {
+					system("cls");
+
+					int count = 0;
+					int newStart = End + 1;
+					int newEnd = min(newStart + sizeOfWindow - 1, strVec.size() - 1);
+
+					Start = newStart; End = newEnd;
+					idx++;
+
+					for (int i = Start; i <= End; ++i) {
+						setcolor(0, 7);
+						cout << "  " << strVec[i];
+						if (i != strVec.size() - 1) { cout << endl; }
+						count++;
+					}
+					gotoxy(0, 0);
+					setcolor(0, 12);
+					cout << "¡Ü";
+					setcolor(0, 0);
+				}
+				else {
+					gotoxy(0, idx - Start);
+					setcolor(0, 0);
+					cout << "  ";
+					idx++;
+
+					gotoxy(0, idx - Start);
+					setcolor(0, 12);
+					cout << "¡Ü";
+					setcolor(0, 0);
+				}
+			}
 			else if ('\r' == ch || '\n' == ch) {
 				/// To Do..
 				gotoxy(0, 0);
-
-				if (idx < count_userType ) { // utVec[braceNum].Get(mdVec[idx].no)->GetUserTypeListSize()) {
+				if (0 == count_userType && 0 == count_item)
+				{
+					// nothing..
+				}
+				else if ( strVec.empty() && idx < count_userType) { // utVec[braceNum].Get(mdVec[idx].no)->GetUserTypeListSize()) {
+					setcolor(0, 0);
 					system("cls");
+
 					// usertypelist
-					setcolor(0, 7);
-					
 					braceNum++;
 					idxVec.push_back(idx);
-					mdVec2.push_back(mdVec);
-
+					
 					if (braceNum >= utVec.size()) {
 						utVec.push_back(wiz::load_data::TypeArray<wiz::load_data::UserType*>());
 					}
 
 					wiz::load_data::TypeArray< wiz::load_data::UserType*> ref;
-					utVec[braceNum - 1].Get(mdVec[idxVec[braceNum - 1]].no)->GetUserTypeItemRef(mdVec[idxVec[braceNum - 1]].varName, ref);
+					string strTemp = mdVec[idxVec[braceNum - 1]].varName;
+					if (strTemp == " " || false == utVec[braceNum - 1].Get(mdVec[idxVec[braceNum - 1]].no)->valid())
+					{
+						strTemp = "";
+					}
+
+					if (utVec[braceNum - 1].Get(mdVec[idxVec[braceNum - 1]].no)->GetUserTypeItemRef(strTemp, ref))
+					{
+						//
+					}
 					utVec[braceNum] = ref;
 					Start = 0;
 					idx = 0;
 					isFirst = true;
 				}
 				else
-				{
+				{	
 					// itemlist
 					// print
-					system("cls");
-					if (mdVec.empty() == false) {
+
+					if (
+						!mdVec.empty() &&
+						strVec.empty()
+						) 
+					{
+						setcolor(0, 0);
+						system("cls");
+
 						string strTemp = mdVec[idx].varName;
 						if (strTemp == " ") { strTemp = ""; }
 						const int count = utVec[braceNum].Get(mdVec[idx].no)->GetItem(strTemp).GetCount();
 						setcolor(0, 7);
-						cout << strTemp << " " << count << " " << braceNum << " " << idx << " " << mdVec[idx].no << endl;
-
+						
 						for (int i = 0; i < count; ++i) {
-							setcolor(0, 7);
-							cout << "  " << utVec[braceNum].Get(mdVec[idx].no)->GetItem(strTemp).Get(i);
+							setcolor(0, 7); 
+							string temp = utVec[braceNum].Get(mdVec[idx].no)->GetItem(strTemp).Get(i);
+							cout << "  " << temp;
+							strVec.push_back(temp);
 							if (i != count - 1) { cout << endl; }
 						}
 					}
-					// To Do- add, set.
-					isFirst = true;
 
-					
-					ch = _getch(); 
+					if (state == 0) {
+						gotoxy(0, 0);
+						state = 1;
+
+						idxVec.push_back(idx);
+						
+						idx = 0;
+						Start = 0;
+					}
+					else if (state == 1) {
+						gotoxy(0, idx); /// chk..
+						Start = idx;
+					}
+
+					setcolor(0, 12);
+					cout << "¡Ü";
+					setcolor(0, 0);
+					// idx = 0;
+					End = min(Start + sizeOfWindow - 1, strVec.size() - 1);
+					if (strVec.empty()) { End = Start - 1; }
+
+					// To Do - add, set.
+					//ch = _getch();
 					/// switch( ch );
 				}
-				setcolor(0, 0);
-				system("cls");
 			}
 			else {
 				if ('q' == ch) { return; } // quit
-				else if ('b' == ch && braceNum > 0) {  // back
-					braceNum--; system("cls"); isFirst = true; 
-					Start = idxVec[idxVec.size() - 1];
-					/// chk..
-					End = min(Start + sizeOfWindow - 1, utVec[braceNum].Get(mdVec2[braceNum][idxVec[braceNum]].no)->GetUserTypeListSize() 
-										+ utVec[braceNum].Get(mdVec2[braceNum][idxVec[braceNum]].no)->GetItemListSize() - 1);
-					mdVec2.pop_back();
-					idx = idxVec[idxVec.size() - 1];
+				else if ('b' == ch && braceNum > 0 && strVec.empty() && state == 0) {  // back
+					braceNum--; setcolor(0, 0);  system("cls"); isFirst = true;
+					Start = idxVec.back();
+
+					idx = idxVec.back();
 					idxVec.pop_back();
+				}
+				else if ('b' == ch && !idxVec.empty())
+				{
+					Start = idxVec.back();
+
+					idx = idxVec.back();
+					idxVec.pop_back();
+					state = 0;
+					setcolor(0, 0);
+					system("cls");
+					strVec.clear();
+					isFirst = true;
 				}
 				/// add- a, set- s, remove - r.
 			}
