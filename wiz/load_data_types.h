@@ -16,13 +16,17 @@ namespace wiz {
 		class Type {
 		private:
 			string name;
+			bool isValid;
 		public:
-			explicit Type(const string& name = "") : name(name) { }
+			bool valid()const { return isValid; }
+			void setValid(const bool val) { isValid = val; }
+		public:
+			explicit Type(const string& name = "", const bool isValid = true) : name(name), isValid(isValid) { }
 			Type(const Type& type)
-				: name(type.name)
+				: name(type.name), isValid(type.isValid)
 			{ }
 			virtual ~Type() { }
-			bool IsFail() const {
+			bool IsFail() const { // change body?
 				return "" == name;
 			}
 			string GetName()const {
@@ -41,6 +45,7 @@ namespace wiz {
 			Type& operator=(const Type& type)
 			{
 				name = type.name;
+				isValid = type.isValid;
 				return *this;
 			}
 		};

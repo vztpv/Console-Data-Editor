@@ -222,6 +222,12 @@ namespace wiz {
 						if (RIGHT == Utility::Top(strVec)) {
 							Utility::Pop(strVec);
 							//
+							TypeArray<UserType*> pTemp;
+							nestedUT[braceNum-1]->GetUserTypeItemRef(var2, pTemp);
+							if (pTemp.GetCount() > 0)
+							{
+								pTemp.Get(pTemp.GetCount() - 1)->setValid(false);
+							}
 							nestedUT[braceNum] = NULL;
 							braceNum--;
 
@@ -257,7 +263,9 @@ namespace wiz {
 						if (LEFT == Utility::Top(strVec)) {
 							Utility::Pop(strVec);
 
-							nestedUT[braceNum]->AddUserTypeItem(UserType(""));
+							UserType temp("");
+							
+							nestedUT[braceNum]->AddUserTypeItem(temp);
 							TypeArray<UserType*> pTemp;
 							nestedUT[braceNum]->GetUserTypeItemRef("", pTemp);
 
@@ -314,6 +322,12 @@ namespace wiz {
 						if (RIGHT == Utility::Top(strVec)) {
 							Utility::Pop(strVec);
 							//
+							TypeArray<UserType*> pTemp;
+							nestedUT[braceNum-1]->GetUserTypeItemRef("", pTemp);
+							if (pTemp.GetCount() > 0)
+							{
+								pTemp.Get(pTemp.GetCount() - 1)->setValid(false);
+							}
 							//if (flag1 == 0) {
 							nestedUT[braceNum] = NULL;
 							braceNum--;
@@ -411,6 +425,12 @@ namespace wiz {
 						if (RIGHT == Utility::Top(strVec)) {
 							Utility::Pop(strVec);
 							//
+							TypeArray<UserType*> pTemp;
+							nestedUT[braceNum-1]->GetUserTypeItemRef(var2, pTemp);
+							if (pTemp.GetCount() > 0)
+							{
+								pTemp.Get(pTemp.GetCount() - 1)->setValid(false);
+							}
 
 							nestedUT[braceNum] = NULL;
 							braceNum--;
@@ -496,6 +516,12 @@ namespace wiz {
 
 					ifReserver.Num = 100000;
 					_LoadData(strVec, ifReserver, globalTemp);
+					/// ToDo - Change ^ to ' '
+					{
+						// for all, remove ^ in val
+						Utility::ReplaceAll(&globalTemp, '^', ' ');
+					}
+					cout << "remove ^ end" << endl;
 
 					inFile.close();
 				}
@@ -925,12 +951,6 @@ namespace wiz {
 				if (false == LoadDataFromFile(fileName, globalTemp)) { return false; }
 				cout << "LoadData End" << endl;
 
-				/// ToDo - Change ^ to ' '
-				{
-					// for all, remove ^ in val
-					Utility::ReplaceAll(&globalTemp, '^', ' ');
-				}
-				cout << "remove ^ end" << endl;
 				global = move( globalTemp );
 				return true;
 			}
