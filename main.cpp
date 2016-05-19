@@ -235,6 +235,7 @@ void MStyleTest(const string& fileName)
 				setcolor(0, 12);
 				cout << "¡Ü";
 				setcolor(0, 0);
+				gotoxy(0, 0);
 			}
 
 			isFirst = false;
@@ -539,6 +540,6 @@ int main(void)
 	
 	MStyleTest("input.eu4");
 
-	_getch();
+	//_getch();
 	return 0;
 }
