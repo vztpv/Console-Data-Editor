@@ -537,8 +537,12 @@ int main(void)
 	//test2(); // load from string!
 	//eu4Test();
 	//stellarisTest();
+	string fileName;
+
+	cout << "input name : ";
+	cin >> fileName;
 	
-	MStyleTest("input.eu4");
+	MStyleTest(fileName);
 
 	//_getch();
 	return 0;
