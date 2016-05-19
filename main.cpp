@@ -182,9 +182,6 @@ void MStyleTest(const string& fileName)
 	int count_item = 0;
 
 	while (true) {
-	
-		
-		
 		if (isFirst) {
 			mdVec = std::vector<MData>();
 			count_userType = 0;
@@ -495,17 +492,33 @@ void MStyleTest(const string& fileName)
 				if ('q' == ch) { return; } // quit
 				else if ('b' == ch && braceNum > 0 && strVec.empty() && state == 0) {  // back
 					braceNum--; setcolor(0, 0);  system("cls"); isFirst = true;
-					Start = idxVec.back();
+					//Start = idxVec.back();
 
 					idx = idxVec.back();
 					idxVec.pop_back();
+
+					if (0 <= idx - sizeOfWindow / 2)
+					{
+						Start = idx - sizeOfWindow / 2;
+					}
+					else {
+						Start = 0;
+					}
 				}
 				else if ('b' == ch && !idxVec.empty())
 				{
-					Start = idxVec.back();
-
+					
 					idx = idxVec.back();
 					idxVec.pop_back();
+
+					if (0 <= idx - sizeOfWindow / 2)
+					{
+						Start = idx - sizeOfWindow / 2;
+					}
+					else {
+						Start = 0;
+					}
+
 					state = 0;
 					setcolor(0, 0);
 					system("cls");
