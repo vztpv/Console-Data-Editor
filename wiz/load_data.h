@@ -146,7 +146,7 @@ namespace wiz {
 							strVec.empty() && 
 							vecReserver.end()
 							) {
-							throw "Err nextToken does not exist";
+							throw "Err nextToken does not exist"; // cf) or empty? file or empty? string!
 						}
 					}
 				}
@@ -564,7 +564,7 @@ namespace wiz {
 				return true;
 			}
 		private:
-			UserType global; // ToDo - remove!!
+			UserType global; // ToDo - remove!
 		public:
 			// InitQuery or LoadQuery
 			explicit LoadData() { InitWizDB(); }
@@ -586,16 +586,173 @@ namespace wiz {
 			}
 			//
 			bool InitWizDB() {
+				return InitWizDB(global);
+			}
+			// allRemove Query 
+			bool AllRemoveWizDB() {
+				return AllRemoveWizDB(global);
+			}
+			// AddQuery AddData, AddUserTypeData?
+			bool AddData(const string& position, const string& data, const string& condition = "") {
+				return AddData(global, position, data, condition);
+			}
+			// SetQuery
+			bool SetData(const string& position, const string& varName, const string& data, const string& condition = "")
+			{
+				return SetData(global, position, varName, data, condition);
+			}
+			/// 
+			string GetData(const string& position, const string& condition) {
+				return GetData(global, position, condition);
+			}
+			string GetItemListData(const string& position, const string& condition)
+			{
+				return GetItemListData(global, position, condition);
+			}
+			string GetItemListNamesData(const string& position, const string& condition)
+			{
+				return GetItemListNamesData(position, condition);
+			}
+			string GetUserTypeListNamesData(const string& position, const string& condition) 
+			{
+				return GetUserTypeListNamesData(global, position, condition);
+			}
+			/// varName = val - do
+			/// varName = { val val val } - GetData(position+"/varName", ""); 
+			/// varName = { var = val } - GetData(position+"/varname", var);
+			string GetData(const string& position, const string& varName, const string& condition) // ??
+			{
+				return GetData(global, position, varName, condition);
+			}
+			/*
+			bool RemoveData(const string& position) {
+			auto finded = Find(global, position);
+			if (finded.first) {
+			for (int i = 0; i < finded.second.size(); ++i) {
+			finded.second[i]->Remove(); // todo - ³»ºÎ..
+			}
+			return true;
+			}
+			else {
+			return false;
+			}
+			}
+			*/
+			bool Remove(const string& position, const string& var, const string& condition) {
+				return Remove(global, position, var, condition);
+			}
+		
+			bool LoadWizDB(const string& fileName) {
+				return LoadWizDB(global, fileName);
+			}
+			// SaveQuery
+			bool SaveWizDB(const string& fileName, const string option="0") { /// , int option
+				return SaveWizDB(global, fileName, option);
+			}
+
+			/// To Do - ExistItem, ExistUserType, SetUserType? GetUserType?
+			bool ExistData(const string& position, const string& varName, const string& condition) // ??
+			{
+				return ExistData(global, position, varName, condition);
+			}
+			bool ChkData()
+			{
+				return Utility::ChkData(&global);
+			}
+			
+			/// ToDo - recursive function??
+			string SearchItem(const string& var, const string& condition)
+			{
+				return SearchItem(global, var, condition);
+			}
+			string SearchUserType(const string& var, const string& condition)
+			{
+				return SearchUserType(global, var, condition);
+			}
+		private:
+			void SearchItem(vector<string>& positionVec, const string& var, const string& nowPosition,
+				UserType* ut, const string& condition)
+			{
+				SearchItem(global, positionVec, var, nowPosition, ut, condition);
+			}
+			void SearchUserType(vector<string>& positionVec, const string& var, const string& nowPosition,
+				UserType* ut, const string& condition)
+			{
+				SearchUserType(global, positionVec, var, nowPosition, ut, condition);
+			}
+		private:
+			static void SearchItem(UserType& global, vector<string>& positionVec, const string& var, const string& nowPosition,
+				UserType* ut, const string& condition)
+			{
+				if (ut->GetItem(var).GetCount() > 0) {
+					Condition cond(condition, ut, &global);
+
+					while (cond.Next());
+
+					if ("TRUE" == cond.Now()[0])
+					{
+						positionVec.push_back(nowPosition);
+					}
+				}
+
+				for (int i = 0; i < ut->GetUserTypeListSize(); ++i) {
+					string temp = ut->GetUserTypeList(i).GetName();
+					if (temp == "") { temp = " "; }
+					for (int j = 0; j < ut->GetUserTypeList(i).GetCount(); ++j) {
+						SearchItem( 
+							global,
+							positionVec,
+							var,
+							nowPosition + "/" + temp,
+							ut->GetUserTypeList(i).Get(j),
+							condition
+						);
+					}
+				}
+			}
+			static void SearchUserType(UserType& global, vector<string>& positionVec, const string& var, const string& nowPosition,
+				UserType* ut, const string& condition)
+			{
+				if (ut->GetName() == var) {
+					Condition cond(condition, ut, &global);
+
+					while (cond.Next());
+
+					if ("TRUE" == cond.Now()[0])
+					{
+						positionVec.push_back(nowPosition);
+					}
+				}
+
+				for (int i = 0; i < ut->GetUserTypeListSize(); ++i) {
+					string temp = ut->GetUserTypeList(i).GetName();
+
+					if (temp == "") { temp = " "; }
+					for (int j = 0; j < ut->GetUserTypeList(i).GetCount(); ++j) {
+						SearchUserType(
+							global,
+							positionVec,
+							var,
+							nowPosition + "/" + temp,
+							ut->GetUserTypeList(i).Get(j),
+							condition
+						);
+					}
+				}
+			}
+
+		public:
+			static bool InitWizDB(UserType& global) {
 				global = UserType("global");
 				return true;
 			}
 			// allRemove Query 
-			bool AllRemoveWizDB() {
+			static bool AllRemoveWizDB(UserType& global) {
 				global = UserType("");
 				return true;
 			}
 			// AddQuery AddData, AddUserTypeData?
-			bool AddData(const string& position, const string& data, const string& condition = "") {
+			static bool AddData(UserType& global, const string& position, const string& data, const string& condition = "") {
 				UserType utTemp = UserType("global");
 				bool isTrue = false;
 
@@ -643,7 +800,7 @@ namespace wiz {
 				}
 			}
 			// SetQuery
-			bool SetData(const string& position, const string& varName, const string& data, const string& condition = "")
+			static bool SetData(UserType& global, const string& position, const string& varName, const string& data, const string& condition = "")
 			{
 				auto finded = Utility::Find(&global, position);
 				bool isTrue = false;
@@ -701,7 +858,7 @@ namespace wiz {
 				}
 			}
 			/// 
-			string GetData(const string& position, const string& condition) {
+			static string GetData(UserType& global, const string& position, const string& condition) {
 				string str;
 				auto finded = Utility::Find(&global, position);
 				if (finded.first) {
@@ -725,7 +882,7 @@ namespace wiz {
 					return "";
 				}
 			}
-			string GetItemListData(const string& position, const string& condition)
+			static string GetItemListData(UserType& global, const string& position, const string& condition)
 			{
 				string str;
 				auto finded = Utility::Find(&global, position);
@@ -750,7 +907,7 @@ namespace wiz {
 					return "";
 				}
 			}
-			string GetItemListNamesData(const string& position, const string& condition)
+			static string GetItemListNamesData(UserType& global, const string& position, const string& condition)
 			{
 				string str;
 				auto finded = Utility::Find(&global, position);
@@ -775,7 +932,7 @@ namespace wiz {
 					return "";
 				}
 			}
-			string GetUserTypeListNamesData(const string& position, const string& condition) 
+			static string GetUserTypeListNamesData(UserType& global, const string& position, const string& condition)
 			{
 				string str;
 				auto finded = Utility::Find(&global, position);
@@ -803,7 +960,7 @@ namespace wiz {
 			/// varName = val - do
 			/// varName = { val val val } - GetData(position+"/varName", ""); 
 			/// varName = { var = val } - GetData(position+"/varname", var);
-			string GetData(const string& position, const string& varName, const string& condition) // ??
+			static string GetData(UserType& global, const string& position, const string& varName, const string& condition) // ??
 			{
 				string str;
 				auto finded = Utility::Find(&global, position);
@@ -840,7 +997,7 @@ namespace wiz {
 			}
 			}
 			*/
-			bool Remove(const string& position, const string& var, const string& condition) {
+			static bool Remove(UserType& global, const string& position, const string& var, const string& condition) {
 				auto finded = Utility::Find(&global, position);
 				bool isTrue = false;
 
@@ -870,8 +1027,8 @@ namespace wiz {
 					return false;
 				}
 			}
-		
-			bool LoadWizDB(const string& fileName) {
+
+			static bool LoadWizDB(UserType& global, const string& fileName) {
 				UserType globalTemp = UserType("global");
 				// preprocessing
 				//Utility::PassSharp(fileName, "output.txt");
@@ -880,68 +1037,68 @@ namespace wiz {
 				//cout << "AddSpace End" << endl;
 				/*
 				{
-					ifstream inFile;
-					ofstream outFile;
+				ifstream inFile;
+				ofstream outFile;
 
-					inFile.open("output2.txt");
-					outFile.open("output3.txt");
+				inFile.open("output2.txt");
+				outFile.open("output3.txt");
 
-					string temp;
+				string temp;
 
-					/// chk maybe has bugs!, - "abcd" - ok, "abc""def" - not ok.
-					while (inFile >> temp)
-					{
-						if (temp.empty()) { continue; }
-						int idx = 0;
-						if ((idx = temp.find('\"')) != string::npos) {
-							if ((idx = temp.find('\"', idx + 1)) != string::npos) {
-								outFile << temp;
-							}
-							else {
-								outFile << temp;
-								outFile << '^';
-								
-								while (inFile >> temp) {
-									if ((idx = temp.find('\"')) != string::npos) {
-										outFile << temp; outFile << " ";
-										break;
-									}
-									else {
-										outFile << temp;
-										outFile << '^';
-									}
-								}
-							}
-						}
-						else {
-							outFile << temp;
-						}
-						outFile << " ";
-					}
-					inFile.close();
-					outFile.close();
+				/// chk maybe has bugs!, - "abcd" - ok, "abc""def" - not ok.
+				while (inFile >> temp)
+				{
+				if (temp.empty()) { continue; }
+				int idx = 0;
+				if ((idx = temp.find('\"')) != string::npos) {
+				if ((idx = temp.find('\"', idx + 1)) != string::npos) {
+				outFile << temp;
+				}
+				else {
+				outFile << temp;
+				outFile << '^';
+
+				while (inFile >> temp) {
+				if ((idx = temp.find('\"')) != string::npos) {
+				outFile << temp; outFile << " ";
+				break;
+				}
+				else {
+				outFile << temp;
+				outFile << '^';
+				}
+				}
+				}
+				}
+				else {
+				outFile << temp;
+				}
+				outFile << " ";
+				}
+				inFile.close();
+				outFile.close();
 				}
 				cout << "space in \"~\" -> ^ End" << endl;
 				*/
-			/*	{
-					ifstream inFile;
-					inFile.open("output3.txt"); // ~2
+				/*	{
+				ifstream inFile;
+				inFile.open("output3.txt"); // ~2
 
-					int count = 0;
-					int count2 = 0;
-					string temp;
-					while (inFile >> temp)
-					{
-						if (temp == "{") { count2++; }
-						if (temp == "}") { count2--; }
-						for (int i = 0; i < temp.size(); ++i)
-						{
-							if (temp[i] == '{') { count++; }
-							else if (temp[i] == '}') { count--; }
-						}
-					}
-					inFile.close();
-					cout << count << " " << count2 << endl;
+				int count = 0;
+				int count2 = 0;
+				string temp;
+				while (inFile >> temp)
+				{
+				if (temp == "{") { count2++; }
+				if (temp == "}") { count2--; }
+				for (int i = 0; i < temp.size(); ++i)
+				{
+				if (temp[i] == '{') { count++; }
+				else if (temp[i] == '}') { count--; }
+				}
+				}
+				inFile.close();
+				cout << count << " " << count2 << endl;
 				}
 				cout << "chk end" << endl;
 				*/
@@ -951,11 +1108,11 @@ namespace wiz {
 				if (false == LoadDataFromFile(fileName, globalTemp)) { return false; }
 				cout << "LoadData End" << endl;
 
-				global = move( globalTemp );
+				global = move(globalTemp);
 				return true;
 			}
 			// SaveQuery
-			bool SaveWizDB(const string& fileName, const string option="0") { /// , int option
+			static bool SaveWizDB(UserType& global, const string& fileName, const string option = "0") { /// , int option
 				ofstream outFile;
 				outFile.open(fileName + "temp", ios::binary);
 				if (outFile.fail()) { return false; }
@@ -1008,7 +1165,7 @@ namespace wiz {
 			}
 
 			/// To Do - ExistItem, ExistUserType, SetUserType? GetUserType?
-			bool ExistData(const string& position, const string& varName, const string& condition) // ??
+			static bool ExistData(UserType& global, const string& position, const string& varName, const string& condition) // ??
 			{
 				int count = 0;
 				auto finded = Utility::Find(&global, position);
@@ -1025,23 +1182,23 @@ namespace wiz {
 								continue;
 							}
 						}
-						count = count + ( finded.second[i]->GetItem(varName).GetCount() );
+						count = count + (finded.second[i]->GetItem(varName).GetCount());
 					}
 				}
 				return 0 != count;
 			}
-			bool ChkData()
+			static bool ChkData(UserType& global)
 			{
 				return Utility::ChkData(&global);
 			}
-			
+
 			/// ToDo - recursive function??
-			string SearchItem(const string& var, const string& condition)
+			static string SearchItem(UserType& global, const string& var, const string& condition)
 			{
 				vector<string> positionVec;
 				string temp;
 
-				SearchItem(positionVec, var, "root", &global, condition);
+				SearchItem(global, positionVec, var, "root", &global, condition);
 
 				for (int i = 0; i < positionVec.size(); ++i)
 				{
@@ -1050,12 +1207,12 @@ namespace wiz {
 
 				return temp;
 			}
-			string SearchUserType(const string& var, const string& condition)
+			static string SearchUserType(UserType& global, const string& var, const string& condition)
 			{
 				vector<string> positionVec;
 				string temp;
 
-				SearchUserType(positionVec, var, "root", &global, condition);
+				SearchUserType(global, positionVec, var, "root", &global, condition);
 
 				for (int i = 0; i < positionVec.size(); ++i)
 				{
@@ -1063,64 +1220,6 @@ namespace wiz {
 				}
 
 				return temp;
-			}
-		private:
-			void SearchItem(vector<string>& positionVec, const string& var, const string& nowPosition,
-				UserType* ut, const string& condition)
-			{
-				if (ut->GetItem(var).GetCount() > 0) {
-					Condition cond(condition, ut, &global);
-
-					while (cond.Next());
-
-					if ("TRUE" == cond.Now()[0])
-					{
-						positionVec.push_back(nowPosition);
-					}
-				}
-
-				for (int i = 0; i < ut->GetUserTypeListSize(); ++i) {
-					string temp = ut->GetUserTypeList(i).GetName();
-					if (temp == "") { temp = " "; }
-					for (int j = 0; j < ut->GetUserTypeList(i).GetCount(); ++j) {
-						SearchItem(
-							positionVec, 
-							var, 
-							nowPosition + "/" + temp, 
-							ut->GetUserTypeList(i).Get(j), 
-							condition
-						);
-					}
-				}
-			}
-			void SearchUserType(vector<string>& positionVec, const string& var, const string& nowPosition,
-				UserType* ut, const string& condition)
-			{
-				if (ut->GetName() == var) {
-					Condition cond(condition, ut, &global);
-
-					while (cond.Next());
-
-					if ("TRUE" == cond.Now()[0])
-					{
-						positionVec.push_back(nowPosition);
-					}
-				}
-
-				for (int i = 0; i < ut->GetUserTypeListSize(); ++i) {
-					string temp = ut->GetUserTypeList(i).GetName();
-					
-					if (temp=="") { temp = " "; }
-					for (int j = 0; j < ut->GetUserTypeList(i).GetCount(); ++j) {
-						SearchUserType(
-							positionVec,
-							var,
-							nowPosition + "/" + temp,
-							ut->GetUserTypeList(i).Get(j),
-							condition
-						);
-					}
-				}
 			}
 		};
 	}

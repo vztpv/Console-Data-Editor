@@ -68,7 +68,15 @@ namespace wiz {
 			virtual ~TypeArray() { }
 		public:
 			void Remove() {
-				arr = Array<T>();
+				arr = std::vector<T>();
+			}
+			void Remove(int idx)
+			{
+				for (int i = idx + 1; i < arr.size(); ++i)
+				{
+					arr[i - 1] = arr[i];
+				}
+				arr.resize(arr.size() - 1);
 			}
 			void Push(const T& val) { /// do not change..!!
 				arr.push_back(val);
@@ -237,8 +245,8 @@ namespace wiz {
 							ilist[j - 1] = ilist[j];
 						}
 						ilist.resize(ilist.size() - 1);
+						k = _GetIndex(ilist, 1, k + 1);
 					}
-					k = _GetIndex(ilist, 1, k + 1);
 				}
 				itemList = move( tempDic );
 			}
@@ -254,6 +262,18 @@ namespace wiz {
 					}
 				}
 				ilist = move( temp );
+			}
+			void RemoveEmptyItem()
+			{
+				Dictionary< TypeArray< string > > temp;
+
+				for (int i = 0; i < itemList.GetCount(); ++i)
+				{
+					if (0 != itemList[i].GetCount())
+						temp.PushBack(itemList[i]);
+				}
+
+				itemList = move(temp);
 			}
 			void Remove()
 			{
@@ -301,9 +321,10 @@ namespace wiz {
 						for (int j = k + 1; j < ilist.size(); ++j) {
 							ilist[j - 1] = ilist[j];
 						}
-						ilist.resize(ilist.size() - 1);
+						ilist.resize(ilist.size() - 1);	
+						k = _GetIndex(ilist, 2, k + 1);
 					}
-					k = _GetIndex(ilist, 2, k + 1);
+				
 				}
 				userTypeList = move( tempDic );
 			}
