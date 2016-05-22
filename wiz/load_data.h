@@ -807,7 +807,7 @@ namespace wiz {
 
 				if (finded.first) {
 					/// todo - if varName is "" then data : val val val ... 
-					if (varName == "") {
+					if (varName == "" || varName == " ") {
 						UserType utTemp;
 						if (false == LoadDataFromString(data, utTemp)) {
 							return false;
@@ -963,6 +963,9 @@ namespace wiz {
 			static string GetData(UserType& global, const string& position, const string& varName, const string& condition) // ??
 			{
 				string str;
+				string _var = varName;
+				if (_var == " ") { _var = ""; }
+
 				auto finded = Utility::Find(&global, position);
 				if (finded.first) {
 					for (int i = 0; i < finded.second.size(); ++i) {
@@ -978,7 +981,7 @@ namespace wiz {
 							}
 						}
 
-						str = str + finded.second[i]->GetItem(varName).ToString() + "\n";
+						str = str + finded.second[i]->GetItem(_var).ToString() + "\n";
 					}
 				}
 				return str;
@@ -1000,6 +1003,9 @@ namespace wiz {
 			static bool Remove(UserType& global, const string& position, const string& var, const string& condition) {
 				auto finded = Utility::Find(&global, position);
 				bool isTrue = false;
+				
+				string _var = var;
+				if (_var == " ") { _var = ""; }
 
 				if (finded.first) {
 					for (int i = 0; i < finded.second.size(); ++i) {
@@ -1017,8 +1023,8 @@ namespace wiz {
 							}
 						}
 
-						temp->RemoveItemList(var);
-						temp->RemoveUserTypeList(var);
+						temp->RemoveItemList(_var);
+						temp->RemoveUserTypeList(_var);
 						isTrue = true;
 					}
 					return isTrue;
@@ -1027,7 +1033,36 @@ namespace wiz {
 					return false;
 				}
 			}
+			static bool Remove(UserType& global, const string& position, const string& condition) {
+				auto finded = Utility::Find(&global, position);
+				bool isTrue = false;
 
+
+				if (finded.first) {
+					for (int i = 0; i < finded.second.size(); ++i) {
+						UserType* temp = finded.second[i];
+
+						if (false == condition.empty()) {
+							Condition cond(condition, finded.second[i], &global);
+
+							while (cond.Next());
+
+							if ("TRUE" != cond.Now()[0])
+							{
+								// cout << cond.Now()[0] << endl;
+								continue;
+							}
+						}
+
+						temp->Remove();
+						isTrue = true;
+					}
+					return isTrue;
+				}
+				else {
+					return false;
+				}
+			}
 			static bool LoadWizDB(UserType& global, const string& fileName) {
 				UserType globalTemp = UserType("global");
 				// preprocessing
@@ -1168,6 +1203,9 @@ namespace wiz {
 			static bool ExistData(UserType& global, const string& position, const string& varName, const string& condition) // ??
 			{
 				int count = 0;
+				string _var = varName;
+				if (_var == " ") { _var = ""; }
+
 				auto finded = Utility::Find(&global, position);
 				if (finded.first) {
 					for (int i = 0; i < finded.second.size(); ++i) {
@@ -1182,7 +1220,7 @@ namespace wiz {
 								continue;
 							}
 						}
-						count = count + (finded.second[i]->GetItem(varName).GetCount());
+						count = count + (finded.second[i]->GetItem(_var).GetCount());
 					}
 				}
 				return 0 != count;
@@ -1192,7 +1230,8 @@ namespace wiz {
 				return Utility::ChkData(&global);
 			}
 
-			/// ToDo - recursive function??
+			/// ToDo - global, position, var, condition + var is " "!
+			// "root" -> position.
 			static string SearchItem(UserType& global, const string& var, const string& condition)
 			{
 				vector<string> positionVec;

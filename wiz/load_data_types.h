@@ -244,9 +244,9 @@ namespace wiz {
 						for (int j = k + 1; j < ilist.size(); ++j) {
 							ilist[j - 1] = ilist[j];
 						}
-						ilist.resize(ilist.size() - 1);
-						k = _GetIndex(ilist, 1, k + 1);
+						ilist.resize(ilist.size() - 1);	
 					}
+					k = _GetIndex(ilist, 1, k + 1);
 				}
 				itemList = move( tempDic );
 			}
@@ -322,9 +322,9 @@ namespace wiz {
 							ilist[j - 1] = ilist[j];
 						}
 						ilist.resize(ilist.size() - 1);	
-						k = _GetIndex(ilist, 2, k + 1);
+						
 					}
-				
+					k = _GetIndex(ilist, 2, k + 1);
 				}
 				userTypeList = move( tempDic );
 			}
