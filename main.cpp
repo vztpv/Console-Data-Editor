@@ -32,8 +32,9 @@ void test2() {
 
 	cout << (global.GetData("","")) << endl;
 
-	global.AddData("", "x=1");
-
+	global.AddData("", "player={ { x= 0 } }");
+	//global.AddData("player/ ", "z = { x = 1 }");
+	global.AddNoNameUserType("player/", "x=1" );
 	cout << (global.GetData("","")) << endl;
 
 	global.AddData("", "x={z=3}");
@@ -554,7 +555,7 @@ void MStyleTest(const string& fileName)
 
 						setcolor(0, 7);
 						// need more test!!
-						cout << "add UserType : 1, add Item : 2,  your input : ";
+						cout << "add UserType : 1, add Item : 2, add usertype that name is "": 3 your input : ";
 						cin >> select;
 						// add userType?
 						if (1 == select) {
@@ -588,6 +589,26 @@ void MStyleTest(const string& fileName)
 							getchar();
 							getline(cin, val);
 							utVec2[braceNum]->AddItem(var, val);
+
+							if (state == 1)
+							{
+								idx = idxVec.back();
+								idxVec.pop_back();
+								// max!
+								if (0 <= idx - sizeOfWindow / 2)
+								{
+									Start = idx - sizeOfWindow / 2;
+								}
+								else {
+									Start = 0;
+								}
+								strVec.clear();
+								state = 0;
+							}
+						}
+						else if (3 == select)
+						{
+							utVec2[braceNum]->AddUserTypeItem(wiz::load_data::UserType(""));
 
 							if (state == 1)
 							{
@@ -814,6 +835,7 @@ int main(void)
 	//test2(); // load from string!
 	//eu4Test();
 	//stellarisTest();
+	
 	string fileName;
 
 	cout << "input name : ";
@@ -821,6 +843,6 @@ int main(void)
 	
 	MStyleTest(fileName);
 
-	//_getch();
+	_getch();
 	return 0;
 }
