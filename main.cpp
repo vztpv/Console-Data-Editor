@@ -35,6 +35,8 @@ void test2() {
 	global.AddData("", "player={ { x= 0 } }");
 	//global.AddData("player/ ", "z = { x = 1 }");
 	global.AddNoNameUserType("player/", "x=1" );
+	cout << (global.GetData("player/", " ", "")) << endl;
+	cout << "------------------------------------" << endl;
 	cout << (global.GetData("","")) << endl;
 
 	global.AddData("", "x={z=3}");
@@ -833,7 +835,8 @@ void MStyleTest(const string& fileName)
 int main(void)
 {
 	//test2(); // load from string!
-	//eu4Test();
+	//_getch();
+	 //eu4Test();
 	//stellarisTest();
 	
 	string fileName;
