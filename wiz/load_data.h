@@ -596,6 +596,11 @@ namespace wiz {
 			bool AddData(const string& position, const string& data, const string& condition = "") {
 				return AddData(global, position, data, condition);
 			}
+			// 
+			bool AddNoNameUserType(const string& position, const string& data, const string& condition = "")
+			{
+				return AddNoNameUserType(global, position, data, condition);
+			}
 			// SetQuery
 			bool SetData(const string& position, const string& varName, const string& data, const string& condition = "")
 			{
@@ -791,6 +796,45 @@ namespace wiz {
 								user_n++;
 							}
 						}
+						isTrue = true;
+					}
+					return isTrue;
+				}
+				else {
+					return false;
+				}
+			}
+			static bool AddNoNameUserType(UserType& global, const string& position, const string& data, const string& condition = "")
+			{
+				UserType utTemp = UserType("");
+				bool isTrue = false;
+
+				if (false == LoadDataFromString(data, utTemp))
+				{
+					return false;
+				}
+				auto finded = Utility::Find(&global, position);
+				if (finded.first) {
+					for (int i = 0; i < finded.second.size(); ++i) {
+						int item_n = 0;
+						int user_n = 0;
+
+						/// chk temp test codes - > using flag? 1->Exist 2->Comparision?
+						//if (finded.second[i]->GetItem("base_tax").GetCount() > 0) { continue; }
+						///~end
+						if (false == condition.empty()) {
+							Condition cond(condition, finded.second[i], &global);
+
+							while (cond.Next());
+
+							if ("TRUE" != cond.Now()[0])
+							{
+								//cout << cond.Now()[0] << endl;
+								continue;
+							}
+						}
+						finded.second[i]->AddUserTypeItem(utTemp);
+
 						isTrue = true;
 					}
 					return isTrue;
