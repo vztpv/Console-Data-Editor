@@ -856,17 +856,18 @@ namespace wiz {
 				auto finded = Utility::Find(&global, position);
 				if (finded.first) {
 					StringTokenizer tokenizer(var, "/");
+					UserType utTemp = UserType("");
+					if (false == LoadDataFromString(data, utTemp))
+					{
+						return false;
+					}
 
 					while(tokenizer.hasMoreTokens()) {
 						string utName = tokenizer.nextToken();
 						if (utName == " ") { utName = ""; }
-						UserType utTemp = UserType(utName);
-
-
-						if (false == LoadDataFromString(data, utTemp))
-						{
-							return false;
-						}
+						
+						utTemp.SetName(utName);
+						
 						for (int i = 0; i < finded.second.size(); ++i) {
 							int item_n = 0;
 							int user_n = 0;
@@ -904,52 +905,55 @@ namespace wiz {
 				bool isTrue = false;
 
 				if (finded.first) {
-					/// todo - if varName is "" then data : val val val ... 
-					if (varName == "" || varName == " ") {
-						UserType utTemp;
-						if (false == LoadDataFromString(data, utTemp)) {
-							return false;
-						}
-						const int n = utTemp.GetItem("").GetCount();
-						for (int i = 0; i < finded.second.size(); ++i) {
-							if (false == condition.empty()) {
-								Condition cond(condition, finded.second[i], &global);
-
-								while (cond.Next());
-
-								if ("TRUE" != cond.Now()[0])
-								{
-									//	cout << cond.Now()[0] << endl;
-									continue;
-								}
-							}
-							finded.second[i]->RemoveItemList("");
-
-							for (int j = 0; j < n; ++j) {
-								finded.second[i]->AddItem("", utTemp.GetItem("").Get(j));
-							}
-							isTrue = true;
-						}
-						return isTrue;
+					StringTokenizer tokenizer(varName, "/");
+					UserType utTemp("");
+					if (false == LoadDataFromString(data, utTemp)) {
+						return false;
 					}
-					else {
-						for (int i = 0; i < finded.second.size(); ++i) {
-							if (false == condition.empty()) {
-								Condition cond(condition, finded.second[i], &global);
+					while( tokenizer.hasMoreTokens() ) {
+						string _varName = tokenizer.nextToken();
+						/// todo - if varName is "" then data : val val val ... 
+						if (_varName == "" || _varName == " ") {
+							const int n = utTemp.GetItem("").GetCount();
+							for (int i = 0; i < finded.second.size(); ++i) {
+								if (false == condition.empty()) {
+									Condition cond(condition, finded.second[i], &global);
 
-								while (cond.Next());
+									while (cond.Next());
 
-								if ("TRUE" != cond.Now()[0])
-								{
-									//	cout << cond.Now()[0] << endl;
-									continue;
+									if ("TRUE" != cond.Now()[0])
+									{
+										//	cout << cond.Now()[0] << endl;
+										continue;
+									}
 								}
+								finded.second[i]->RemoveItemList("");
+
+								for (int j = 0; j < n; ++j) {
+									finded.second[i]->AddItem("", utTemp.GetItem("").Get(j));
+								}
+								isTrue = true;
 							}
-							finded.second[i]->SetItem(varName, data); /// chk??
-							isTrue = true;
 						}
-						return isTrue;
+						else {
+							for (int i = 0; i < finded.second.size(); ++i) {
+								if (false == condition.empty()) {
+									Condition cond(condition, finded.second[i], &global);
+
+									while (cond.Next());
+
+									if ("TRUE" != cond.Now()[0])
+									{
+										//	cout << cond.Now()[0] << endl;
+										continue;
+									}
+								}
+								finded.second[i]->SetItem(_varName, data); /// chk??
+								isTrue = true;
+							}
+						}
 					}
+					return isTrue;
 				}
 				else {
 					return false;
@@ -1084,6 +1088,9 @@ namespace wiz {
 				}
 				return str;
 			}
+			
+			/// todo - SetUserTypeName?? // 합치는 함수??
+
 			/*
 			bool RemoveData(const string& position) {
 			auto finded = Find(global, position);
@@ -1102,28 +1109,31 @@ namespace wiz {
 				auto finded = Utility::Find(&global, position);
 				bool isTrue = false;
 				
-				string _var = var;
-				if (_var == " ") { _var = ""; }
-
 				if (finded.first) {
-					for (int i = 0; i < finded.second.size(); ++i) {
-						UserType* temp = finded.second[i];
+					StringTokenizer tokenizer(var, "/");
+					while (tokenizer.hasMoreTokens()) {
+						string _var = tokenizer.nextToken();
+						if (_var == " ") { _var = ""; }
 
-						if (false == condition.empty()) {
-							Condition cond(condition, finded.second[i], &global);
+						for (int i = 0; i < finded.second.size(); ++i) {
+							UserType* temp = finded.second[i];
 
-							while (cond.Next());
+							if (false == condition.empty()) {
+								Condition cond(condition, finded.second[i], &global);
 
-							if ("TRUE" != cond.Now()[0])
-							{
-								// cout << cond.Now()[0] << endl;
-								continue;
+								while (cond.Next());
+
+								if ("TRUE" != cond.Now()[0])
+								{
+									// cout << cond.Now()[0] << endl;
+									continue;
+								}
 							}
-						}
 
-						temp->RemoveItemList(_var);
-						temp->RemoveUserTypeList(_var);
-						isTrue = true;
+							temp->RemoveItemList(_var);
+							temp->RemoveUserTypeList(_var);
+							isTrue = true;
+						}
 					}
 					return isTrue;
 				}
