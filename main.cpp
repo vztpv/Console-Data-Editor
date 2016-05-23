@@ -642,6 +642,7 @@ void MStyleTest(const string& fileName)
 								for (int i = 0; i < utVec[braceNum].Get(h)->GetUserTypeListSize(); ++i) {
 									if (count == idx) {
 										utVec[braceNum].Get(h)->GetUserTypeList(i).SetName(temp);
+										utVec[braceNum].Get(h)->MergeUserTypeName();
 									}
 									count++;
 								}
@@ -843,9 +844,8 @@ int main(void)
 
 	cout << "input name : ";
 	cin >> fileName;
-	
+		
 	MStyleTest(fileName);
-
-	_getch();
-	return 0;
+	
+	return 0;	
 }
