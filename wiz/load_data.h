@@ -566,6 +566,7 @@ namespace wiz {
 		private:
 			UserType global; // ToDo - remove!
 		public:
+			/// To Do.. static function -> ~.function.!
 			// InitQuery or LoadQuery
 			explicit LoadData() { InitWizDB(); }
 
@@ -689,7 +690,9 @@ namespace wiz {
 			static void SearchItem(UserType& global, vector<string>& positionVec, const string& var, const string& nowPosition,
 				UserType* ut, const string& condition)
 			{
-				if (ut->GetItem(var).GetCount() > 0) {
+				string _var = var;
+				if (_var == " ") { _var = ""; }
+				if (ut->GetItem(_var).GetCount() > 0) {
 					Condition cond(condition, ut, &global);
 
 					while (cond.Next());
@@ -707,7 +710,7 @@ namespace wiz {
 						SearchItem( 
 							global,
 							positionVec,
-							var,
+							_var,
 							nowPosition + "/" + temp,
 							ut->GetUserTypeList(i).Get(j),
 							condition
@@ -718,7 +721,11 @@ namespace wiz {
 			static void SearchUserType(UserType& global, vector<string>& positionVec, const string& var, const string& nowPosition,
 				UserType* ut, const string& condition)
 			{
-				if (ut->GetName() == var) {
+				string _var = var;
+				if (_var == " ") {
+					_var = "";
+				}
+				if (ut->GetName() == _var) {
 					Condition cond(condition, ut, &global);
 
 					while (cond.Next());
@@ -737,7 +744,7 @@ namespace wiz {
 						SearchUserType(
 							global,
 							positionVec,
-							var,
+							_var,
 							nowPosition + "/" + temp,
 							ut->GetUserTypeList(i).Get(j),
 							condition
@@ -836,6 +843,53 @@ namespace wiz {
 						finded.second[i]->AddUserTypeItem(utTemp);
 
 						isTrue = true;
+					}
+					return isTrue;
+				}
+				else {
+					return false;
+				}
+			}
+			static bool AddUserType(UserType& global, const string& position, const string& var, const string& data, const string& condition = "")
+			{
+				bool isTrue = false;
+				auto finded = Utility::Find(&global, position);
+				if (finded.first) {
+					StringTokenizer tokenizer(var, "/");
+
+					while(tokenizer.hasMoreTokens()) {
+						string utName = tokenizer.nextToken();
+						if (utName == " ") { utName = ""; }
+						UserType utTemp = UserType(utName);
+
+
+						if (false == LoadDataFromString(data, utTemp))
+						{
+							return false;
+						}
+						for (int i = 0; i < finded.second.size(); ++i) {
+							int item_n = 0;
+							int user_n = 0;
+
+							/// chk temp test codes - > using flag? 1->Exist 2->Comparision?
+							//if (finded.second[i]->GetItem("base_tax").GetCount() > 0) { continue; }
+							///~end
+							if (false == condition.empty()) {
+								Condition cond(condition, finded.second[i], &global);
+
+								while (cond.Next());
+
+								if ("TRUE" != cond.Now()[0])
+								{
+									//cout << cond.Now()[0] << endl;
+									continue;
+								}
+							}
+
+							finded.second[i]->AddUserTypeItem(utTemp);
+
+							isTrue = true;
+						}
 					}
 					return isTrue;
 				}
