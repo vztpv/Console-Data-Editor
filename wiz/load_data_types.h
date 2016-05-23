@@ -144,6 +144,47 @@ namespace wiz {
 
 		class UserType : public Type {
 		public:
+			void MergeUserTypeName() // MergeUserTypeName
+			{
+				bool chk = false;
+
+				for (int i = 0; i < userTypeList.GetCount(); ++i) {
+					for (int j = i + 1; j < userTypeList.GetCount(); ++j) {
+						if (userTypeList[i].GetName() == userTypeList[j].GetName()) {
+							chk = true; 
+							break;
+						}
+					}
+					if (chk) { break; }
+				}
+				if (chk) {
+					Dictionary< TypeArray< UserType* > > temp;
+					int k = _GetIndex(ilist, 2, 0);
+
+					for (int i = 0; i < userTypeList.GetCount(); ++i) {
+						int index = -1;
+						if (!temp.Search(TypeArray<UserType*>(userTypeList[i].GetName()), &index))
+						{
+							temp.PushBack(TypeArray<UserType*>(userTypeList[i].GetName()));//
+							temp.Search(TypeArray<UserType*>(userTypeList[i].GetName()), &index);
+						}
+						else {
+							// ilist left shift 1.
+							for (int j = k + 1; j < ilist.size(); ++j) {
+								ilist[j - 1] = ilist[j];
+							}
+							ilist.resize(ilist.size() - 1);
+						}
+						k = _GetIndex(ilist, 2, k + 1);
+
+						for (int j = 0; j < userTypeList[i].GetCount(); ++j) {
+							temp[index].Push(userTypeList[i].Get(j));
+						}
+					}
+					userTypeList = std::move(temp);
+				}
+			}
+		public:
 			const vector<int>& GetIList() const { return ilist; }
 			vector<int>& GetIList() { return ilist; }
 			int GetItemListSize()const { return itemList.GetCount(); }
