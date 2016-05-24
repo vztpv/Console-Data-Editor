@@ -877,7 +877,7 @@ namespace wiz {
 							///~end
 							if (false == condition.empty()) {
 								string _condition = condition;
-								_condition = wiz::String::replace(_condition, "~~", var);
+								_condition = wiz::String::replace(_condition, "~~", utName); //
 
 								Condition cond(_condition, finded.second[i], &global);
 
