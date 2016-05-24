@@ -130,10 +130,10 @@ void stellarisTest()
 		//	cout << global.GetData("species/ /", "TRUE") << endl;
 
 			// cout << global.SearchItem("name", "TRUE") << endl;
-		cout << "chk" << endl;
-		cout << global.GetData("species/ ",
-			"EQ = { portrait /identity \"human\" ~ 2 }") << endl;
-		cout << "chk_" << endl;
+		//cout << "chk" << endl;
+		//cout << global.GetData("species/ ",
+		//	"EQ = { portrait /identity \"human\" ~ 2 }") << endl;
+		//cout << "chk_" << endl;
 
 		global.SaveWizDB("gamestate_result", "1"); /// , 0
 		cout << "save end" << endl;
@@ -464,12 +464,12 @@ void MStyleTest(const string& fileName)
 
 						string strTemp = mdVec[idx].varName;
 						if (strTemp == " ") { strTemp = ""; }
-						const int count = utVec[braceNum].Get(mdVec[idx].no)->GetItem(strTemp).GetCount();
+						const int count = 1; // utVec[braceNum].Get(mdVec[idx].no)->GetItem(strTemp).size();
 						setcolor(0, 7);
 						
 						for (int i = 0; i < count; ++i) {
 							setcolor(0, 7); 
-							string temp = utVec[braceNum].Get(mdVec[idx].no)->GetItem(strTemp).Get(i);
+							string temp = utVec[braceNum].Get(mdVec[idx].no)->GetItem(strTemp)[idx].Get(0);
 							cout << "  " << temp;
 							strVec.push_back(temp);
 							if (i != count - 1) { cout << endl; }
