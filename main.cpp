@@ -819,14 +819,72 @@ void MStyleTest(const string& fileName)
 					/// else if( l? reload?
 					isFirst = true; // redraw?
 				}
-				else if ('t' == ch) { // pass???
+				else if ('t' == ch ) { // pass???
+					isFirst = true;
 					setcolor(0, 0);
 					system("cls");
 
 					setcolor(7, 0);
 					cout << "text edit mode" << endl;
 
-					// while..
+					// Add, AddUserType, Set, Remove, RemoveAll ?.
+					string temp;
+					getline(cin, temp);
+					
+					wiz::StringTokenizer tokenizer(temp, "|");
+					vector<string> strVecTemp;
+					
+					while (tokenizer.hasMoreTokens()) {
+						strVecTemp.push_back(tokenizer.nextToken());
+					}
+					if (!strVecTemp.empty()) {
+						try {
+							if ("add" == strVecTemp[0])
+							{
+								if (false == wiz::load_data::LoadData::AddData(utTemp, strVecTemp[1], strVecTemp[2], strVecTemp[3]))
+								{
+									cout << "faile to add" << endl; /// To Do to following code.
+								}
+							}
+							else if ("addusertype" == strVecTemp[0])
+							{
+								wiz::load_data::LoadData::AddUserType(utTemp, strVecTemp[1], strVecTemp[2], strVecTemp[3], strVecTemp[4]);
+							}
+							else if ("set" == strVecTemp[0])
+							{
+								wiz::load_data::LoadData::SetData(utTemp, strVecTemp[1], strVecTemp[2], strVecTemp[3], strVecTemp[4]);
+							}
+							else if ("remove" == strVecTemp[0])
+							{
+								wiz::load_data::LoadData::Remove(utTemp, strVecTemp[1], strVecTemp[2], strVecTemp[3]);
+							}
+							else if ("removeall" == strVecTemp[0])
+							{
+								wiz::load_data::LoadData::Remove(utTemp, strVecTemp[1], strVecTemp[2]);
+							}
+						}
+						catch (exception& e) {}
+						catch (wiz::Error& e) {}
+						catch (const char* e) {}
+						catch (const string& e) {}
+					}
+					//
+					if (1 == state)
+					{
+						idxVec.back();
+						idxVec.pop_back();
+						idx = 0;
+						// max!
+						if (0 <= idx - sizeOfWindow / 2)
+						{
+							Start = idx - sizeOfWindow / 2;
+						}
+						else {
+							Start = 0;
+						}
+						strVec.clear();
+						state = 0;
+					}
 				}
 			}
 		}
