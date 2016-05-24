@@ -519,7 +519,7 @@ namespace wiz {
 					/// ToDo - Change ^ to ' '
 					{
 						// for all, remove ^ in val
-						Utility::ReplaceAll(&globalTemp, '^', ' ');
+						Utility::ReplaceAll(&globalTemp,'^', ' ');
 					}
 					cout << "remove ^ end" << endl;
 
@@ -692,7 +692,7 @@ namespace wiz {
 			{
 				string _var = var;
 				if (_var == " ") { _var = ""; }
-				if (ut->GetItem(_var).GetCount() > 0) {
+				if (ut->GetItem(_var).size() > 0) {
 					Condition cond(condition, ut, &global);
 
 					while (cond.Next());
@@ -917,7 +917,7 @@ namespace wiz {
 						string _varName = tokenizer.nextToken();
 						/// todo - if varName is "" then data : val val val ... 
 						if (_varName == "" || _varName == " ") {
-							const int n = utTemp.GetItem("").GetCount();
+							const int n = utTemp.GetItem("").size();
 							for (int i = 0; i < finded.second.size(); ++i) {
 								if (false == condition.empty()) {
 									Condition cond(condition, finded.second[i], &global);
@@ -933,7 +933,7 @@ namespace wiz {
 								finded.second[i]->RemoveItemList("");
 
 								for (int j = 0; j < n; ++j) {
-									finded.second[i]->AddItem("", utTemp.GetItem("").Get(j));
+									finded.second[i]->AddItem("", utTemp.GetItem("")[j].Get(0));
 								}
 								isTrue = true;
 							}
@@ -1086,7 +1086,10 @@ namespace wiz {
 							}
 						}
 
-						str = str + finded.second[i]->GetItem(_var).ToString() + "\n";
+						const int num = finded.second[i]->GetItem(_var).size();
+						for (int k = 0; k < num; ++k) {
+							str = str + finded.second[i]->GetItem(_var)[k].Get(0) + "\n";
+						}
 					}
 				}
 				return str;
@@ -1260,6 +1263,7 @@ namespace wiz {
 			// SaveQuery
 			static bool SaveWizDB(UserType& global, const string& fileName, const string option = "0") { /// , int option
 				ofstream outFile;
+				if (fileName.empty()) { return false; }
 				outFile.open(fileName + "temp", ios::binary);
 				if (outFile.fail()) { return false; }
 
@@ -1278,6 +1282,9 @@ namespace wiz {
 					ofstream outFile;
 					inFile.open(fileName + "temp");
 					outFile.open(fileName);
+
+					if (outFile.fail()) { inFile.close(); return false; }
+
 					string temp;
 					int line_size = 0;
 					int line_count = 0;
@@ -1331,7 +1338,7 @@ namespace wiz {
 								continue;
 							}
 						}
-						count = count + (finded.second[i]->GetItem(_var).GetCount());
+						count = count + (finded.second[i]->GetItem(_var).size());
 					}
 				}
 				return 0 != count;

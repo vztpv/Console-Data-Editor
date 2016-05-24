@@ -266,7 +266,7 @@ namespace wiz {
 					if (x.first) {
 						//if (x.second.size() > 1) { return "ERROR"; } ///
 						for (int i = 0; i < x.second.size(); ++i) {
-							if (x.second[i]->GetItem(var).GetCount() > 0)
+							if (x.second[i]->GetItem(var).size() > 0)
 							{
 								return "TRUE";
 							}
@@ -295,7 +295,7 @@ namespace wiz {
 						//if (x.second.size() > 1) { return "ERROR"; } ///
 
 						for (int i = 0; i < x.second.size(); ++i) {
-							if (0 < x.second[i]->GetItem(var).GetCount())
+							if (0 < x.second[i]->GetItem(var).size())
 							{
 								return "FALSE";
 							}
@@ -333,19 +333,19 @@ namespace wiz {
 
 				if ("~" != position1 && false == x.first)
 				{
-					return "ERROR";
+					return "ERROR GV1";
 				}
 				if ("~" != position2 && false == y.first)
 				{
-					return "ERROR";
+					return "ERROR GV2";
 				}
 				//
 				if (((x.first && x.second.size() > 1) || (y.first && y.second.size() > 1))) {
-					return "ERROR";
+					return "ERROR GV3";
 				}
 
-				TypeArray<string> value1; 
-				TypeArray<string> value2;
+				vector<TypeArray<string>> value1;  // Item<string> <- 
+				vector<TypeArray<string>> value2;
 				
 				// added..
 				if (position1 != "~") {
@@ -356,21 +356,31 @@ namespace wiz {
 				}
 				//
 				if (position1 == "~" ) {
-					value1.Push(var1);
+					value1.push_back(TypeArray<string>(var1));
+					value1[0].Push(var1);
 				}
 				if (position2 == "~") {
-					value2.Push(var2);
+					value2.push_back(TypeArray<string>(var2));
+					value2[0].Push(var2);
 				}
 
-				if (option == "0" && (value1.GetCount() > 1 || value2.GetCount() > 1)) {
-					return "ERROR";
+				//
+				if (value1.size() == 0) {
+					return "ERROR GV4";
+				}
+				if (value2.size() == 0) {
+					return "ERROR GV5";
+				}
+
+				if (option == "0" && (value1.size() > 1 || value2.size() > 1)) {
+					return "ERROR GV6";
 				}
 
 				if ("COMP<" == op) {
 					if ("0" != option) { /// ToDo.. // 0. just 1-1, // 1. for any case // 2. for all case
-						for (int i = 0; i < value1.GetCount(); ++i) {
-							for (int j = 0; j < value2.GetCount(); ++j) {
-								if (Compare(value1.Get(i), value2.Get(j)) == "< 0") {
+						for (int i = 0; i < value1.size(); ++i) {
+							for (int j = 0; j < value2.size(); ++j) {
+								if (Compare(value1[i].Get(0), value2[j].Get(0)) == "< 0") {
 									if ("1" == option) { return "TRUE"; }
 								}
 								else {
@@ -384,7 +394,7 @@ namespace wiz {
 						}
 					}
 					else {
-						if (Compare(value1.Get(0), value2.Get(0)) == "< 0") {
+						if (Compare(value1[0].Get(0), value2[0].Get(0)) == "< 0") {
 							return "TRUE";
 						}
 					}
@@ -392,9 +402,9 @@ namespace wiz {
 				}
 				else if ("COMP>" == op) {
 					if ("0" != option) { /// ToDo.. // 0. just 1-1, // 1. for any case // 2. for all case
-						for (int i = 0; i < value1.GetCount(); ++i) {
-							for (int j = 0; j < value2.GetCount(); ++j) {
-								if (Compare(value1.Get(i), value2.Get(j)) == "> 0") {
+						for (int i = 0; i < value1.size(); ++i) {
+							for (int j = 0; j < value2.size(); ++j) {
+								if (Compare(value1[i].Get(0), value2[j].Get(0)) == "> 0") {
 									if ("1" == option) { return "TRUE"; }
 								}
 								else {
@@ -408,7 +418,7 @@ namespace wiz {
 						}
 					}
 					else {
-						if (Compare(value1.Get(0), value2.Get(0)) == "> 0") {
+						if (Compare(value1[0].Get(0), value2[0].Get(0)) == "> 0") {
 							return "TRUE";
 						}
 					}
@@ -416,9 +426,9 @@ namespace wiz {
 				}
 				else if ("EQ" == op) {
 					if ("0" != option) { /// ToDo.. // 0. just 1-1, // 1. for any case // 2. for all case
-						for (int i = 0; i < value1.GetCount(); ++i) {
-							for (int j = 0; j < value2.GetCount(); ++j) {
-								if (Compare(value1.Get(i), value2.Get(j)) == "== 0") {
+						for (int i = 0; i < value1.size(); ++i) {
+							for (int j = 0; j < value2.size(); ++j) {
+								if (Compare(value1[i].Get(0), value2[j].Get(0)) == "== 0") {
 									if ("1" == option) { return "TRUE"; }
 								}
 								else {
@@ -432,7 +442,7 @@ namespace wiz {
 						}
 					}
 					else {
-						if (Compare(value1.Get(0), value2.Get(0)) == "== 0") {
+						if (Compare(value1[0].Get(0), value2[0].Get(0)) == "== 0") {
 							return "TRUE";
 						}
 					}
@@ -440,9 +450,9 @@ namespace wiz {
 				}
 				else if ("NOTEQ" == op) {
 					if ("0" != option) { /// ToDo.. // 0. just 1-1, // 1. for any case // 2. for all case
-						for (int i = 0; i < value1.GetCount(); ++i) {
-							for (int j = 0; j < value2.GetCount(); ++j) {
-								if (Compare(value1.Get(i), value2.Get(j)) != "== 0") {
+						for (int i = 0; i < value1.size(); ++i) {
+							for (int j = 0; j < value2.size(); ++j) {
+								if (Compare(value1[i].Get(0), value2[j].Get(0)) != "== 0") {
 									if ("1" == option) { return "TRUE"; }
 								}
 								else {
@@ -456,14 +466,14 @@ namespace wiz {
 						}
 					}
 					else {
-						if (Compare(value1.Get(0), value2.Get(0)) != "== 0") {
+						if (Compare(value1[0].Get(0), value2[0].Get(0)) != "== 0") {
 							return "TRUE";
 						}
 					}
 					return "FALSE";
 				}
 
-				return "ERROR";
+				return "ERROR GV7";
 			}
 			string BoolOperation(const string& op, const string& x, const string& y)
 			{

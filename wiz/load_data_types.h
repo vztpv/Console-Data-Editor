@@ -29,7 +29,7 @@ namespace wiz {
 			bool IsFail() const { // change body?
 				return "" == name;
 			}
-			string GetName()const {
+			const string& GetName()const {
 				return name;
 			}
 			void SetName(string name)
@@ -187,7 +187,7 @@ namespace wiz {
 		public:
 			const vector<int>& GetIList() const { return ilist; }
 			vector<int>& GetIList() { return ilist; }
-			int GetItemListSize()const { return itemList.GetCount(); }
+			int GetItemListSize()const { return itemList.size(); }
 			int GetUserTypeListSize()const { return userTypeList.GetCount(); }
 			TypeArray<string>& GetItemList(const int idx) { return itemList[idx]; }
 			const TypeArray<string>& GetItemList(const int idx) const { return itemList[idx]; }
@@ -210,8 +210,8 @@ namespace wiz {
 			const UserType* GetParent()const { return parent; }
 		private:
 			UserType* parent;
-			vector<int> ilist;
-			Dictionary< TypeArray<string> > itemList;
+			std::vector<int> ilist;
+			std::vector< TypeArray<string> > itemList;
 			Dictionary< TypeArray<UserType*>> userTypeList;
 		public:
 			explicit UserType(const string& name = "") : Type(name) , parent(NULL) { }
@@ -265,7 +265,7 @@ namespace wiz {
 			void _Remove()
 			{
 				ilist = vector<int>();
-				itemList = Dictionary< TypeArray<string> >();
+				itemList = vector< TypeArray<string> >();
 				RemoveUserTypeList();
 			}
 
@@ -281,10 +281,10 @@ namespace wiz {
 			void RemoveItemList(const string& varName)
 			{
 				int k = _GetIndex(ilist, 1, 0);
-				Dictionary<TypeArray<string>> tempDic;
-				for (int i = 0; i < itemList.GetCount(); ++i) {
+				vector<TypeArray<string>> tempDic;
+				for (int i = 0; i < itemList.size(); ++i) {
 					if (varName != itemList[i].GetName()) {
-						tempDic.PushBack(itemList[i]);
+						tempDic.push_back(itemList[i]);
 					}
 					else {
 						// remove item, ilist left shift 1.
@@ -299,7 +299,7 @@ namespace wiz {
 			}
 			void RemoveItemList() /// ALL
 			{
-				itemList = Dictionary<TypeArray<string>>();
+				itemList = vector<TypeArray<string>>();
 				//
 				vector<int> temp;
 				for (int i = 0; i < ilist.size(); ++i) {
@@ -313,10 +313,10 @@ namespace wiz {
 			void RemoveEmptyItem() // fixed..
 			{
 				int k = _GetIndex(ilist, 1, 0);
-				Dictionary<TypeArray<string>> tempDic;
-				for (int i = 0; i < itemList.GetCount(); ++i) {
+				vector<TypeArray<string>> tempDic;
+				for (int i = 0; i < itemList.size(); ++i) {
 					if (itemList[i].GetCount() > 0) {
-						tempDic.PushBack(itemList[i]);
+						tempDic.push_back(itemList[i]);
 					}
 					else {
 						// remove item, ilist left shift 1.
@@ -333,7 +333,7 @@ namespace wiz {
 			{
 				/// parent->removeUserType(name); - ToDo - X?
 				ilist = vector<int>();
-				itemList = Dictionary< TypeArray<string> >();
+				itemList = vector< TypeArray<string> >();
 
 				RemoveUserTypeList();
 			}
@@ -386,7 +386,7 @@ namespace wiz {
 		public:
 			bool empty()const { return ilist.empty(); }
 			void AddItem(const string& name, const string& item) {
-				int index = -1;
+				/*int index = -1;
 				if (!itemList.Search(TypeArray<string>(name), &index))
 				{
 					ilist.push_back(1);
@@ -394,7 +394,12 @@ namespace wiz {
 					itemList.PushBack(TypeArray<string>(name));//
 					itemList.Search(TypeArray<string>(name), &index);
 				}
-				itemList[index].Push(item);
+				itemList[index].Push(item);				
+				*/
+				TypeArray<string> temp( name );
+				temp.Push( item );
+				itemList.push_back(temp);
+				ilist.push_back(1);
 			}
 			void AddUserTypeItem(const UserType& item) {
 				int index = -1;
@@ -412,23 +417,27 @@ namespace wiz {
 				userTypeList[index].Push(temp);
 			}
 
-			TypeArray<string> GetItem(const string& name) const {
-				TypeArray<string> temp;
-				int index = -1;
-				if (itemList.Search(TypeArray<string>(name), &index))
-				{
-					temp = itemList[index];//
+			vector<TypeArray<string>> GetItem(const string& name) const {
+				vector<TypeArray<string>> temp;
+
+				for (int i = 0; i < itemList.size(); ++i) {
+					if (itemList[i].GetName() == name) {
+						temp.push_back(itemList[i]);
+					}
 				}
 				return temp;
 			}
 			bool SetItem(const string& name, const string& value) {
 				int index = -1;
-				if (itemList.Search(TypeArray<string>(name), &index))
-				{
-					for (int i = 0; i < itemList[index].GetCount(); ++i) {
-						itemList[index].Set(i, value);//
+				
+				for (int i = 0; i < itemList.size(); ++i) {
+					if (itemList[i].GetName() == name)
+					{
+						itemList[i].Set(0, value);
+						index = i;
 					}
 				}
+
 				return -1 != index;
 			}
 			TypeArray<UserType> GetUserTypeItem(const string& name) const { /// chk...
@@ -468,7 +477,7 @@ namespace wiz {
 								stream << ut->itemList[itemListCount].GetName() << "=";
 							stream << ut->itemList[itemListCount].Get(j);
 							if (j != ut->itemList[itemListCount].GetCount() - 1)
-								stream << " ";
+								stream << "\n";
 						}
 						stream << "\n";
 						itemListCount++;
@@ -531,7 +540,7 @@ namespace wiz {
 				string temp;
 				int itemListCount = 0;
 				
-				for (int i = 0; i < itemList.GetCount(); ++i) {
+				for (int i = 0; i < itemList.size(); ++i) {
 					for (int j = 0; j < itemList[itemListCount].GetCount(); j++) {
 						if (itemList[itemListCount].GetName() != "")
 							temp = temp + itemList[itemListCount].GetName() + " = ";
@@ -540,7 +549,7 @@ namespace wiz {
 							temp = temp + "/";
 						}
 					}
-					if (i != itemList.GetCount() - 1)
+					if (i != itemList.size() - 1)
 					{
 						temp = temp + "/";
 					}
@@ -553,7 +562,7 @@ namespace wiz {
 				string temp;
 				int itemListCount = 0;
 
-				for (int i = 0; i < itemList.GetCount(); ++i) {
+				for (int i = 0; i < itemList.size(); ++i) {
 					for (int j = 0; j < itemList[itemListCount].GetCount(); j++) {
 						if (itemList[itemListCount].GetName() != "")
 							temp = temp + itemList[itemListCount].GetName();
@@ -564,7 +573,7 @@ namespace wiz {
 							temp = temp + "/";
 						}
 					}
-					if (i != itemList.GetCount() - 1)
+					if (i != itemList.size() - 1)
 					{
 						temp = temp + "/";
 					}
@@ -586,7 +595,7 @@ namespace wiz {
 						if (j != userTypeList[userTypeListCount].GetCount() - 1)
 							temp = temp + "/";
 					}
-					if (i != itemList.GetCount() - 1)
+					if (i != itemList.size() - 1)
 					{
 						temp = temp + "/";
 					}

@@ -447,8 +447,14 @@ namespace wiz {
 
 				for (int i = 0; i < itemListSize; ++i) {
 					TypeArray<std::string>& itemList = temp->GetItemList(i);
+					
+					string name = itemList.GetName();
+					ChangeCharInString(name, target_ch, result_ch);
+					itemList.SetName(name);
+					
 					for (int j = 0; j < itemList.GetCount(); ++j) {
 						ChangeCharInString(itemList.Get(j), target_ch, result_ch);
+						
 					}
 				}
 				for (int i = 0; i < userTypeListSize; ++i) {
