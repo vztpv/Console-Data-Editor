@@ -469,7 +469,7 @@ void MStyleTest(const string& fileName)
 						
 						for (int i = 0; i < count; ++i) {
 							setcolor(0, 7); 
-							string temp = utVec[braceNum].Get(mdVec[idx].no)->GetItem(strTemp)[idx].Get(0);
+							string temp = utVec[braceNum].Get(mdVec[idx].no)->GetItem(strTemp)[idx-count_userType].Get(0);
 							cout << "  " << temp;
 							strVec.push_back(temp);
 							if (i != count - 1) { cout << endl; }
