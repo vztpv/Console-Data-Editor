@@ -205,12 +205,16 @@ namespace wiz {
 					this->AddUserTypeItem(*utTa.Get(i));
 				}
 			}
+		public:
+			UserType* GetParent() { return parent; }
+			const UserType* GetParent()const { return parent; }
 		private:
+			UserType* parent;
 			vector<int> ilist;
 			Dictionary< TypeArray<string> > itemList;
 			Dictionary< TypeArray<UserType*>> userTypeList;
 		public:
-			explicit UserType(const string& name = "") : Type(name) { }
+			explicit UserType(const string& name = "") : Type(name) , parent(NULL) { }
 			UserType(const UserType& ut) : Type(ut.GetName()) {
 				Reset(ut);  // Initial
 			}
@@ -240,6 +244,7 @@ namespace wiz {
 			void Reset(const UserType& ut) { /// UT 전체를 복사한다.
 				ilist = ut.ilist;
 				itemList = ut.itemList;
+				parent = ut.parent;
 
 				for (int i = 0; i < ut.userTypeList.GetCount(); i++) {
 					TypeArray<UserType*> temp(ut.userTypeList[i].GetName());
@@ -250,6 +255,8 @@ namespace wiz {
 				}
 			}
 			void Reset2(UserType&& ut) {
+				parent = ut.parent;
+				ut.parent = NULL; /// chk..
 				ilist = std::move(ut.ilist);
 				itemList = std::move(ut.itemList);
 				userTypeList = std::move(ut.userTypeList);
@@ -259,7 +266,6 @@ namespace wiz {
 			{
 				ilist = vector<int>();
 				itemList = Dictionary< TypeArray<string> >();
-
 				RemoveUserTypeList();
 			}
 
@@ -304,17 +310,24 @@ namespace wiz {
 				}
 				ilist = move( temp );
 			}
-			void RemoveEmptyItem()
+			void RemoveEmptyItem() // fixed..
 			{
-				Dictionary< TypeArray< string > > temp;
-
-				for (int i = 0; i < itemList.GetCount(); ++i)
-				{
-					if (0 != itemList[i].GetCount())
-						temp.PushBack(itemList[i]);
+				int k = _GetIndex(ilist, 1, 0);
+				Dictionary<TypeArray<string>> tempDic;
+				for (int i = 0; i < itemList.GetCount(); ++i) {
+					if (itemList[i].GetCount() > 0) {
+						tempDic.PushBack(itemList[i]);
+					}
+					else {
+						// remove item, ilist left shift 1.
+						for (int j = k + 1; j < ilist.size(); ++j) {
+							ilist[j - 1] = ilist[j];
+						}
+						ilist.resize(ilist.size() - 1);
+					}
+					k = _GetIndex(ilist, 1, k + 1);
 				}
-
-				itemList = move(temp);
+				itemList = move(tempDic);
 			}
 			void Remove()
 			{
@@ -393,6 +406,9 @@ namespace wiz {
 					userTypeList.Search(TypeArray<UserType*>(item.GetName()), &index);
 				}
 				UserType* temp( new UserType(item) );
+			
+				temp->parent = this;
+
 				userTypeList[index].Push(temp);
 			}
 

@@ -299,7 +299,7 @@ namespace wiz {
 			{
 				vector< UserType* > temp;
 				if (position.empty()) { temp.push_back(global); return{ true, temp }; }
-
+				if (position == "..") { temp.push_back(global->GetParent());  return{ true, temp }; }
 				StringTokenizer tokenizer(position, "/");
 				vector<string> strVec;
 				Deck<pair< UserType*, int>> utDeck;
