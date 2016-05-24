@@ -369,8 +369,10 @@ namespace wiz {
 					else {
 						// remove usertypeitem, ilist left shift 1.
 						for (int j = 0; j < userTypeList[i].GetCount(); ++j) {
-							delete userTypeList[i].Get(j);
-							userTypeList[i].Set(j, NULL);
+							if (NULL != userTypeList[i].Get(j)) {
+								delete userTypeList[i].Get(j);
+								userTypeList[i].Set(j, NULL);
+							}
 						}
 						for (int j = k + 1; j < ilist.size(); ++j) {
 							ilist[j - 1] = ilist[j];
