@@ -876,7 +876,10 @@ namespace wiz {
 							//if (finded.second[i]->GetItem("base_tax").GetCount() > 0) { continue; }
 							///~end
 							if (false == condition.empty()) {
-								Condition cond(condition, finded.second[i], &global);
+								string _condition = condition;
+								_condition = wiz::String::replace(_condition, "~~", var);
+
+								Condition cond(_condition, finded.second[i], &global);
 
 								while (cond.Next());
 

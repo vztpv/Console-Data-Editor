@@ -259,8 +259,9 @@ namespace wiz {
 			}
 			string GetValue(const string& op, const string& var, const string& val, UserType* utPosition, UserType* global, const string& option = "0")
 			{
+				/// ExistItem, ExistUserType
 				if (NULL == utPosition) { return "ERROR"; }
-				if ("EXIST" == op) { /// option == 1?	
+				if ("EXISTITEM" == op) { /// option == 1?	
 					auto x = Get(var, val, utPosition, global);
 					if (x.first) {
 						//if (x.second.size() > 1) { return "ERROR"; } ///
@@ -274,13 +275,42 @@ namespace wiz {
 					}
 					return "FALSE";
 				}
-				else if ("NOTEXIST" == op) { /// option == 2 ?
+				else if ("EXISTUSERTYPE" == op) { /// option == 1?	
+					auto x = Get(var, val, utPosition, global);
+					if (x.first) {
+						//if (x.second.size() > 1) { return "ERROR"; } ///
+						for (int i = 0; i < x.second.size(); ++i) {
+							if (x.second[i]->GetUserTypeItem(var).GetCount() > 0)
+							{
+								return "TRUE";
+							}
+						}
+						return "FALSE";
+					}
+					return "FALSE";
+				}
+				else if ("NOTEXISTITEM" == op) { /// option == 2 ?
 					auto x = Get(var, val, utPosition, global);
 					if (x.first) {
 						//if (x.second.size() > 1) { return "ERROR"; } ///
 
 						for (int i = 0; i < x.second.size(); ++i) {
 							if (0 < x.second[i]->GetItem(var).GetCount())
+							{
+								return "FALSE";
+							}
+						}
+						return "TRUE";
+					}
+					return "FALSE";
+				}
+				else if ("NOTEXISTUSERTYPE" == op) { /// option == 2 ?
+					auto x = Get(var, val, utPosition, global);
+					if (x.first) {
+						//if (x.second.size() > 1) { return "ERROR"; } ///
+
+						for (int i = 0; i < x.second.size(); ++i) {
+							if (0 < x.second[i]->GetUserTypeItem(var).GetCount())
 							{
 								return "FALSE";
 							}
@@ -325,10 +355,10 @@ namespace wiz {
 					value2 = y.second[0]->GetItem(var2);
 				}
 				//
-				if (value1.GetCount() == 0) {
+				if (position1 == "~" ) {
 					value1.Push(var1);
 				}
-				if (value2.GetCount() == 0) {
+				if (position2 == "~") {
 					value2.Push(var2);
 				}
 
@@ -520,7 +550,7 @@ namespace wiz {
 
 									tokenStack.push(BoolOperation(op, operand1, operand2));
 								}
-								else { // EXIST, NOTEXIST 
+								else { // EXIST, NOTEXIST for ( ITEM or USERTYPE ) 
 									tokenStack.pop();
 									tokenStack.pop();
 									tokenStack.pop();
