@@ -241,6 +241,7 @@ namespace wiz {
 				for (int i = 0; i < itemList.size(); ++i) {
 					if (varName != itemList[i].GetName()) {
 						tempDic.push_back(itemList[i]);
+						k = _GetIndex(ilist, 1, k + 1);
 					}
 					else {
 						// remove item, ilist left shift 1.
@@ -248,8 +249,8 @@ namespace wiz {
 							ilist[j - 1] = ilist[j];
 						}
 						ilist.resize(ilist.size() - 1);	
+						k = _GetIndex(ilist, 1, k);
 					}
-					k = _GetIndex(ilist, 1, k + 1);
 				}
 				itemList = ( tempDic );
 			}
@@ -321,6 +322,7 @@ namespace wiz {
 				for (int i = 0; i < userTypeList.size(); ++i) {
 					if (varName != userTypeList[i].GetName()) {
 						tempDic.push_back(userTypeList[i]);
+						k = _GetIndex(ilist, 2, k + 1);
 					}
 					else {
 						// remove usertypeitem, ilist left shift 1.
@@ -334,9 +336,9 @@ namespace wiz {
 							ilist[j - 1] = ilist[j];
 						}
 						ilist.resize(ilist.size() - 1);	
-						
+						k = _GetIndex(ilist, 2, k);
 					}
-					k = _GetIndex(ilist, 2, k + 1);
+				
 				}
 				userTypeList = move( tempDic );
 			}
