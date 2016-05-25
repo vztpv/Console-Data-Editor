@@ -193,7 +193,7 @@ void MStyleTest(const string& fileName)
 			count_userType = 0;
 			count_item = 0;
 			
-			for (int h = 0; h < utVec[braceNum].GetCount(); ++h) {
+			for (int h = 0; h < utVec[braceNum].size(); ++h) {
 				for (int i = 0; i < utVec[braceNum].Get(h)->GetUserTypeListSize(); ++i) {
 					MData mdTemp{ true, utVec[braceNum].Get(h)->GetUserTypeList(i).GetName(), h };
 					if (mdTemp.varName.empty() && utVec[braceNum].Get(h)->GetUserTypeList(i).valid()) {
@@ -207,7 +207,7 @@ void MStyleTest(const string& fileName)
 					count_userType++;
 				}
 			}
-			for (int h = 0; h < utVec[braceNum].GetCount(); ++h) {
+			for (int h = 0; h < utVec[braceNum].size(); ++h) {
 				for (int i = 0; i < utVec[braceNum].Get(h)->GetItemListSize(); ++i) {
 					MData mdTemp{ false, utVec[braceNum].Get(h)->GetItemList(i).GetName(), h };
 					if (mdTemp.varName.empty() && utVec[braceNum].Get(h)->GetItemList(i).valid()) {
@@ -436,13 +436,13 @@ void MStyleTest(const string& fileName)
 						strTemp = "";
 					}
 
-					if (utVec[braceNum - 1].Get(mdVec[idxVec[braceNum - 1]].no)->GetUserTypeItemRef(strTemp, ref))
+					if (utVec[braceNum - 1].Get(mdVec[idxVec[braceNum - 1]].no)->GetLastUserTypeItemRef(strTemp, ref))
 					{
 						//
 					}
 					utVec[braceNum] = ref;
 
-					utVec2[braceNum - 1]->GetUserTypeItemRef(strTemp, ref);
+					utVec2[braceNum - 1]->GetLastUserTypeItemRef(strTemp, ref);
 					utVec2[braceNum] = ref.Get(mdVec[idxVec[braceNum - 1]].no);
 
 					Start = 0;
@@ -469,9 +469,12 @@ void MStyleTest(const string& fileName)
 						
 						for (int i = 0; i < count; ++i) {
 							setcolor(0, 7); 
-							string temp = utVec[braceNum].Get(mdVec[idx].no)->GetItem(strTemp)[idx-count_userType].Get(0);
+							
+							auto x = utVec[braceNum].Get(mdVec[idx].no)->GetItemList(idx - count_userType);
+							string temp = x.Get(0);
 							cout << "  " << temp;
 							strVec.push_back(temp);
+							//}
 							if (i != count - 1) { cout << endl; }
 						}
 					}
@@ -588,7 +591,7 @@ void MStyleTest(const string& fileName)
 							cout << "var : ";
 							cin >> var;
 							cout << "val : ";
-							getchar();
+							getchar(); //
 							getline(cin, val);
 							utVec2[braceNum]->AddItem(var, val);
 
@@ -638,11 +641,10 @@ void MStyleTest(const string& fileName)
 							cin >> temp;
 
 							int count = 0;
-							for (int h = 0; h < utVec[braceNum].GetCount(); ++h) {
+							for (int h = 0; h < utVec[braceNum].size(); ++h) {
 								for (int i = 0; i < utVec[braceNum].Get(h)->GetUserTypeListSize(); ++i) {
 									if (count == idx) {
 										utVec[braceNum].Get(h)->GetUserTypeList(i).SetName(temp);
-										utVec[braceNum].Get(h)->MergeUserTypeName();
 									}
 									count++;
 								}
@@ -661,13 +663,13 @@ void MStyleTest(const string& fileName)
 								
 								int count = 0;
 								int count_userType = 0;
-								for (int h = 0; h < utVec[braceNum].GetCount(); ++h) {
+								for (int h = 0; h < utVec[braceNum].size(); ++h) {
 									for (int i = 0; i < utVec[braceNum].Get(h)->GetUserTypeListSize(); ++i) {
 										count++;
 										count_userType++;
 									}
 								}
-								for (int h = 0; h < utVec[braceNum].GetCount(); ++h) {
+								for (int h = 0; h < utVec[braceNum].size(); ++h) {
 									for (int i = 0; i < utVec[braceNum].Get(h)->GetItemListSize(); ++i) {
 										if (idxVec.back() == count) {
 											utVec[braceNum].Get(h)->GetItemList(i).Get(idx) = value;
@@ -693,12 +695,12 @@ void MStyleTest(const string& fileName)
 								cin >> temp;
 								name = temp;
 								int count = 0;
-								for (int h = 0; h < utVec[braceNum].GetCount(); ++h) {
+								for (int h = 0; h < utVec[braceNum].size(); ++h) {
 									for (int i = 0; i < utVec[braceNum].Get(h)->GetUserTypeListSize(); ++i) {
 										count++;
 									}
 								}
-								for (int h = 0; h < utVec[braceNum].GetCount(); ++h) {
+								for (int h = 0; h < utVec[braceNum].size(); ++h) {
 									for (int i = 0; i < utVec[braceNum].Get(h)->GetItemListSize(); ++i) {
 										if (idx == count) {
 											utVec[braceNum].Get(h)->GetItemList(i).SetName(name);
@@ -713,7 +715,7 @@ void MStyleTest(const string& fileName)
 						if (idx < count_userType)
 						{
 							int count = 0;
-							for (int h = 0; h < utVec[braceNum].GetCount(); ++h) {
+							for (int h = 0; h < utVec[braceNum].size(); ++h) {
 								for (int i = 0; i < utVec[braceNum].Get(h)->GetUserTypeListSize(); ++i) {
 									if (count == idx) {
 										string temp = mdVec[idx].varName;
@@ -726,21 +728,29 @@ void MStyleTest(const string& fileName)
 								}
 							}
 							idx = 0;
+							Start = 0;
 						}
 						else {
 							if (state == 0) {
 								int count = 0;
-								for (int h = 0; h < utVec[braceNum].GetCount(); ++h) {
+								int count_ut = 0;
+								for (int h = 0; h < utVec[braceNum].size(); ++h) {
 									for (int i = 0; i < utVec[braceNum].Get(h)->GetUserTypeListSize(); ++i) {
 										count++;
+										count_ut++;
 									}
 								}
-								for (int h = 0; h < utVec[braceNum].GetCount(); ++h) {
+								for (int h = 0; h < utVec[braceNum].size(); ++h) {
 									for (int i = 0; i < utVec[braceNum].Get(h)->GetItemListSize(); ++i) {
 										if (count == idx) {
 											string temp = mdVec[idx].varName;
 											if (temp == " ") { temp = ""; }
-											utVec[braceNum].Get(h)->RemoveItemList(temp);
+
+											utVec[braceNum].Get(h)->GetItemList(idx - count_ut).Remove(0);
+											if (utVec[braceNum].Get(h)->GetItemList(idx - count_ut).size() == 0) {
+												utVec[braceNum].Get(h)->GetItemList(idx - count_ut).Remove();
+												utVec[braceNum].Get(h)->RemoveEmptyItem();
+											}
 										}
 										count++;
 									}
@@ -752,20 +762,20 @@ void MStyleTest(const string& fileName)
 							{
 								int count = 0;
 								int count_ut = 0;
-								for (int h = 0; h < utVec[braceNum].GetCount(); ++h) {
+								for (int h = 0; h < utVec[braceNum].size(); ++h) {
 									for (int i = 0; i < utVec[braceNum].Get(h)->GetUserTypeListSize(); ++i) {
 										count++;
 										count_ut++;
 									}
 								}
-								for (int h = 0; h < utVec[braceNum].GetCount(); ++h) {
+								for (int h = 0; h < utVec[braceNum].size(); ++h) {
 									for (int i = 0; i < utVec[braceNum].Get(h)->GetItemListSize(); ++i) {
 										if (count == idxVec.back()) {
 											string temp = mdVec[idxVec.back()].varName;
 											if (temp == " ") { temp = ""; }
 											
-											utVec[braceNum].Get(h)->GetItemList(count - count_ut).Remove(idx);
-											if (utVec[braceNum].Get(h)->GetItemList(count - count_ut).GetCount() == 0) {
+											utVec[braceNum].Get(h)->GetItemList(count - count_ut).Remove(0);
+											if (utVec[braceNum].Get(h)->GetItemList(count - count_ut).size() == 0) {
 												utVec[braceNum].Get(h)->GetItemList(count - count_ut).Remove();
 												utVec[braceNum].Get(h)->RemoveEmptyItem();
 											}
@@ -903,7 +913,9 @@ int main(void)
 	cout << "input name : ";
 	cin >> fileName;
 		
-	MStyleTest(fileName);
-	
+	try {
+		MStyleTest(fileName);
+	}
+	catch (exception& e) { cout << e.what() << endl; }
 	return 0;	
 }
