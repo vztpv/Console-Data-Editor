@@ -280,14 +280,14 @@ namespace wiz {
 				const int itemListSize = utTemp->GetItemListSize();
 				for (int i = 0; i < itemListSize; ++i) {
 					if (utTemp->GetItemList(i).GetName() != ""
-						&& utTemp->GetItemList(i).GetCount() > 1) {
+						&& utTemp->GetItemList(i).size() > 1) {
 						cout << utTemp->GetItemList(i).GetName() << endl;
 						return false;
 					}
 				}
 				const int UserTypeSize = utTemp->GetUserTypeListSize();
 				for (int i = 0; i < UserTypeSize; ++i) {
-					for (int j = 0; j < utTemp->GetUserTypeList(i).GetCount(); ++j) {
+					for (int j = 0; j < utTemp->GetUserTypeList(i).size(); ++j) {
 						chk = chk && ChkData(utTemp->GetUserTypeList(i).Get(j));
 					}
 				}
@@ -334,14 +334,14 @@ namespace wiz {
 					if (utTemp.second < strVec.size() && strVec[utTemp.second] == "$")
 					{
 						for (int j = utTemp.first->GetUserTypeListSize() - 1; j >= 0; --j) {
-							for (int k = utTemp.first->GetUserTypeList(j).GetCount() - 1; k >= 0; --k) {
+							for (int k = utTemp.first->GetUserTypeList(j).size() - 1; k >= 0; --k) {
 								UserType* x = utTemp.first->GetUserTypeList(j).Get(k);
 								utDeck.push_front(make_pair(x, utTemp.second + 1));
 							}
 						}
 					}
-					else if (utTemp.second < strVec.size() && utTemp.first->GetUserTypeItemRef(strVec[utTemp.second], utTemp2)) {
-						for (int j = utTemp2.GetCount() - 1; j >= 0; --j) {
+					else if (utTemp.second < strVec.size() && utTemp.first->GetLastUserTypeItemRef(strVec[utTemp.second], utTemp2)) {
+						for (int j = utTemp2.size() - 1; j >= 0; --j) {
 							utDeck.push_front(make_pair(utTemp2.Get(j), utTemp.second + 1));
 						}
 					}
@@ -452,13 +452,13 @@ namespace wiz {
 					ChangeCharInString(name, target_ch, result_ch);
 					itemList.SetName(name);
 					
-					for (int j = 0; j < itemList.GetCount(); ++j) {
+					for (int j = 0; j < itemList.size(); ++j) {
 						ChangeCharInString(itemList.Get(j), target_ch, result_ch);
 						
 					}
 				}
 				for (int i = 0; i < userTypeListSize; ++i) {
-					for (int j = 0; j < temp->GetUserTypeList(i).GetCount(); ++j) {
+					for (int j = 0; j < temp->GetUserTypeList(i).size(); ++j) {
 						ReplaceAll(temp->GetUserTypeList(i).Get(j), target_ch, result_ch);
 					}
 				}

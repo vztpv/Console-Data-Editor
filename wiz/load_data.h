@@ -197,7 +197,7 @@ namespace wiz {
 							///
 							nestedUT[braceNum]->AddUserTypeItem(UserType(var2));
 							TypeArray<UserType*> pTemp;
-							nestedUT[braceNum]->GetUserTypeItemRef(var2, pTemp);
+							nestedUT[braceNum]->GetLastUserTypeItemRef(var2, pTemp);
 
 							braceNum++;
 
@@ -206,7 +206,7 @@ namespace wiz {
 								nestedUT.push_back(NULL);
 
 							/// initial new nestedUT.
-							nestedUT[braceNum] = pTemp.Get(pTemp.GetCount() - 1);
+							nestedUT[braceNum] = pTemp.Get(pTemp.size() - 1);
 							///
 							state = 3;
 						}
@@ -223,10 +223,10 @@ namespace wiz {
 							Utility::Pop(strVec);
 							//
 							TypeArray<UserType*> pTemp;
-							nestedUT[braceNum-1]->GetUserTypeItemRef(var2, pTemp);
-							if (pTemp.GetCount() > 0)
+							nestedUT[braceNum-1]->GetLastUserTypeItemRef(var2, pTemp);
+							if (pTemp.size() > 0)
 							{
-								pTemp.Get(pTemp.GetCount() - 1)->setValid(false);
+								pTemp.Get(pTemp.size() - 1)->setValid(false);
 							}
 							nestedUT[braceNum] = NULL;
 							braceNum--;
@@ -267,7 +267,7 @@ namespace wiz {
 							
 							nestedUT[braceNum]->AddUserTypeItem(temp);
 							TypeArray<UserType*> pTemp;
-							nestedUT[braceNum]->GetUserTypeItemRef("", pTemp);
+							nestedUT[braceNum]->GetLastUserTypeItemRef("", pTemp);
 
 							braceNum++;
 
@@ -276,7 +276,7 @@ namespace wiz {
 								nestedUT.push_back(NULL);
 
 							/// initial new nestedUT.
-							nestedUT[braceNum] = pTemp.Get(pTemp.GetCount() - 1);
+							nestedUT[braceNum] = pTemp.Get(pTemp.size() - 1);
 							///
 							//}
 
@@ -323,10 +323,10 @@ namespace wiz {
 							Utility::Pop(strVec);
 							//
 							TypeArray<UserType*> pTemp;
-							nestedUT[braceNum-1]->GetUserTypeItemRef("", pTemp);
-							if (pTemp.GetCount() > 0)
+							nestedUT[braceNum-1]->GetLastUserTypeItemRef("", pTemp);
+							if (pTemp.size() > 0)
 							{
-								pTemp.Get(pTemp.GetCount() - 1)->setValid(false);
+								pTemp.Get(pTemp.size() - 1)->setValid(false);
 							}
 							//if (flag1 == 0) {
 							nestedUT[braceNum] = NULL;
@@ -376,7 +376,7 @@ namespace wiz {
 							{
 								nestedUT[braceNum]->AddUserTypeItem(UserType(var2));
 								TypeArray<UserType*> pTemp;
-								nestedUT[braceNum]->GetUserTypeItemRef(var2, pTemp);
+								nestedUT[braceNum]->GetLastUserTypeItemRef(var2, pTemp);
 
 								braceNum++;
 
@@ -385,7 +385,7 @@ namespace wiz {
 									nestedUT.push_back(NULL);
 
 								/// initial new nestedUT.
-								nestedUT[braceNum] = pTemp.Get(pTemp.GetCount() - 1);
+								nestedUT[braceNum] = pTemp.Get(pTemp.size() - 1);
 							}
 							///
 							state = 7;
@@ -426,10 +426,10 @@ namespace wiz {
 							Utility::Pop(strVec);
 							//
 							TypeArray<UserType*> pTemp;
-							nestedUT[braceNum-1]->GetUserTypeItemRef(var2, pTemp);
-							if (pTemp.GetCount() > 0)
+							nestedUT[braceNum-1]->GetLastUserTypeItemRef(var2, pTemp);
+							if (pTemp.size() > 0)
 							{
-								pTemp.Get(pTemp.GetCount() - 1)->setValid(false);
+								pTemp.Get(pTemp.size() - 1)->setValid(false);
 							}
 
 							nestedUT[braceNum] = NULL;
@@ -706,7 +706,7 @@ namespace wiz {
 				for (int i = 0; i < ut->GetUserTypeListSize(); ++i) {
 					string temp = ut->GetUserTypeList(i).GetName();
 					if (temp == "") { temp = " "; }
-					for (int j = 0; j < ut->GetUserTypeList(i).GetCount(); ++j) {
+					for (int j = 0; j < ut->GetUserTypeList(i).size(); ++j) {
 						SearchItem( 
 							global,
 							positionVec,
@@ -740,7 +740,7 @@ namespace wiz {
 					string temp = ut->GetUserTypeList(i).GetName();
 
 					if (temp == "") { temp = " "; }
-					for (int j = 0; j < ut->GetUserTypeList(i).GetCount(); ++j) {
+					for (int j = 0; j < ut->GetUserTypeList(i).size(); ++j) {
 						SearchUserType(
 							global,
 							positionVec,

@@ -280,7 +280,7 @@ namespace wiz {
 					if (x.first) {
 						//if (x.second.size() > 1) { return "ERROR"; } ///
 						for (int i = 0; i < x.second.size(); ++i) {
-							if (x.second[i]->GetUserTypeItem(var).GetCount() > 0)
+							if (x.second[i]->GetUserTypeItem(var).size() > 0)
 							{
 								return "TRUE";
 							}
@@ -310,7 +310,7 @@ namespace wiz {
 						//if (x.second.size() > 1) { return "ERROR"; } ///
 
 						for (int i = 0; i < x.second.size(); ++i) {
-							if (0 < x.second[i]->GetUserTypeItem(var).GetCount())
+							if (0 < x.second[i]->GetUserTypeItem(var).size())
 							{
 								return "FALSE";
 							}

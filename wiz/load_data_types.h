@@ -104,10 +104,7 @@ namespace wiz {
 			//		cout << "error " << index << " " << count << endl;
 			//	}
 			}
-			int GetCount()const {
-				return arr.size();
-			}
-			auto size()const {
+			int size()const {
 				return arr.size();
 			}
 		public:
@@ -131,9 +128,9 @@ namespace wiz {
 			{
 				string temp;
 
-				for (int i = 0; i < GetCount(); ++i) {
+				for (int i = 0; i < size(); ++i) {
 					temp = temp + arr[i];
-					if (i != GetCount() - 1) {
+					if (i != size() - 1) {
 						temp = temp + "/";
 					}
 				}
@@ -144,64 +141,23 @@ namespace wiz {
 
 		class UserType : public Type {
 		public:
-			void MergeUserTypeName() // MergeUserTypeName
-			{
-				bool chk = false;
-
-				for (int i = 0; i < userTypeList.GetCount(); ++i) {
-					for (int j = i + 1; j < userTypeList.GetCount(); ++j) {
-						if (userTypeList[i].GetName() == userTypeList[j].GetName()) {
-							chk = true; 
-							break;
-						}
-					}
-					if (chk) { break; }
-				}
-				if (chk) {
-					Dictionary< TypeArray< UserType* > > temp;
-					int k = _GetIndex(ilist, 2, 0);
-
-					for (int i = 0; i < userTypeList.GetCount(); ++i) {
-						int index = -1;
-						if (!temp.Search(TypeArray<UserType*>(userTypeList[i].GetName()), &index))
-						{
-							temp.PushBack(TypeArray<UserType*>(userTypeList[i].GetName()));//
-							temp.Search(TypeArray<UserType*>(userTypeList[i].GetName()), &index);
-						}
-						else {
-							// ilist left shift 1.
-							for (int j = k + 1; j < ilist.size(); ++j) {
-								ilist[j - 1] = ilist[j];
-							}
-							ilist.resize(ilist.size() - 1);
-						}
-						k = _GetIndex(ilist, 2, k + 1);
-
-						for (int j = 0; j < userTypeList[i].GetCount(); ++j) {
-							temp[index].Push(userTypeList[i].Get(j));
-						}
-					}
-					userTypeList = std::move(temp);
-				}
-			}
-		public:
 			const vector<int>& GetIList() const { return ilist; }
 			vector<int>& GetIList() { return ilist; }
 			int GetItemListSize()const { return itemList.size(); }
-			int GetUserTypeListSize()const { return userTypeList.GetCount(); }
+			int GetUserTypeListSize()const { return userTypeList.size(); }
 			TypeArray<string>& GetItemList(const int idx) { return itemList[idx]; }
 			const TypeArray<string>& GetItemList(const int idx) const { return itemList[idx]; }
 			TypeArray<UserType*>& GetUserTypeList(const int idx) { return userTypeList[idx]; }
 			const TypeArray<UserType*>& GetUserTypeList(const int idx) const { return userTypeList[idx]; }
 			void AddItemList(const TypeArray<string>& strTa)
 			{
-				for (int i = 0; i < strTa.GetCount(); ++i) {
+				for (int i = 0; i < strTa.size(); ++i) {
 					this->AddItem(strTa.GetName(), strTa.Get(i));
 				}
 			}
 			void AddUserTypeList(const TypeArray<UserType*>& utTa)
 			{
-				for (int i = 0; i < utTa.GetCount(); ++i) {
+				for (int i = 0; i < utTa.size(); ++i) {
 					this->AddUserTypeItem(*utTa.Get(i));
 				}
 			}
@@ -212,7 +168,7 @@ namespace wiz {
 			UserType* parent;
 			std::vector<int> ilist;
 			std::vector< TypeArray<string> > itemList;
-			Dictionary< TypeArray<UserType*>> userTypeList;
+			std::vector< TypeArray<UserType*>> userTypeList;
 		public:
 			explicit UserType(const string& name = "") : Type(name) , parent(NULL) { }
 			UserType(const UserType& ut) : Type(ut.GetName()) {
@@ -246,12 +202,12 @@ namespace wiz {
 				itemList = ut.itemList;
 				parent = ut.parent;
 
-				for (int i = 0; i < ut.userTypeList.GetCount(); i++) {
+				for (int i = 0; i < ut.userTypeList.size(); i++) {
 					TypeArray<UserType*> temp(ut.userTypeList[i].GetName());
-					for (int j = 0; j < ut.userTypeList[i].GetCount(); j++) {
+					for (int j = 0; j < ut.userTypeList[i].size(); j++) {
 						temp.Push( new UserType(*ut.userTypeList[i].Get(j)) );
 					}
-					userTypeList.PushBack(move(temp));
+					userTypeList.push_back(move(temp));
 				}
 			}
 			void Reset2(UserType&& ut) {
@@ -295,7 +251,7 @@ namespace wiz {
 					}
 					k = _GetIndex(ilist, 1, k + 1);
 				}
-				itemList = move( tempDic );
+				itemList = ( tempDic );
 			}
 			void RemoveItemList() /// ALL
 			{
@@ -315,7 +271,7 @@ namespace wiz {
 				int k = _GetIndex(ilist, 1, 0);
 				vector<TypeArray<string>> tempDic;
 				for (int i = 0; i < itemList.size(); ++i) {
-					if (itemList[i].GetCount() > 0) {
+					if (itemList[i].size() > 0) {
 						tempDic.push_back(itemList[i]);
 					}
 					else {
@@ -338,8 +294,8 @@ namespace wiz {
 				RemoveUserTypeList();
 			}
 			void RemoveUserTypeList() { /// chk memory leak test!!
-				for (int i = 0; i < userTypeList.GetCount(); i++) {
-					for (int j = 0; j < userTypeList[i].GetCount(); j++) {
+				for (int i = 0; i < userTypeList.size(); i++) {
+					for (int j = 0; j < userTypeList[i].size(); j++) {
 						if (NULL != userTypeList[i].Get(j)) {
 							delete userTypeList[i].Get(j); //
 							userTypeList[i].Set(j, NULL);
@@ -347,7 +303,7 @@ namespace wiz {
 					}
 				}
 				// DO Empty..
-				userTypeList = Dictionary< TypeArray<UserType*> >();
+				userTypeList = vector< TypeArray<UserType*> >();
 
 				vector<int> temp;
 				for (int i = 0; i < ilist.size(); ++i) {
@@ -361,14 +317,14 @@ namespace wiz {
 			void RemoveUserTypeList(const string& varName)
 			{
 				int k = _GetIndex(ilist, 2, 0);
-				Dictionary<TypeArray<UserType*>> tempDic;
-				for (int i = 0; i < userTypeList.GetCount(); ++i) {
+				vector<TypeArray<UserType*>> tempDic;
+				for (int i = 0; i < userTypeList.size(); ++i) {
 					if (varName != userTypeList[i].GetName()) {
-						tempDic.PushBack(userTypeList[i]);
+						tempDic.push_back(userTypeList[i]);
 					}
 					else {
 						// remove usertypeitem, ilist left shift 1.
-						for (int j = 0; j < userTypeList[i].GetCount(); ++j) {
+						for (int j = 0; j < userTypeList[i].size(); ++j) {
 							if (NULL != userTypeList[i].Get(j)) {
 								delete userTypeList[i].Get(j);
 								userTypeList[i].Set(j, NULL);
@@ -404,6 +360,7 @@ namespace wiz {
 				ilist.push_back(1);
 			}
 			void AddUserTypeItem(const UserType& item) {
+				/*
 				int index = -1;
 				if (!userTypeList.Search(TypeArray<UserType*>(item.GetName()), &index))
 				{
@@ -412,13 +369,19 @@ namespace wiz {
 					userTypeList.PushBack(TypeArray<UserType*>(item.GetName()));//
 					userTypeList.Search(TypeArray<UserType*>(item.GetName()), &index);
 				}
+				*/
 				UserType* temp( new UserType(item) );
-			
 				temp->parent = this;
 
-				userTypeList[index].Push(temp);
+				TypeArray<UserType*> temp2(item.GetName());
+				temp2.Push(temp);
+
+				ilist.push_back(2);
+
+				userTypeList.push_back(temp2);
 			}
 
+			/// To Do!!
 			vector<TypeArray<string>> GetItem(const string& name) const {
 				vector<TypeArray<string>> temp;
 
@@ -442,28 +405,31 @@ namespace wiz {
 
 				return -1 != index;
 			}
-			TypeArray<UserType> GetUserTypeItem(const string& name) const { /// chk...
-				TypeArray<UserType> temp;
+			vector<TypeArray<UserType*>> GetUserTypeItem(const string& name) const { /// chk...
+				vector<TypeArray<UserType*>> temp;
 
-				int index = -1;
-				if (userTypeList.Search(TypeArray<UserType*>(name), &index))
-				{
-					temp.SetName(userTypeList[index].GetName());
-					for (int i = 0; i < userTypeList[index].GetCount(); i++) {
-						temp.Push(*userTypeList[index].Get(i));
+				for (int i = 0; i < userTypeList.size(); ++i) {
+					if (userTypeList[i].GetName() == name) {
+						temp.push_back(userTypeList[i]);
 					}
 				}
+
 				return temp;
 			}
 		public:
-			bool GetUserTypeItemRef(const string& name, TypeArray<UserType*>& ref) {
-				int index = -1;
-				if (userTypeList.Search(TypeArray<UserType*>(name), &index))
+			bool GetLastUserTypeItemRef(const string& name, TypeArray<UserType*>& ref) {
+				int idx = -1;
+				
+				for (int i = 0; i < userTypeList.size(); ++i)
 				{
-					ref = userTypeList[index];
-					return true;
+					if (name == userTypeList[i].GetName()) {
+						idx = i;
+					}
 				}
-				return false;
+				if (idx > -1) {
+					ref = userTypeList[idx];
+				}
+				return idx > -1;
 			}
 		private:
 			/// save1 - like EU4 savefiles.
@@ -474,11 +440,11 @@ namespace wiz {
 				for (int i = 0; i < ut->ilist.size(); ++i) {
 					//cout << "ItemList" << endl;
 					if (ut->ilist[i] == 1) {
-						for (int j = 0; j < ut->itemList[itemListCount].GetCount(); j++) {
+						for (int j = 0; j < ut->itemList[itemListCount].size(); j++) {
 							if (ut->itemList[itemListCount].GetName() != "")
 								stream << ut->itemList[itemListCount].GetName() << "=";
 							stream << ut->itemList[itemListCount].Get(j);
-							if (j != ut->itemList[itemListCount].GetCount() - 1)
+							if (j != ut->itemList[itemListCount].size() - 1)
 								stream << "\n";
 						}
 						stream << "\n";
@@ -486,7 +452,7 @@ namespace wiz {
 					}
 					else if (ut->ilist[i] == 2) {
 						// cout << "UserTypeList" << endl;
-						for (int j = 0; j < ut->userTypeList[userTypeListCount].GetCount(); j++) {
+						for (int j = 0; j < ut->userTypeList[userTypeListCount].size(); j++) {
 							if (ut->userTypeList[userTypeListCount].GetName() != "")
 								stream << ut->userTypeList[userTypeListCount].GetName() << "=";
 							stream << "{\n";
@@ -506,11 +472,11 @@ namespace wiz {
 				for (int i = 0; i < ut->ilist.size(); ++i) {
 					//cout << "ItemList" << endl;
 					if (ut->ilist[i] == 1) {
-						for (int j = 0; j < ut->itemList[itemListCount].GetCount(); j++) {
+						for (int j = 0; j < ut->itemList[itemListCount].size(); j++) {
 							if (ut->itemList[itemListCount].GetName() != "")
 								stream << ut->itemList[itemListCount].GetName() << " = ";
 							stream << ut->itemList[itemListCount].Get(j);
-							if (j != ut->itemList[itemListCount].GetCount() - 1)
+							if (j != ut->itemList[itemListCount].size() - 1)
 								stream << " ";
 						}
 						stream << "\n";
@@ -518,7 +484,7 @@ namespace wiz {
 					}
 					else if (ut->ilist[i] == 2) {
 						// cout << "UserTypeList" << endl;
-						for (int j = 0; j < ut->userTypeList[userTypeListCount].GetCount(); j++) {
+						for (int j = 0; j < ut->userTypeList[userTypeListCount].size(); j++) {
 							if (ut->userTypeList[userTypeListCount].GetName() != "")
 								stream << ut->userTypeList[userTypeListCount].GetName() << " = ";
 							stream << " {\n";
@@ -543,11 +509,11 @@ namespace wiz {
 				int itemListCount = 0;
 				
 				for (int i = 0; i < itemList.size(); ++i) {
-					for (int j = 0; j < itemList[itemListCount].GetCount(); j++) {
+					for (int j = 0; j < itemList[itemListCount].size(); j++) {
 						if (itemList[itemListCount].GetName() != "")
 							temp = temp + itemList[itemListCount].GetName() + " = ";
 						temp = temp + itemList[itemListCount].Get(j);
-						if (j != itemList[itemListCount].GetCount() - 1) {
+						if (j != itemList[itemListCount].size() - 1) {
 							temp = temp + "/";
 						}
 					}
@@ -565,13 +531,13 @@ namespace wiz {
 				int itemListCount = 0;
 
 				for (int i = 0; i < itemList.size(); ++i) {
-					for (int j = 0; j < itemList[itemListCount].GetCount(); j++) {
+					for (int j = 0; j < itemList[itemListCount].size(); j++) {
 						if (itemList[itemListCount].GetName() != "")
 							temp = temp + itemList[itemListCount].GetName();
 						else
 							temp = temp + " ";
 
-						if (j != itemList[itemListCount].GetCount() - 1) {
+						if (j != itemList[itemListCount].size() - 1) {
 							temp = temp + "/";
 						}
 					}
@@ -588,13 +554,13 @@ namespace wiz {
 				string temp;
 				int userTypeListCount = 0;
 
-				for (int i = 0; i < userTypeList.GetCount(); ++i) {
-					for (int j = 0; j < userTypeList[userTypeListCount].GetCount(); j++) {
+				for (int i = 0; i < userTypeList.size(); ++i) {
+					for (int j = 0; j < userTypeList[userTypeListCount].size(); j++) {
 						if (userTypeList[userTypeListCount].GetName() != "")
 							temp = temp + userTypeList[userTypeListCount].GetName();
 						else
 							temp = temp + " "; // chk!! cf) wiz::load_data::Utility::Find function...
-						if (j != userTypeList[userTypeListCount].GetCount() - 1)
+						if (j != userTypeList[userTypeListCount].size() - 1)
 							temp = temp + "/";
 					}
 					if (i != itemList.size() - 1)
@@ -614,11 +580,11 @@ namespace wiz {
 				for (int i = 0; i < ilist.size(); ++i) {
 					//cout << "ItemList" << endl;
 					if (ilist[i] == 1) {
-						for (int j = 0; j < itemList[itemListCount].GetCount(); j++) {
+						for (int j = 0; j < itemList[itemListCount].size(); j++) {
 							if (itemList[itemListCount].GetName() != "")
 								temp = temp + itemList[itemListCount].GetName() + " = ";
 							temp = temp + itemList[itemListCount].Get(j);
-							if (j != itemList[itemListCount].GetCount() - 1)
+							if (j != itemList[itemListCount].size() - 1)
 								temp = temp + " ";
 						}
 						temp = temp + " ";
@@ -626,7 +592,7 @@ namespace wiz {
 					}
 					else if (ilist[i] == 2) {
 						// cout << "UserTypeList" << endl;
-						for (int j = 0; j < userTypeList[userTypeListCount].GetCount(); j++) {
+						for (int j = 0; j < userTypeList[userTypeListCount].size(); j++) {
 							if (userTypeList[userTypeListCount].GetName() != "")
 								temp = temp + userTypeList[userTypeListCount].GetName() + " = ";
 							temp = temp + " { ";
@@ -646,11 +612,11 @@ namespace wiz {
 				for (int i = 0; i < ut.ilist.size(); ++i) {
 					//cout << "ItemList" << endl;
 					if (ut.ilist[i] == 1) {
-						for (int j = 0; j < ut.itemList[itemListCount].GetCount(); j++) {
+						for (int j = 0; j < ut.itemList[itemListCount].size(); j++) {
 							if (ut.itemList[itemListCount].GetName() != "")
 								stream << ut.itemList[itemListCount].GetName() << "=";
 							stream << ut.itemList[itemListCount].Get(j);
-							if (j != ut.itemList[itemListCount].GetCount() - 1)
+							if (j != ut.itemList[itemListCount].size() - 1)
 								stream << " ";
 						}
 						stream << "\n";
@@ -658,7 +624,7 @@ namespace wiz {
 					}
 					else if (ut.ilist[i] == 2) {
 						// cout << "UserTypeList" << endl;
-						for (int j = 0; j < ut.userTypeList[userTypeListCount].GetCount(); j++) {
+						for (int j = 0; j < ut.userTypeList[userTypeListCount].size(); j++) {
 							if (ut.userTypeList[userTypeListCount].GetName() != "")
 								stream << ut.userTypeList[userTypeListCount].GetName() << "=";
 							stream << "{\n";
