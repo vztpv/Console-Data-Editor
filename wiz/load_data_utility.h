@@ -133,6 +133,30 @@ namespace wiz {
 					}
 				}
 			};
+		private:
+			static string RemoveEndSpace( const string& str )
+			{
+				string temp;
+				int state = 0;
+
+				for (int i = str.size() - 1; i >= 0; --i) {
+					if (state == 0 && wiz::isWhitespace(str[i]))
+					{
+						continue;
+					}
+					else {
+						state = 1;
+					}
+
+					temp.push_back(str[i]);
+				}
+				// reverse..
+				string retVal;
+				for (int i = temp.size() - 1; i >= 0; --i) {
+					retVal.push_back(temp[i]);
+				}
+				return retVal;
+			}
 		public:
 			static pair<bool, int> Reserve2(ifstream& inFile, ArrayQueue<string>& aq, const int num = 1)
 			{
@@ -142,6 +166,7 @@ namespace wiz {
 				ArrayQueue<string> arrayQueue[4];
 				
 				for (int i = 0; i < num && (getline(inFile,temp)); ++i) {
+					temp = RemoveEndSpace(temp);
 					temp = PassSharp(temp);
 					temp = AddSpace(temp);
 					temp = ChangeSpace(temp, '^'); 

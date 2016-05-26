@@ -1280,7 +1280,7 @@ namespace wiz {
 				{ // for eu4, last line remove!
 					ifstream inFile;
 					ofstream outFile;
-					inFile.open(fileName + "temp");
+					inFile.open(fileName + "temp", ios::binary);
 					outFile.open(fileName);
 
 					if (outFile.fail()) { inFile.close(); return false; }
@@ -1292,7 +1292,7 @@ namespace wiz {
 						while (getline(inFile, temp)) { line_size++; }
 						inFile.close();
 					}
-					inFile.open(fileName + "temp");
+					inFile.open(fileName + "temp", ios::binary);
 					for (int i = 0; i < line_size; ++i)
 					{
 						getline(inFile, temp);

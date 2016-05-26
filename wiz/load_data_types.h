@@ -419,6 +419,11 @@ namespace wiz {
 				return temp;
 			}
 		public:
+			bool GetUserTypeItemRef(const int idx, TypeArray<UserType*>& ref)
+			{
+				ref = userTypeList[idx];
+				return true;
+			}
 			bool GetLastUserTypeItemRef(const string& name, TypeArray<UserType*>& ref) {
 				int idx = -1;
 				
