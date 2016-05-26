@@ -174,7 +174,11 @@ void MStyleTest(const string& fileName)
 	int End = 0; 
 	int state = 0;
 
-	wiz::load_data::LoadData::LoadDataFromFile(fileName, utTemp);
+	if (false == wiz::load_data::LoadData::LoadDataFromFile(fileName, utTemp))
+	{
+		cout << "fail to load data" << endl;
+		return;
+	}
 	
 	global.Push(&utTemp);
 
@@ -436,13 +440,13 @@ void MStyleTest(const string& fileName)
 						strTemp = "";
 					}
 
-					if (utVec[braceNum - 1].Get(mdVec[idxVec[braceNum - 1]].no)->GetLastUserTypeItemRef(strTemp, ref))
+					if (utVec[braceNum - 1].Get(mdVec[idxVec[braceNum - 1]].no)->GetUserTypeItemRef(idxVec[braceNum-1], ref))
 					{
 						//
 					}
 					utVec[braceNum] = ref;
 
-					utVec2[braceNum - 1]->GetLastUserTypeItemRef(strTemp, ref);
+					utVec2[braceNum - 1]->GetUserTypeItemRef(idxVec[braceNum-1], ref);
 					utVec2[braceNum] = ref.Get(mdVec[idxVec[braceNum - 1]].no);
 
 					Start = 0;
@@ -803,7 +807,6 @@ void MStyleTest(const string& fileName)
 						}
 					}
 					else if ('s' == ch) { // save total data.
-						ofstream outFile;
 						string temp;
 
 						setcolor(0, 7);
