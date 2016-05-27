@@ -7,6 +7,13 @@ using namespace std;
 #include <conio.h>
 #include <Windows.h>
 
+
+void FFLUSH() 
+{
+	cin.clear();
+	cin.ignore(cin.rdbuf()->in_avail(), '\n');
+}
+
 void gotoxy(short x, short y)
 {
 	COORD pos = { x, y };
@@ -566,6 +573,7 @@ void MStyleTest(const string& fileName)
 						// need more test!!
 						cout << "add UserType : 1, add Item : 2, add usertype that name is "": 3 your input : ";
 						cin >> select;
+
 						// add userType?
 						if (1 == select) {
 							// name of UserType.
@@ -811,6 +819,7 @@ void MStyleTest(const string& fileName)
 
 						setcolor(0, 7);
 						cout << "save file name : ";
+						FFLUSH();
 						getline(cin, temp);
 
 						wiz::load_data::LoadData::SaveWizDB(utTemp, temp, "1");
@@ -845,6 +854,7 @@ void MStyleTest(const string& fileName)
 
 					// Add, AddUserType, Set, Remove, RemoveAll ?.
 					string temp;
+					FFLUSH();
 					getline(cin, temp);
 					
 					wiz::StringTokenizer tokenizer(temp, "|");
