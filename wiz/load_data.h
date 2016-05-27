@@ -8,6 +8,7 @@
 #include <fstream>
 #include <string>
 #include <utility>
+#include <cmath>
 using namespace std;
 
 #include <wiz/global.h>
@@ -124,7 +125,7 @@ namespace wiz {
 			/// core
 		private:
 			template <class Reserver>
-			static void _LoadData(ArrayQueue<string>& strVec, Reserver& vecReserver, UserType& global) // first, strVec.empty() must be true!!?
+			static bool _LoadData(ArrayQueue<string>& strVec, Reserver& vecReserver, UserType& global) // first, strVec.empty() must be true!!?
 			{
 				int state = 0;
 				int braceNum = 0;
@@ -146,7 +147,7 @@ namespace wiz {
 							strVec.empty() && 
 							vecReserver.end()
 							) {
-							throw "Err nextToken does not exist"; // cf) or empty? file or empty? string!
+							return false; // throw "Err nextToken does not exist"; // cf) or empty? file or empty? string!
 						}
 					}
 				}
@@ -497,6 +498,8 @@ namespace wiz {
 				if (braceNum != 0) {
 					throw string("chk braceNum is ") + toStr(braceNum);
 				}
+
+				return true;
 			}
 
 		public:
@@ -515,7 +518,11 @@ namespace wiz {
 					InFIleReserver ifReserver(inFile);
 
 					ifReserver.Num = 100000;
-					_LoadData(strVec, ifReserver, globalTemp);
+					// empty file..
+					if (false == _LoadData(strVec, ifReserver, globalTemp))
+					{
+						return true;
+					}
 					/// ToDo - Change ^ to ' '
 					{
 						// for all, remove ^ in val
@@ -552,7 +559,11 @@ namespace wiz {
 					strVec.push(tokenizer.nextToken());
 				}
 				try {
-					_LoadData(strVec, NoneReserver(), utTemp);
+					// empty string!
+					if (false == _LoadData(strVec, NoneReserver(), utTemp))
+					{
+						return true;
+					}
 					Utility::ReplaceAll(&utTemp, '^', ' ');
 				}
 				catch (Error& e) { cout << e << endl; return false; }
@@ -862,37 +873,67 @@ namespace wiz {
 						return false;
 					}
 
-					while(tokenizer.hasMoreTokens()) {
+					while (tokenizer.hasMoreTokens()) {
 						string utName = tokenizer.nextToken();
+						vector<string> strVec;
 						if (utName == " ") { utName = ""; }
-						
-						utTemp.SetName(utName);
-						
-						for (int i = 0; i < finded.second.size(); ++i) {
-							int item_n = 0;
-							int user_n = 0;
 
-							/// chk temp test codes - > using flag? 1->Exist 2->Comparision?
-							//if (finded.second[i]->GetItem("base_tax").GetCount() > 0) { continue; }
-							///~end
-							if (false == condition.empty()) {
-								string _condition = condition;
-								_condition = wiz::String::replace(_condition, "~~", utName); //
-
-								Condition cond(_condition, finded.second[i], &global);
-
-								while (cond.Next());
-
-								if ("TRUE" != cond.Now()[0])
-								{
-									//cout << cond.Now()[0] << endl;
-									continue;
-								}
+						if (utName.size() >= 3 && utName[0] == '[' && utName[utName.size() - 1] == ']')
+						{
+							StringTokenizer tokenizer2(utName, vector<string>{ "[", "~", "]" });
+							while (tokenizer2.hasMoreTokens())
+							{
+								strVec.push_back(tokenizer2.nextToken());
 							}
+						}
 
-							finded.second[i]->AddUserTypeItem(utTemp);
+						long long int a = 0, b = 0, Min = 0, Max = 0;
+						bool chkInt = false;
 
-							isTrue = true;
+						if (strVec.size() == 2 && Utility::IsInteger(strVec[0]) && Utility::IsInteger(strVec[1])) {
+							chkInt = true;
+							a = atoll(strVec[0].c_str());
+							b = atoll(strVec[1].c_str());
+							Min = min(a, b);
+							Max = max(a, b);
+						}
+
+						for (auto i = Min; i <= Max; ++i)
+						{
+							if (strVec.size() == 2 && chkInt)
+							{
+								utName = to_string(i);
+							}
+							else {}
+							utTemp.SetName(utName);
+
+							for (int i = 0; i < finded.second.size(); ++i) {
+								int item_n = 0;
+								int user_n = 0;
+
+
+								if (false == condition.empty()) {
+									string _condition = condition;
+									_condition = wiz::String::replace(_condition, "~~", utName); //
+
+									Condition cond(_condition, finded.second[i], &global);
+
+									while (cond.Next());
+
+									if ("TRUE" != cond.Now()[0])
+									{
+										//cout << cond.Now()[0] << endl;
+										continue;
+									}
+								}
+
+								finded.second[i]->AddUserTypeItem(utTemp);
+
+								isTrue = true; // chk!!
+							}
+							
+							// prevent from infinity loop.
+							if (i == Max) { break; }
 						}
 					}
 					return isTrue;

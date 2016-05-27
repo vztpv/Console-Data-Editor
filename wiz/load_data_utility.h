@@ -14,6 +14,103 @@ namespace wiz {
 		class Utility
 		{
 		public:
+			static bool IsInteger(const string& str) {
+				int state = 0;
+				for (int i = 0; i < str.size(); ++i) {
+					switch (state)
+					{
+					case 0:
+						if ('+' == str[i] || '-' == str[i]) {
+							state = 0;
+						}
+						else if (str[i] >= '0' && str[i] <= '9')
+						{
+							state = 1;
+						}
+						else return false;
+						break;
+					case 1:
+						if (str[i] >= '0' && str[i] <= '9') {
+							state = 1;
+						}
+						else return false;
+					}
+				}
+				return true;
+			}
+			static bool IsDouble(const string& str) {
+				int state = 0;
+				for (int i = 0; i < str.size(); ++i) {
+					switch (state)
+					{
+					case 0:
+						if ('+' == str[i] || '-' == str[i]) {
+							state = 0;
+						}
+						else if (str[i] >= '0' && str[i] <= '9')
+						{
+							state = 1;
+						}
+						else return false;
+						break;
+					case 1:
+						if (str[i] >= '0' && str[i] <= '9') {
+							state = 1;
+						}
+						else if (str[i] == '.') {
+							state = 2;
+						}
+						else return false;
+						break;
+					case 2:
+						if (str[i] >= '0' && str[i] <= '9') { state = 2; }
+						else return false;
+						break;
+					}
+				}
+				return true;
+			}
+			static bool IsDate(const string& str)
+			{
+				int state = 0;
+				for (int i = 0; i < str.size(); ++i) {
+					switch (state)
+					{
+					case 0:
+						if (str[i] >= '0' && str[i] <= '9')
+						{
+							state = 1;
+						}
+						else return false;
+						break;
+					case 1:
+						if (str[i] >= '0' && str[i] <= '9') {
+							state = 1;
+						}
+						else if (str[i] == '.') {
+							state = 2;
+						}
+						else return false;
+						break;
+					case 2:
+						if (str[i] >= '0' && str[i] <= '9') { state = 2; }
+						else if (str[i] == '.') {
+							state = 3;
+						}
+						else return false;
+						break;
+					case 3:
+						if (str[i] >= '0' && str[i] <= '9') { state = 3; }
+						else return false;
+						break;
+					}
+				}
+				return true;
+			}
+			static bool IsMinus(const string& str)
+			{
+				return str.empty() == false && str[0] == '-';
+			}
 			/// todo bool ,more stable!!
 			static void AddSpace(const string& file1Name, const string& file2Name) {
 				ifstream inFile;

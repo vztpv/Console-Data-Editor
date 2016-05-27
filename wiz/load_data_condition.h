@@ -35,107 +35,11 @@ namespace wiz {
 				}
 				return temp;
 			}
-			bool IsInteger(const string& str) {
-				int state = 0;
-				for (int i = 0; i < str.size(); ++i) {
-					switch (state)
-					{
-					case 0:
-						if ('+' == str[i] || '-' == str[i]) {
-							state = 0;
-						}
-						else if (str[i] >= '0' && str[i] <= '9')
-						{
-							state = 1;
-						}
-						else return false;
-						break;
-					case 1:
-						if (str[i] >= '0' && str[i] <= '9') {
-							state = 1;
-						}
-						else return false;
-					}
-				}
-				return true;
-			}
-			bool IsDouble(const string& str) {
-				int state = 0;
-				for (int i = 0; i < str.size(); ++i) {
-					switch (state)
-					{
-					case 0:
-						if ('+' == str[i] || '-' == str[i]) {
-							state = 0;
-						}
-						else if (str[i] >= '0' && str[i] <= '9')
-						{
-							state = 1;
-						}
-						else return false;
-						break;
-					case 1:
-						if (str[i] >= '0' && str[i] <= '9') {
-							state = 1;
-						}
-						else if (str[i] == '.') {
-							state = 2;
-						}
-						else return false;
-						break;
-					case 2:
-						if (str[i] >= '0' && str[i] <= '9') { state = 2; }
-						else return false;
-						break;
-					}
-				}
-				return true;
-			}
-			bool IsDate(const string& str)
-			{
-				int state = 0;
-				for (int i = 0; i < str.size(); ++i) {
-					switch (state)
-					{
-					case 0:
-						if (str[i] >= '0' && str[i] <= '9')
-						{
-							state = 1;
-						}
-						else return false;
-						break;
-					case 1:
-						if (str[i] >= '0' && str[i] <= '9') {
-							state = 1;
-						}
-						else if (str[i] == '.') {
-							state = 2;
-						}
-						else return false;
-						break;
-					case 2:
-						if (str[i] >= '0' && str[i] <= '9') { state = 2; }
-						else if (str[i] == '.') {
-							state = 3;
-						}
-						else return false;
-						break;
-					case 3:
-						if (str[i] >= '0' && str[i] <= '9') { state = 3; }
-						else return false;
-						break;
-					}
-				}
-				return true;
-			}
-			bool IsMinus(const string& str)
-			{
-				return str.empty() == false && str[0] == '-';
-			}
+			
 			string GetType(const string& str) {
-				if (IsInteger(str)) { return "INTEGER"; }
-				else if (IsDouble(str)) { return "DOUBLE"; }
-				else if (IsDate(str)) { return "DATE"; }
+				if (Utility::IsInteger(str)) { return "INTEGER"; }
+				else if (Utility::IsDouble(str)) { return "DOUBLE"; }
+				else if (Utility::IsDate(str)) { return "DATE"; }
 				else return "STRING";
 			}
 			string Compare(const string& str1, const string& str2, const int type = 0)
@@ -159,10 +63,10 @@ namespace wiz {
 				}
 				else if ("INTEGER" == type1)
 				{
-					if (IsMinus(str1) && !IsMinus(str2)) { return "< 0"; }
-					else if (!IsMinus(str1) && IsMinus(str2)) { return "> 0"; }
+					if (Utility::IsMinus(str1) && !Utility::IsMinus(str2)) { return "< 0"; }
+					else if (!Utility::IsMinus(str1) && Utility::IsMinus(str2)) { return "> 0"; }
 
-					const bool minusComp = IsMinus(str1) && IsMinus(str2);
+					const bool minusComp = Utility::IsMinus(str1) && Utility::IsMinus(str2);
 
 					if (false == minusComp) {
 						string x = reverse(str1);
