@@ -166,7 +166,7 @@ namespace wiz {
 				ArrayQueue<string> arrayQueue[4];
 				
 				for (int i = 0; i < num && (getline(inFile,temp)); ++i) {
-					temp = RemoveEndSpace(temp);
+					//temp = RemoveEndSpace(temp);
 					temp = PassSharp(temp);
 					temp = AddSpace(temp);
 					temp = ChangeSpace(temp, '^'); 
