@@ -8,9 +8,9 @@ using namespace std;
 #include <Windows.h>
 
 
-inline void GETCH() /// To Do - Replace..
+inline int GETCH() /// To Do - Replace..
 {
-	_getch();
+	return _getch();
 }
 
 inline void FFLUSH()  // to  DO - Ãß°¡!!
@@ -181,6 +181,7 @@ void MStyleTest(const string& fileName)
 	int braceNum = 0;
 	int idx = 0;
 	bool isFirst = true;
+	bool isReDraw = true;
 	int sizeOfWindow = 30;
 	int Start = 0;
 	int End = 0; 
@@ -208,14 +209,14 @@ void MStyleTest(const string& fileName)
 			mdVec = std::vector<MData>();
 			count_userType = 0;
 			count_item = 0;
-			
+
 			for (int h = 0; h < utVec[braceNum].size(); ++h) {
 				for (int i = 0; i < utVec[braceNum].Get(h)->GetUserTypeListSize(); ++i) {
 					MData mdTemp{ true, utVec[braceNum].Get(h)->GetUserTypeList(i).GetName(), h };
 					if (mdTemp.varName.empty() && utVec[braceNum].Get(h)->GetUserTypeList(i).valid()) {
 						mdTemp.varName = " ";
 					}
-					if (false == ( utVec[braceNum].Get(h)->GetUserTypeList(i).valid()))
+					if (false == (utVec[braceNum].Get(h)->GetUserTypeList(i).valid()))
 					{
 						mdTemp.varName = " ";
 					}
@@ -232,11 +233,14 @@ void MStyleTest(const string& fileName)
 					mdVec.push_back(mdTemp);
 					count_item++;
 				}
-			}			
+			}
+			isFirst = false;
+		}
+		if (isReDraw) {
 			setcolor(0, 0);
 			system("cls");
 
-			End = min( Start + sizeOfWindow - 1, mdVec.size()-1 );
+			End = min(Start + sizeOfWindow - 1, mdVec.size() - 1);
 			if (mdVec.empty()) {
 				End = Start - 1;
 			}
@@ -245,7 +249,7 @@ void MStyleTest(const string& fileName)
 				for (int i = Start; i <= End; ++i) {
 					if (mdVec[i].isDir) { setcolor(0, 10); }
 					else { setcolor(0, 7); }
-					if (false == mdVec[i].varName.empty() ) {
+					if (false == mdVec[i].varName.empty()) {
 						cout << "  " << mdVec[i].varName;
 					}
 					else
@@ -254,21 +258,21 @@ void MStyleTest(const string& fileName)
 					}
 					if (i != mdVec.size() - 1) { cout << endl; }
 				}
-		
+
 				gotoxy(0, idx - Start);
-				
+
 				setcolor(0, 12);
 				cout << "¡Ü";
 				setcolor(0, 0);
 				gotoxy(0, 0);
 			}
 
-			isFirst = false;
+			isReDraw = false;
 		}
 
 		// move and chk enterkey. - todo!!
 		{
-			char ch = _getch();
+			char ch = GETCH();
 			
 			if ('q' == ch) { return; }
 
@@ -428,9 +432,9 @@ void MStyleTest(const string& fileName)
 			else if ('\r' == ch || '\n' == ch) {
 				/// To Do..
 				gotoxy(0, 0);
-				if (0 == count_userType && 0 == count_item)
+				if (count_item == 0 && count_userType == 0)
 				{
-					// nothing..
+
 				}
 				else if (strVec.empty() && idx < count_userType) { // utVec[braceNum].Get(mdVec[idx].no)->GetUserTypeListSize()) {
 					setcolor(0, 0);
@@ -464,12 +468,13 @@ void MStyleTest(const string& fileName)
 					Start = 0;
 					idx = 0;
 					isFirst = true;
+					isReDraw = true;
+
+					count_userType = 0;
+					count_item = 0;
 				}
 				else
 				{	
-					// itemlist
-					// print
-
 					if (
 						!mdVec.empty() &&
 						strVec.empty()
@@ -503,21 +508,23 @@ void MStyleTest(const string& fileName)
 						
 						idx = 0;
 						Start = 0;
+						
+						setcolor(0, 12);
+						cout << "¡Ü";
+						setcolor(0, 0);
 					}
 					else if (state == 1) { /// cf) state = 2;
 						gotoxy(0, idx); /// chk..
 						Start = idx;
 					}
 
-					setcolor(0, 12);
-					cout << "¡Ü";
-					setcolor(0, 0);
+					
 					// idx = 0;
 					End = min(Start + sizeOfWindow - 1, strVec.size() - 1);
 					if (strVec.empty()) { End = Start - 1; }
 
 					count_userType = 0;
-					count_item = 0; /// chk??
+					count_item = 0;
 				}
 			}
 			else if (0 == state && 'f' == ch)
@@ -541,11 +548,11 @@ void MStyleTest(const string& fileName)
 					idx = x;
 					x = max(0, x - sizeOfWindow / 2);
 					Start = x;
-					isFirst = true; /// chk!! To Do - OnlyRedraw? Reset? // int + changed?
+					isReDraw = true; /// chk!! To Do - OnlyRedraw? Reset? // int + changed?
 				}
 				else
 				{
-					isFirst = true; /// OnlyDraw = true?, no search?
+					isReDraw = true; /// OnlyDraw = true?, no search?
 				}
 			}
 			else if (0 == state && '1' == ch)
@@ -565,7 +572,7 @@ void MStyleTest(const string& fileName)
 
 				idx = index;
 				Start = max(0, idx - sizeOfWindow / 2);
-				isFirst = true;
+				isReDraw = true;
 			}
 			else if (0 == state && '2' == ch)
 			{
@@ -584,13 +591,19 @@ void MStyleTest(const string& fileName)
 
 				idx = index;
 				Start = max(0, idx - sizeOfWindow / 2);
-				isFirst = true;
+				isReDraw = true;
 
 			}
 			else {
 				if ('q' == ch) { return; } // quit
 				else if ('b' == ch && braceNum > 0 && strVec.empty() && state == 0) {  // back
-					braceNum--; setcolor(0, 0);  system("cls"); isFirst = true;
+					braceNum--; 
+					
+					setcolor(0, 0);  
+					system("cls"); 
+					
+					isFirst = true;
+					isReDraw = true;
 					//Start = idxVec.back();
 
 					idx = idxVec.back();
@@ -604,7 +617,7 @@ void MStyleTest(const string& fileName)
 						Start = 0;
 					}
 				}
-				else if ('b' == ch && !idxVec.empty())
+				else if ('b' == ch && !idxVec.empty()) /// state == 1 ?
 				{
 					idx = idxVec.back();
 					idxVec.pop_back();
@@ -621,7 +634,9 @@ void MStyleTest(const string& fileName)
 					setcolor(0, 0);
 					system("cls");
 					strVec.clear();
+					
 					isFirst = true;
+					isReDraw = true;
 				}
 				else if ('e' == ch) {
 					setcolor(0, 0);
@@ -629,8 +644,8 @@ void MStyleTest(const string& fileName)
 					setcolor(7, 0);
 
 					cout << "edit mode" << endl;
-					cout << "add - a, change - c, remove -r, save -s" << endl;
-					ch = _getch();
+					cout << "add - a, change - c, remove - r, save - s" << endl;
+					ch = GETCH();
 	
 
 					/// todo : edit - e    ch = getch();
@@ -643,7 +658,7 @@ void MStyleTest(const string& fileName)
 
 						setcolor(0, 7);
 						// need more test!!
-						cout << "add UserType : 1, add Item : 2, add usertype that name is "": 3 your input : ";
+						cout << "add UserType : 1, add Item : 2, add usertype that name is \"\": 3 your input : ";
 						cin >> select;
 
 						// add userType?
@@ -914,10 +929,12 @@ void MStyleTest(const string& fileName)
 						}
 					}
 					/// else if( l? reload?
-					isFirst = true; // redraw?
+					isFirst = true; // 
+					isReDraw = true; //
 				}
-				else if ('t' == ch ) { // pass???
+				else if ('t' == ch  && braceNum == 0) { // pass???
 					isFirst = true;
+					isReDraw = true;
 					setcolor(0, 0);
 					system("cls");
 
@@ -969,22 +986,6 @@ void MStyleTest(const string& fileName)
 					//
 					idx = 0;
 					Start = 0;
-					if (1 == state)
-					{
-						idxVec.back();
-						idxVec.pop_back();
-						idx = 0;
-						// max!
-						if (0 <= idx - sizeOfWindow / 2)
-						{
-							Start = idx - sizeOfWindow / 2;
-						}
-						else {
-							Start = 0;
-						}
-						strVec.clear();
-						state = 0;
-					}
 				}
 			}
 		}
