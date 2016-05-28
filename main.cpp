@@ -8,19 +8,24 @@ using namespace std;
 #include <Windows.h>
 
 
-void FFLUSH() 
+inline void GETCH() /// To Do - Replace..
+{
+	_getch();
+}
+
+inline void FFLUSH()  // to  DO - Ãß°¡!!
 {
 	cin.clear();
 	cin.ignore(cin.rdbuf()->in_avail(), '\n');
 }
 
-void gotoxy(short x, short y)
+inline void gotoxy(short x, short y)
 {
 	COORD pos = { x, y };
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 }
 
-void setcolor(int color, int bgcolor)
+inline void setcolor(int color, int bgcolor)
 {
 	color = color & 0xF;
 	bgcolor = bgcolor & 0xF;
