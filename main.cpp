@@ -515,6 +515,73 @@ void MStyleTest(const string& fileName)
 					count_item = 0; /// chk??
 				}
 			}
+			else if (0 == state && 'f' == ch)
+			{
+				string temp;
+				int x = 0;
+				system("cls");
+				setcolor(0, 7);
+				cout << "row input : ";
+				cin >> temp;
+				FFLUSH();
+
+				if (wiz::load_data::Utility::IsInteger(temp)) {
+					x = stoi(temp); // toInt
+					if (x < 0) { x = 0; }
+					else if (x >= mdVec.size()) {
+						x = mdVec.size() - 1;
+					}
+
+					// chk!! ToDo ?
+					idx = x;
+					x = max(0, x - sizeOfWindow / 2);
+					Start = x;
+					isFirst = true; /// chk!! To Do - OnlyRedraw? Reset? // int + changed?
+				}
+				else
+				{
+					isFirst = true; /// OnlyDraw = true?, no search?
+				}
+			}
+			else if (0 == state && '1' == ch)
+			{
+				int index = idx;
+				string temp = mdVec[idx].varName;
+
+				for (int i = idx - 1; i >= 0; --i) {
+					if (mdVec[i].varName == temp) {
+						index = i;
+					}
+					else
+					{
+						break;
+					}
+				}
+
+				idx = index;
+				Start = max(0, idx - sizeOfWindow / 2);
+				isFirst = true;
+			}
+			else if (0 == state && '2' == ch)
+			{
+				int index = idx;
+				string temp = mdVec[idx].varName;
+
+				for (int i = idx + 1; i < mdVec.size(); ++i) {
+					if (mdVec[i].varName == temp) {
+						index = i;
+					}
+					else
+					{
+						break;
+					}
+				}
+
+				idx = index;
+				Start = max(0, idx - sizeOfWindow / 2);
+				isFirst = true;
+
+			}
 			else {
 				if ('q' == ch) { return; } // quit
 				else if ('b' == ch && braceNum > 0 && strVec.empty() && state == 0) {  // back
