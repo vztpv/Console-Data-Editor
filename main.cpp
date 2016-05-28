@@ -432,11 +432,11 @@ void MStyleTest(const string& fileName)
 			else if ('\r' == ch || '\n' == ch) {
 				/// To Do..
 				gotoxy(0, 0);
-				if (count_item == 0 && count_userType == 0)
+				if (count_userType == 0 && count_item == 0)
 				{
-
+					//
 				}
-				else if (strVec.empty() && idx < count_userType) { // utVec[braceNum].Get(mdVec[idx].no)->GetUserTypeListSize()) {
+				else if (state == 0 && strVec.empty() && idx < count_userType) { // utVec[braceNum].Get(mdVec[idx].no)->GetUserTypeListSize()) {
 					setcolor(0, 0);
 					system("cls");
 
@@ -469,9 +469,6 @@ void MStyleTest(const string& fileName)
 					idx = 0;
 					isFirst = true;
 					isReDraw = true;
-
-					count_userType = 0;
-					count_item = 0;
 				}
 				else
 				{	
@@ -523,8 +520,9 @@ void MStyleTest(const string& fileName)
 					End = min(Start + sizeOfWindow - 1, strVec.size() - 1);
 					if (strVec.empty()) { End = Start - 1; }
 
+					// chk
 					count_userType = 0;
-					count_item = 0;
+					count_item = 1;
 				}
 			}
 			else if (0 == state && 'f' == ch)
@@ -647,10 +645,6 @@ void MStyleTest(const string& fileName)
 					cout << "add - a, change - c, remove - r, save - s" << endl;
 					ch = GETCH();
 	
-
-					/// todo : edit - e    ch = getch();
-					/// add - a, change- c, remove - r. save - s 
-					/// isFirst = true;
 					if ('a' == ch) { // add
 						int select=-1;
 						string var;
@@ -667,22 +661,6 @@ void MStyleTest(const string& fileName)
 							cout << "what is new UserType name? : ";
 							cin >> var;
 							utVec2[braceNum]->AddUserTypeItem(wiz::load_data::UserType(var));
-
-							if (state == 1)
-							{
-								idx = idxVec.back();
-								idxVec.pop_back();
-								// max!
-								if (0 <= idx - sizeOfWindow / 2)
-								{
-									Start = idx - sizeOfWindow / 2;
-								}
-								else {
-									Start = 0;
-								}
-								strVec.clear();
-								state = 0;
-							}
 						}
 						// addd Item?
 						else if (2 == select) {
@@ -690,45 +668,13 @@ void MStyleTest(const string& fileName)
 							cout << "var : ";
 							cin >> var;
 							cout << "val : ";
-							getchar(); //
+							FFLUSH();
 							getline(cin, val);
 							utVec2[braceNum]->AddItem(var, val);
-
-							if (state == 1)
-							{
-								idx = idxVec.back();
-								idxVec.pop_back();
-								// max!
-								if (0 <= idx - sizeOfWindow / 2)
-								{
-									Start = idx - sizeOfWindow / 2;
-								}
-								else {
-									Start = 0;
-								}
-								strVec.clear();
-								state = 0;
-							}
 						}
 						else if (3 == select)
 						{
 							utVec2[braceNum]->AddUserTypeItem(wiz::load_data::UserType(""));
-
-							if (state == 1)
-							{
-								idx = idxVec.back();
-								idxVec.pop_back();
-								// max!
-								if (0 <= idx - sizeOfWindow / 2)
-								{
-									Start = idx - sizeOfWindow / 2;
-								}
-								else {
-									Start = 0;
-								}
-								strVec.clear();
-								state = 0;
-							}
 						}
 					}
 					else if ('c' == ch && Start <= End) { // change var or value
@@ -910,24 +856,25 @@ void MStyleTest(const string& fileName)
 						getline(cin, temp);
 
 						wiz::load_data::LoadData::SaveWizDB(utTemp, temp, "1");
-
-						if (1 == state)
-						{
-							idxVec.back();
-							idxVec.pop_back();
-							idx = 0;
-							// max!
-							if (0 <= idx - sizeOfWindow / 2)
-							{
-								Start = idx - sizeOfWindow / 2;
-							}
-							else {
-								Start = 0;
-							}
-							strVec.clear();
-							state = 0;
-						}
 					}
+					
+					if (1 == state)
+					{
+						idxVec.back();
+						idxVec.pop_back();
+						idx = 0;
+						// max!
+						if (0 <= idx - sizeOfWindow / 2)
+						{
+							Start = idx - sizeOfWindow / 2;
+						}
+						else {
+							Start = 0;
+						}
+						strVec.clear();
+						state = 0;
+					}
+
 					/// else if( l? reload?
 					isFirst = true; // 
 					isReDraw = true; //
