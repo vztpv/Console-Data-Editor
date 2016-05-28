@@ -898,11 +898,11 @@ namespace wiz {
 							Max = max(a, b);
 						}
 
-						for (auto i = Min; i <= Max; ++i)
+						for (auto x = Min; x <= Max; ++x)
 						{
 							if (strVec.size() == 2 && chkInt)
 							{
-								utName = to_string(i);
+								utName = std::to_string(x);
 							}
 							else {}
 							utTemp.SetName(utName);
@@ -933,7 +933,7 @@ namespace wiz {
 							}
 							
 							// prevent from infinity loop.
-							if (i == Max) { break; }
+							if (x == Max) { break; }
 						}
 					}
 					return isTrue;
@@ -980,20 +980,52 @@ namespace wiz {
 							}
 						}
 						else {
-							for (int i = 0; i < finded.second.size(); ++i) {
-								if (false == condition.empty()) {
-									Condition cond(condition, finded.second[i], &global);
-
-									while (cond.Next());
-
-									if ("TRUE" != cond.Now()[0])
-									{
-										//	cout << cond.Now()[0] << endl;
-										continue;
-									}
+							vector<string> strVec;
+							
+							if (_varName.size() >= 3 && _varName[0] == '[' && _varName[_varName.size() - 1] == ']')
+							{
+								StringTokenizer tokenizer2(_varName, vector<string>{ "[", "~", "]" });
+								while (tokenizer2.hasMoreTokens())
+								{
+									strVec.push_back(tokenizer2.nextToken());
 								}
-								finded.second[i]->SetItem(_varName, data); /// chk??
-								isTrue = true;
+							}
+
+							long long int a = 0, b = 0, Min = 0, Max = 0;
+							bool chkInt = false;
+
+							if (strVec.size() == 2 && Utility::IsInteger(strVec[0]) && Utility::IsInteger(strVec[1])) {
+								chkInt = true;
+								a = atoll(strVec[0].c_str());
+								b = atoll(strVec[1].c_str());
+								Min = min(a, b);
+								Max = max(a, b);
+							}
+							for (int x = Min; x <= Max; ++x) {
+								if (strVec.size() == 2 && chkInt)
+								{
+									_varName = std::to_string(x);
+								}
+								else {}
+
+								for (int i = 0; i < finded.second.size(); ++i) {
+									if (false == condition.empty()) {
+										Condition cond(condition, finded.second[i], &global);
+
+										while (cond.Next());
+
+										if ("TRUE" != cond.Now()[0])
+										{
+											//	cout << cond.Now()[0] << endl;
+											continue;
+										}
+									}
+									finded.second[i]->SetItem(_varName, data); /// chk??
+									isTrue = true;
+								}
+							
+								// prevent from infinity loop.
+								if (x == Max) { break; }
 							}
 						}
 					}
@@ -1161,25 +1193,56 @@ namespace wiz {
 					while (tokenizer.hasMoreTokens()) {
 						string _var = tokenizer.nextToken();
 						if (_var == " ") { _var = ""; }
+						vector<string> strVec;
 
-						for (int i = 0; i < finded.second.size(); ++i) {
-							UserType* temp = finded.second[i];
+						if (_var.size() >= 3 && _var[0] == '[' && _var[_var.size() - 1] == ']')
+						{
+							StringTokenizer tokenizer2(_var, vector<string>{ "[", "~", "]" });
+							while (tokenizer2.hasMoreTokens())
+							{
+								strVec.push_back(tokenizer2.nextToken());
+							}
+						}
 
-							if (false == condition.empty()) {
-								Condition cond(condition, finded.second[i], &global);
+						long long int a = 0, b = 0, Min = 0, Max = 0;
+						bool chkInt = false;
 
-								while (cond.Next());
+						if (strVec.size() == 2 && Utility::IsInteger(strVec[0]) && Utility::IsInteger(strVec[1])) {
+							chkInt = true;
+							a = atoll(strVec[0].c_str());
+							b = atoll(strVec[1].c_str());
+							Min = min(a, b);
+							Max = max(a, b);
+						}
+						for (int x = Min; x <= Max; ++x) {
+							if (strVec.size() == 2 && chkInt)
+							{
+								_var = std::to_string(x);
+							}
+							else {}
 
-								if ("TRUE" != cond.Now()[0])
-								{
-									// cout << cond.Now()[0] << endl;
-									continue;
+							for (int i = 0; i < finded.second.size(); ++i) {
+								UserType* temp = finded.second[i];
+
+								if (false == condition.empty()) {
+									Condition cond(condition, finded.second[i], &global);
+
+									while (cond.Next());
+
+									if ("TRUE" != cond.Now()[0])
+									{
+										// cout << cond.Now()[0] << endl;
+										continue;
+									}
 								}
+
+								temp->RemoveItemList(_var);
+								temp->RemoveUserTypeList(_var);
+								isTrue = true;
 							}
 
-							temp->RemoveItemList(_var);
-							temp->RemoveUserTypeList(_var);
-							isTrue = true;
+							// prevent from infinity loop.
+							if (x == Max) { break; }
 						}
 					}
 					return isTrue;
