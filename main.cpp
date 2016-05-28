@@ -895,6 +895,8 @@ void MStyleTest(const string& fileName)
 						catch (const string& e) {}
 					}
 					//
+					idx = 0;
+					Start = 0;
 					if (1 == state)
 					{
 						idxVec.back();
