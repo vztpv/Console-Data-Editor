@@ -536,7 +536,7 @@ namespace wiz {
 				catch (const char* err) { cout << err << endl; inFile.close(); return false; }
 				catch (const string& e) { cout << e << endl; inFile.close(); return false; }
 				catch (exception e) { cout << e.what() << endl; inFile.close(); return false; }
-				catch (...) { cout << "예기치 못한 에러" << endl; inFile.close(); return false; }
+				catch (...) { cout << "not expected error" << endl; inFile.close(); return false; }
 				
 				global = move( globalTemp );
 				return true;
@@ -569,7 +569,7 @@ namespace wiz {
 				catch (Error& e) { cout << e << endl; return false; }
 				catch (const char* err) { cout << err << endl; return false; }
 				catch (exception& e) { cout << e.what() << endl; return false; }
-				catch (...) { cout << "예기치 못한 에러" << endl; return  false; }
+				catch (...) { cout << "not expected error" << endl; return  false; }
 
 				ut = move(utTemp);
 				return true;
@@ -708,7 +708,7 @@ namespace wiz {
 
 					while (cond.Next());
 
-					if ("TRUE" == cond.Now()[0])
+					if (cond.Now().size() == 1 && "TRUE" == cond.Now()[0])
 					{
 						positionVec.push_back(nowPosition);
 					}
@@ -741,7 +741,7 @@ namespace wiz {
 
 					while (cond.Next());
 
-					if ("TRUE" == cond.Now()[0])
+					if (cond.Now().size() == 1 && "TRUE" == cond.Now()[0])
 					{
 						positionVec.push_back(nowPosition);
 					}
@@ -797,7 +797,7 @@ namespace wiz {
 
 							while (cond.Next());
 
-							if ("TRUE" != cond.Now()[0])
+							if (cond.Now().size() != 1 || "TRUE" != cond.Now()[0] ) // || cond.Now().size()  != 1
 							{
 								//cout << cond.Now()[0] << endl;
 								continue;
@@ -845,7 +845,7 @@ namespace wiz {
 
 							while (cond.Next());
 
-							if ("TRUE" != cond.Now()[0])
+							if (cond.Now().size() != 1 || "TRUE" != cond.Now()[0])
 							{
 								//cout << cond.Now()[0] << endl;
 								continue;
@@ -920,7 +920,7 @@ namespace wiz {
 
 									while (cond.Next());
 
-									if ("TRUE" != cond.Now()[0])
+									if (cond.Now().size() != 1 || "TRUE" != cond.Now()[0])
 									{
 										//cout << cond.Now()[0] << endl;
 										continue;
@@ -965,7 +965,7 @@ namespace wiz {
 
 									while (cond.Next());
 
-									if ("TRUE" != cond.Now()[0])
+									if (cond.Now().size() != 1 || "TRUE" != cond.Now()[0])
 									{
 										//	cout << cond.Now()[0] << endl;
 										continue;
@@ -1014,7 +1014,7 @@ namespace wiz {
 
 										while (cond.Next());
 
-										if ("TRUE" != cond.Now()[0])
+										if (cond.Now().size() != 1 || "TRUE" != cond.Now()[0])
 										{
 											//	cout << cond.Now()[0] << endl;
 											continue;
@@ -1046,7 +1046,7 @@ namespace wiz {
 
 							while (cond.Next());
 
-							if ("TRUE" != cond.Now()[0])
+							if (cond.Now().size() != 1 || "TRUE" != cond.Now()[0])
 							{
 								//	cout << cond.Now()[0] << endl;
 								continue;
@@ -1071,7 +1071,7 @@ namespace wiz {
 
 							while (cond.Next());
 
-							if ("TRUE" != cond.Now()[0])
+							if (cond.Now().size() != 1 || "TRUE" != cond.Now()[0])
 							{
 								//	cout << cond.Now()[0] << endl;
 								continue;
@@ -1096,7 +1096,7 @@ namespace wiz {
 
 							while (cond.Next());
 
-							if ("TRUE" != cond.Now()[0])
+							if (cond.Now().size() != 1 || "TRUE" != cond.Now()[0])
 							{
 								//	cout << cond.Now()[0] << endl;
 								continue;
@@ -1121,7 +1121,7 @@ namespace wiz {
 
 							while (cond.Next());
 
-							if ("TRUE" != cond.Now()[0])
+							if (cond.Now().size() != 1 || "TRUE" != cond.Now()[0])
 							{
 								//	cout << cond.Now()[0] << endl;
 								continue;
@@ -1152,7 +1152,7 @@ namespace wiz {
 
 							while (cond.Next());
 
-							if ("TRUE" != cond.Now()[0])
+							if (cond.Now().size() != 1 || "TRUE" != cond.Now()[0])
 							{
 								//	cout << cond.Now()[0] << endl;
 								continue;
@@ -1229,7 +1229,7 @@ namespace wiz {
 
 									while (cond.Next());
 
-									if ("TRUE" != cond.Now()[0])
+									if (cond.Now().size() != 1 || "TRUE" != cond.Now()[0])
 									{
 										// cout << cond.Now()[0] << endl;
 										continue;
@@ -1265,7 +1265,7 @@ namespace wiz {
 
 							while (cond.Next());
 
-							if ("TRUE" != cond.Now()[0])
+							if (cond.Now().size() != 1 || "TRUE" != cond.Now()[0])
 							{
 								// cout << cond.Now()[0] << endl;
 								continue;
@@ -1436,7 +1436,7 @@ namespace wiz {
 
 							while (cond.Next());
 
-							if ("TRUE" != cond.Now()[0])
+							if (cond.Now().size() != 1 || "TRUE" != cond.Now()[0])
 							{
 								//	cout << cond.Now()[0] << endl;
 								continue;

@@ -74,7 +74,7 @@ namespace wiz {
 			{
 				for (int i = idx + 1; i < arr.size(); ++i)
 				{
-					arr[i - 1] = arr[i];
+					arr[i - 1] = move(arr[i]);
 				}
 				arr.resize(arr.size() - 1);
 			}
