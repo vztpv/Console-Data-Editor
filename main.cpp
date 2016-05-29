@@ -792,13 +792,6 @@ void MStyleTest(const string& fileName)
 											if (temp == " ") { temp = ""; }
 
 											utVec[braceNum].Get(h)->RemoveItemList(temp);
-											/*
-											utVec[braceNum].Get(h)->GetItemList(idx - count_ut).Remove(0);
-											if (utVec[braceNum].Get(h)->GetItemList(idx - count_ut).size() == 0) {
-												utVec[braceNum].Get(h)->GetItemList(idx - count_ut).Remove();
-												utVec[braceNum].Get(h)->RemoveEmptyItem();
-											}
-											*/
 										}
 										count++;
 									}
