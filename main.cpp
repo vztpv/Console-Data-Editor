@@ -917,6 +917,11 @@ void MStyleTest(const string& fileName)
 							{
 								wiz::load_data::LoadData::Remove(utTemp, strVecTemp[1], strVecTemp[2]);
 							}
+							else if ("searchitem" == strVecTemp[0])
+							{
+								cout << wiz::load_data::LoadData::SearchItem(utTemp, strVecTemp[1], strVecTemp[2]) << endl;
+								GETCH();
+							}
 						}
 						catch (exception& e) {}
 						catch (wiz::Error& e) {}
