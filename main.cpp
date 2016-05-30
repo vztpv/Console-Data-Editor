@@ -213,13 +213,10 @@ void MStyleTest(const string& fileName)
 			for (int h = 0; h < utVec[braceNum].size(); ++h) {
 				for (int i = 0; i < utVec[braceNum].Get(h)->GetUserTypeListSize(); ++i) {
 					MData mdTemp{ true, utVec[braceNum].Get(h)->GetUserTypeList(i).GetName(), h };
-					if (mdTemp.varName.empty() && utVec[braceNum].Get(h)->GetUserTypeList(i).valid()) {
+					if (mdTemp.varName.empty()) {
 						mdTemp.varName = " ";
 					}
-					if (false == (utVec[braceNum].Get(h)->GetUserTypeList(i).valid()))
-					{
-						mdTemp.varName = " ";
-					}
+					
 					mdVec.push_back(mdTemp);
 					count_userType++;
 				}
@@ -227,7 +224,7 @@ void MStyleTest(const string& fileName)
 			for (int h = 0; h < utVec[braceNum].size(); ++h) {
 				for (int i = 0; i < utVec[braceNum].Get(h)->GetItemListSize(); ++i) {
 					MData mdTemp{ false, utVec[braceNum].Get(h)->GetItemList(i).GetName(), h };
-					if (mdTemp.varName.empty() && utVec[braceNum].Get(h)->GetItemList(i).valid()) {
+					if (mdTemp.varName.empty()) {
 						mdTemp.varName = " ";
 					}
 					mdVec.push_back(mdTemp);
@@ -451,7 +448,7 @@ void MStyleTest(const string& fileName)
 
 					wiz::load_data::TypeArray< wiz::load_data::UserType*> ref;
 					string strTemp = mdVec[idxVec[braceNum-1]].varName;
-					if (strTemp == " " || false == utVec[braceNum - 1].Get(mdVec[idxVec[braceNum - 1]].no)->valid())
+					if (strTemp == " " ) // || false == utVec[braceNum - 1].Get(mdVec[idxVec[braceNum - 1]].no)->valid())
 					{
 						strTemp = "";
 					}
