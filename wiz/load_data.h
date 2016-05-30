@@ -222,13 +222,7 @@ namespace wiz {
 					case 3:
 						if (RIGHT == Utility::Top(strVec)) {
 							Utility::Pop(strVec);
-							//
-							TypeArray<UserType*> pTemp;
-							nestedUT[braceNum-1]->GetLastUserTypeItemRef(var2, pTemp);
-							if (pTemp.size() > 0)
-							{
-								pTemp.Get(pTemp.size() - 1)->setValid(false);
-							}
+							
 							nestedUT[braceNum] = NULL;
 							braceNum--;
 
@@ -322,13 +316,7 @@ namespace wiz {
 					case 5:
 						if (RIGHT == Utility::Top(strVec)) {
 							Utility::Pop(strVec);
-							//
-							TypeArray<UserType*> pTemp;
-							nestedUT[braceNum-1]->GetLastUserTypeItemRef("", pTemp);
-							if (pTemp.size() > 0)
-							{
-								pTemp.Get(pTemp.size() - 1)->setValid(false);
-							}
+				
 							//if (flag1 == 0) {
 							nestedUT[braceNum] = NULL;
 							braceNum--;
@@ -426,12 +414,6 @@ namespace wiz {
 						if (RIGHT == Utility::Top(strVec)) {
 							Utility::Pop(strVec);
 							//
-							TypeArray<UserType*> pTemp;
-							nestedUT[braceNum-1]->GetLastUserTypeItemRef(var2, pTemp);
-							if (pTemp.size() > 0)
-							{
-								pTemp.Get(pTemp.size() - 1)->setValid(false);
-							}
 
 							nestedUT[braceNum] = NULL;
 							braceNum--;

@@ -16,14 +16,10 @@ namespace wiz {
 		class Type {
 		private:
 			string name;
-			bool isValid;
 		public:
-			bool valid()const { return isValid; }
-			void setValid(const bool val) { isValid = val; }
-		public:
-			explicit Type(const string& name = "", const bool isValid = true) : name(name), isValid(isValid) { }
+			explicit Type(const string& name = "", const bool valid=true) : name(name) { }
 			Type(const Type& type)
-				: name(type.name), isValid(type.isValid)
+				: name(type.name)
 			{ }
 			virtual ~Type() { }
 			bool IsFail() const { // change body?
@@ -45,7 +41,6 @@ namespace wiz {
 			Type& operator=(const Type& type)
 			{
 				name = type.name;
-				isValid = type.isValid;
 				return *this;
 			}
 		};
@@ -64,7 +59,7 @@ namespace wiz {
 				arr = move( ta.arr );
 			}
 		public:
-			explicit TypeArray(const string& name = "") : Type(name) { }
+			explicit TypeArray(const string& name = "", const bool valid = true) : Type(name, valid) { }
 			virtual ~TypeArray() { }
 		public:
 			void Remove() {
@@ -372,8 +367,9 @@ namespace wiz {
 					userTypeList.Search(TypeArray<UserType*>(item.GetName()), &index);
 				}
 				*/
-				UserType* temp( new UserType(item) );
+				UserType* temp = new UserType(item);
 				temp->parent = this;
+				temp->SetName("");
 
 				TypeArray<UserType*> temp2(item.GetName());
 				temp2.Push(temp);
