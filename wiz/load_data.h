@@ -704,7 +704,10 @@ namespace wiz {
 				string _var = var;
 				if (_var == " ") { _var = ""; }
 				if (ut->GetItem(_var).size() > 0) {
-					Condition cond(condition, ut, &global);
+					string _condition = condition;
+					_condition = wiz::String::replace(_condition, "~~", _var); //
+
+					Condition cond(_condition, ut, &global);
 
 					while (cond.Next());
 
@@ -737,7 +740,10 @@ namespace wiz {
 					_var = "";
 				}
 				if (ut->GetName() == _var) {
-					Condition cond(condition, ut, &global);
+					string _condition = condition;
+					_condition = wiz::String::replace(_condition, "~~", _var); //
+
+					Condition cond(_condition, ut, &global);
 
 					while (cond.Next());
 
