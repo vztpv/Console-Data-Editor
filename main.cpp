@@ -448,7 +448,7 @@ void MStyleTest(const string& fileName)
 
 					wiz::load_data::TypeArray< wiz::load_data::UserType*> ref;
 					string strTemp = mdVec[idxVec[braceNum-1]].varName;
-					if (strTemp == " " ) // || false == utVec[braceNum - 1].Get(mdVec[idxVec[braceNum - 1]].no)->valid())
+					if (strTemp == " " ) 
 					{
 						strTemp = "";
 					}
@@ -516,6 +516,7 @@ void MStyleTest(const string& fileName)
 					// idx = 0;
 					End = min(Start + sizeOfWindow - 1, strVec.size() - 1);
 					if (strVec.empty()) { End = Start - 1; }
+
 
 					// chk
 					count_userType = 0;
@@ -641,7 +642,8 @@ void MStyleTest(const string& fileName)
 					cout << "edit mode" << endl;
 					cout << "add - a, change - c, remove - r, save - s" << endl;
 					ch = GETCH();
-	
+					FFLUSH();
+
 					if ('a' == ch) { // add
 						int select=-1;
 						string var;
@@ -680,7 +682,9 @@ void MStyleTest(const string& fileName)
 							string temp;
 							setcolor(0, 7);
 							cout << "change userType name : ";
-							cin >> temp;
+							
+							FFLUSH();
+							getline(cin, temp);
 
 							int count = 0;
 							for (int h = 0; h < utVec[braceNum].size(); ++h) {
