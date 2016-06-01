@@ -13,8 +13,6 @@
                 
 # ToDo : 
                 1. File Open Fail Processing, fix bug, and speed up, and make new header file and etc.. 
-                2. make DLL for C# ?
-                3. Viewer -> Editor!
                 
 # Using C++11, VisualStudio2015, Windows10
 
