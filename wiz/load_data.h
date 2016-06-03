@@ -8,7 +8,7 @@
 #include <fstream>
 #include <string>
 #include <utility>
-#include <cmath>
+#include <algorithm>
 using namespace std;
 
 #include <wiz/global.h>
@@ -687,8 +687,10 @@ namespace wiz {
 				if (_var == " ") { _var = ""; }
 				if (ut->GetItem(_var).size() > 0) {
 					string _condition = condition;
-					_condition = wiz::String::replace(_condition, "~~", _var); //
 
+					if (_var == "") { _condition = wiz::String::replace(_condition, "~~", "^"); }
+					else  
+						_condition = wiz::String::replace(_condition, "~~", _var); //
 					Condition cond(_condition, ut, &global);
 
 					while (cond.Next());
@@ -721,9 +723,11 @@ namespace wiz {
 				if (_var == " ") {
 					_var = "";
 				}
-				if (ut->GetName() == _var) {
+				if (ut->GetUserTypeItem(_var).size() > 0) {
 					string _condition = condition;
-					_condition = wiz::String::replace(_condition, "~~", _var); //
+
+					if (_var == "") { _condition = wiz::String::replace(_condition, "~~", "^"); }
+					else  _condition = wiz::String::replace(_condition, "~~", _var); //
 
 					Condition cond(_condition, ut, &global);
 
@@ -901,8 +905,11 @@ namespace wiz {
 
 
 								if (false == condition.empty()) {
-									string _condition = condition;
-									_condition = wiz::String::replace(_condition, "~~", utName); //
+									string _condition = condition; 
+									
+									if (utName == "") { _condition = wiz::String::replace(_condition, "~~", "^"); }
+									else
+										_condition = wiz::String::replace(_condition, "~~", utName); //
 
 									Condition cond(_condition, finded.second[i], &global);
 
@@ -949,7 +956,12 @@ namespace wiz {
 							const int n = utTemp.GetItem("").size();
 							for (int i = 0; i < finded.second.size(); ++i) {
 								if (false == condition.empty()) {
-									Condition cond(condition, finded.second[i], &global);
+									string _condition = condition;
+									if (_varName == "") { _condition = wiz::String::replace(_condition, "~~", "^"); }
+									else
+										_condition = wiz::String::replace(_condition, "~~", _varName); //
+
+									Condition cond(_condition, finded.second[i], &global);
 
 									while (cond.Next());
 
@@ -998,7 +1010,12 @@ namespace wiz {
 
 								for (int i = 0; i < finded.second.size(); ++i) {
 									if (false == condition.empty()) {
-										Condition cond(condition, finded.second[i], &global);
+										string _condition = condition;
+										if (_varName == "") { _condition = wiz::String::replace(_condition, "~~", "^"); }
+										else
+											_condition = wiz::String::replace(_condition, "~~", _varName); //
+
+										Condition cond(_condition, finded.second[i], &global);
 
 										while (cond.Next());
 
@@ -1136,7 +1153,12 @@ namespace wiz {
 				if (finded.first) {
 					for (int i = 0; i < finded.second.size(); ++i) {
 						if (false == condition.empty()) {
-							Condition cond(condition, finded.second[i], &global);
+							string _condition = condition;
+							if (varName == "") { _condition = wiz::String::replace(_condition, "~~", "^"); }
+							else
+								_condition = wiz::String::replace(_condition, "~~", varName); //
+
+							Condition cond(_condition, finded.second[i], &global);
 
 							while (cond.Next());
 
@@ -1211,10 +1233,14 @@ namespace wiz {
 
 							for (int i = 0; i < finded.second.size(); ++i) {
 								UserType* temp = finded.second[i];
-
+								
 								if (false == condition.empty()) {
-									Condition cond(condition, finded.second[i], &global);
+									string _condition = condition;
+									if (_var == "") { _condition = wiz::String::replace(_condition, "~~", "^"); }
+									else
+										_condition = wiz::String::replace(_condition, "~~", _var); //
 
+									Condition cond(_condition, finded.second[i], &global);
 									while (cond.Next());
 
 									if (cond.Now().size() != 1 || "TRUE" != cond.Now()[0])
@@ -1269,6 +1295,40 @@ namespace wiz {
 					return false;
 				}
 			}
+			
+			static bool RemoveNoNameItem(UserType& global, const string& position, const string& value)
+			{
+				auto finded = Utility::Find(&global, position);
+				bool isTrue = false;
+
+
+				if (finded.first) {
+					for (int i = 0; i < finded.second.size(); ++i) {
+						UserType* temp = finded.second[i];
+						vector<int> idx;
+
+						for (int j = 0; j < temp->GetItemListSize(); ++j)
+						{
+							if (value == temp->GetItemList(j).Get(0)) {
+								idx.push_back(j);
+							}
+						}
+						//
+						sort(idx.begin(), idx.end(), std::greater<int>()); /// result ex) 5 4 3 2 1 
+						// 
+						for (const int& x : idx) {
+							temp->RemoveItemList(x);
+						}
+								
+						isTrue = true;
+					}
+					return isTrue;
+				}
+				else {
+					return false;
+				}
+			}
+
 			static bool LoadWizDB(UserType& global, const string& fileName) {
 				UserType globalTemp = UserType("global");
 				// preprocessing

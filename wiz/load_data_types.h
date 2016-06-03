@@ -229,6 +229,27 @@ namespace wiz {
 				return -1;
 			}
 		public:
+			void RemoveItemList(const int idx)
+			{
+				// left shift start idx, to end, at itemList. and resize!
+				for (int i = idx+1; i < GetItemListSize(); ++i) {
+					itemList[i - 1] = std::move(itemList[i]);
+				}
+				itemList.resize(itemList.size() - 1);
+				//  ilist left shift and resize - count itemType!
+				int count = 0;
+				for (int i = 0; i < ilist.size(); ++i) {
+					if (ilist[i] == 1 ) { count++; }
+					if (count == idx + 1) {
+						// iºÎÅÍ left shift!and resize!
+						for (int k = i+1; k < ilist.size(); ++k) {
+							ilist[k - 1] = std::move(ilist[k]);
+						}
+						ilist.resize(ilist.size() - 1);
+						break;
+					}
+				}
+			}
 			void RemoveItemList(const string& varName)
 			{
 				int k = _GetIndex(ilist, 1, 0);

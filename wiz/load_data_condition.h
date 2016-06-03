@@ -400,7 +400,7 @@ namespace wiz {
 				}
 			}
 
-			void Init(const string condition)
+			void Init(const string& condition)
 			{
 				bool evalue = false;
 
@@ -408,7 +408,11 @@ namespace wiz {
 				StringTokenizer tokenizer(str, { " ", "\t", "\n", "\r" });
 
 				while (tokenizer.hasMoreTokens()) {
-					tokenVec.push_back(tokenizer.nextToken());
+					string temp = tokenizer.nextToken();
+					if (temp == "^") {
+						temp = "";
+					}
+					tokenVec.push_back(temp);
 				}
 			}
 		public:
