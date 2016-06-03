@@ -270,7 +270,8 @@ void MStyleTest(const string& fileName)
 		// move and chk enterkey. - todo!!
 		{
 			char ch = GETCH();
-			
+			FFLUSH();
+
 			if ('q' == ch) { return; }
 
 			// todo - add, remove, save
@@ -653,12 +654,14 @@ void MStyleTest(const string& fileName)
 						// need more test!!
 						cout << "add UserType : 1, add Item : 2, add usertype that name is \"\": 3 your input : ";
 						cin >> select;
+						FFLUSH();
 
 						// add userType?
 						if (1 == select) {
 							// name of UserType.
 							cout << "what is new UserType name? : ";
 							cin >> var;
+							FFLUSH();
 							utVec2[braceNum]->AddUserTypeItem(wiz::load_data::UserType(var));
 						}
 						// addd Item?
@@ -739,6 +742,7 @@ void MStyleTest(const string& fileName)
 							else if (0 == state) { // var
 								cout << "change var : " << endl;
 								cin >> temp;
+								FFLUSH();
 								name = temp;
 								int count = 0;
 								for (int h = 0; h < utVec[braceNum].size(); ++h) {
@@ -914,6 +918,10 @@ void MStyleTest(const string& fileName)
 							{
 								wiz::load_data::LoadData::Remove(utTemp, strVecTemp[1], strVecTemp[2], strVecTemp[3]);
 							}
+							else if ("removenonameitem" == strVecTemp[0])
+							{
+								wiz::load_data::LoadData::RemoveNoNameItem(utTemp, strVecTemp[1], strVecTemp[2]);
+							}
 							else if ("removeall" == strVecTemp[0])
 							{
 								wiz::load_data::LoadData::Remove(utTemp, strVecTemp[1], strVecTemp[2]);
@@ -921,6 +929,11 @@ void MStyleTest(const string& fileName)
 							else if ("searchitem" == strVecTemp[0])
 							{
 								cout << wiz::load_data::LoadData::SearchItem(utTemp, strVecTemp[1], strVecTemp[2]) << endl;
+								GETCH();
+							}
+							else if ("searchusertype" == strVecTemp[0])
+							{
+								cout << wiz::load_data::LoadData::SearchUserType(utTemp, strVecTemp[1], strVecTemp[2]) << endl;
 								GETCH();
 							}
 						}
