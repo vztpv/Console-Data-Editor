@@ -39,7 +39,13 @@ void test2() {
 	
 	global.InitWizDB();
 
-	global.AddData("", "x= { y = { ival = 0 } }");
+	if (global.AddData("", "x = { y = { ival = 0 } }"))
+	{
+		cout << "chk" << endl;
+	}
+	
+	cout << (global.GetData("", "")) << endl;
+
 	global.AddData("x/", "y={ id = 1 name = \"country AAA\" }");
 
 	cout << (global.GetData("","")) << endl;
@@ -71,7 +77,10 @@ void test2() {
 	cout << (global.GetData("", "")) << endl;
 
 	global.SetData("", "x", "3", "");
-	global.SetData("x", "", "2 3 4 5", "");
+	if (!global.SetData("x", "", "2 3 4 5", ""))
+	{
+		cout << "error why? " << endl;
+	}
 
 	cout << (global.GetData("", "")) << endl;
 
@@ -953,7 +962,7 @@ void MStyleTest(const string& fileName)
 
 int main(void)
 {
-	//test2(); // load from string!
+	test2(); // load from string!
 	//_getch();
 	 //eu4Test();
 	//stellarisTest();
