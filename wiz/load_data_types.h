@@ -390,7 +390,7 @@ namespace wiz {
 				*/
 				UserType* temp = new UserType(item);
 				temp->parent = this;
-				temp->SetName("");
+				//temp->SetName("");
 
 				TypeArray<UserType*> temp2(item.GetName());
 				temp2.Push(temp);

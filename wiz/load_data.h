@@ -858,7 +858,9 @@ namespace wiz {
 				bool isTrue = false;
 				auto finded = Utility::Find(&global, position);
 				if (finded.first) {
-					StringTokenizer tokenizer(var, "/");
+					string temp = var;
+					if (temp == "") { temp = " "; }
+					StringTokenizer tokenizer(temp, "/");
 					UserType utTemp = UserType("");
 					if (false == LoadDataFromString(data, utTemp))
 					{
@@ -944,7 +946,9 @@ namespace wiz {
 				bool isTrue = false;
 
 				if (finded.first) {
-					StringTokenizer tokenizer(varName, "/");
+					string temp = varName;
+					if (temp == "") { temp = " "; }
+					StringTokenizer tokenizer(temp, "/");
 					UserType utTemp("");
 					if (false == LoadDataFromString(data, utTemp)) {
 						return false;
@@ -1199,7 +1203,9 @@ namespace wiz {
 				bool isTrue = false;
 				
 				if (finded.first) {
-					StringTokenizer tokenizer(var, "/");
+					string temp = var;
+					if (temp == "") { temp = " "; }
+					StringTokenizer tokenizer(temp, "/");
 					while (tokenizer.hasMoreTokens()) {
 						string _var = tokenizer.nextToken();
 						if (_var == " ") { _var = ""; }
