@@ -957,7 +957,7 @@ namespace wiz {
 							for (int i = 0; i < finded.second.size(); ++i) {
 								if (false == condition.empty()) {
 									string _condition = condition;
-									if (_varName == "") { _condition = wiz::String::replace(_condition, "~~", "^"); }
+									if (_varName == "" || _varName == " ") { _condition = wiz::String::replace(_condition, "~~", "^"); }
 									else
 										_condition = wiz::String::replace(_condition, "~~", _varName); //
 
