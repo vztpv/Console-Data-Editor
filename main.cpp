@@ -13,7 +13,7 @@ inline int GETCH() /// To Do - Replace..
 	return _getch();
 }
 
-inline void FFLUSH()  // to  DO - Ãß°¡!!
+inline void FFLUSH()  // to  DO - ì¶”ê°€!!
 {
 	cin.clear();
 	cin.ignore(cin.rdbuf()->in_avail(), '\n');
@@ -119,7 +119,7 @@ void eu4Test()
 			//_getch();
 		}
 
-		//LoadData::Remove("provinces/$/", "history", "NOTEQ = { core / \"RUS\" / }", 2); // ¸ðµç °æ¿ì¿¡ ´Ù ´Ù¸¥´Ù¸é?
+		//LoadData::Remove("provinces/$/", "history", "NOTEQ = { core / \"RUS\" / }", 2); // ëª¨ë“  ê²½ìš°ì— ë‹¤ ë‹¤ë¥¸ë‹¤ë©´?
 		global.Remove("provinces/$/", "history", "AND = { EQ = { core / \"RUS\" ~ 1 }"
 			"NOTEQ = { core / \"PLT\" ~ 2 } }");
 		// ToDo - global.Remove("provinces/$/history/", "AND = { ISDATE _COMP> = { 1899.12.31 }  });
@@ -268,7 +268,7 @@ void MStyleTest(const string& fileName)
 				gotoxy(0, idx - Start);
 
 				setcolor(0, 12);
-				cout << "¡Ü";
+				cout << "â—";
 				setcolor(0, 0);
 				gotoxy(0, 0);
 			}
@@ -307,7 +307,7 @@ void MStyleTest(const string& fileName)
 					}
 					gotoxy(0, idx - Start);
 					setcolor(0, 12);
-					cout << "¡Ü";
+					cout << "â—";
 					setcolor(0, 0);
 				}
 				else {
@@ -318,7 +318,7 @@ void MStyleTest(const string& fileName)
 
 					gotoxy(0, idx - Start);
 					setcolor(0, 12);
-					cout << "¡Ü";
+					cout << "â—";
 					setcolor(0, 0);
 				}
 			}
@@ -346,7 +346,7 @@ void MStyleTest(const string& fileName)
 					}
 					gotoxy(0, 0);
 					setcolor(0, 12);
-					cout << "¡Ü";
+					cout << "â—";
 					setcolor(0, 0);
 				}
 				else {
@@ -357,7 +357,7 @@ void MStyleTest(const string& fileName)
 
 					gotoxy(0, idx - Start);
 					setcolor(0, 12);
-					cout << "¡Ü";
+					cout << "â—";
 					setcolor(0, 0);
 				}
 			}
@@ -382,7 +382,7 @@ void MStyleTest(const string& fileName)
 					}
 					gotoxy(0, idx - Start);
 					setcolor(0, 12);
-					cout << "¡Ü";
+					cout << "â—";
 					setcolor(0, 0);
 				}
 				else {
@@ -393,7 +393,7 @@ void MStyleTest(const string& fileName)
 
 					gotoxy(0, idx - Start);
 					setcolor(0, 12);
-					cout << "¡Ü";
+					cout << "â—";
 					setcolor(0, 0);
 				}
 			}
@@ -421,7 +421,7 @@ void MStyleTest(const string& fileName)
 					}
 					gotoxy(0, 0);
 					setcolor(0, 12);
-					cout << "¡Ü";
+					cout << "â—";
 					setcolor(0, 0);
 				}
 				else {
@@ -432,7 +432,7 @@ void MStyleTest(const string& fileName)
 
 					gotoxy(0, idx - Start);
 					setcolor(0, 12);
-					cout << "¡Ü";
+					cout << "â—";
 					setcolor(0, 0);
 				}
 			}
@@ -514,7 +514,7 @@ void MStyleTest(const string& fileName)
 						Start = 0;
 						
 						setcolor(0, 12);
-						cout << "¡Ü";
+						cout << "â—";
 						setcolor(0, 0);
 					}
 					else if (state == 1) { /// cf) state = 2;
@@ -675,7 +675,7 @@ void MStyleTest(const string& fileName)
 						}
 						// addd Item?
 						else if (2 == select) {
-							// var, val /// state¿¡ µû¶ó?
+							// var, val /// stateì— ë”°ë¼?
 							cout << "var : ";
 							cin >> var;
 							cout << "val : ";
@@ -962,7 +962,7 @@ void MStyleTest(const string& fileName)
 
 int main(void)
 {
-	test2(); // load from string!
+//	test2(); // load from string!
 	//_getch();
 	 //eu4Test();
 	//stellarisTest();
