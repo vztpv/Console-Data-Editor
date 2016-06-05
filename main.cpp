@@ -1,4 +1,5 @@
 
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 using namespace std;
 
@@ -13,7 +14,7 @@ inline int GETCH() /// To Do - Replace..
 	return _getch();
 }
 
-inline void FFLUSH()  // to  DO - Ï∂îÍ∞Ä!!
+inline void FFLUSH()  // to  DO - √ﬂ∞°!!
 {
 	cin.clear();
 	cin.ignore(cin.rdbuf()->in_avail(), '\n');
@@ -29,37 +30,37 @@ inline void setcolor(int color, int bgcolor)
 {
 	color = color & 0xF;
 	bgcolor = bgcolor & 0xF;
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 
-										(bgcolor << 4) | color);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),
+		(bgcolor << 4) | color);
 }
 
 
 void test2() {
 	wiz::load_data::LoadData global;
-	
+
 	global.InitWizDB();
 
 	if (global.AddData("", "x = { y = { ival = 0 } }"))
 	{
 		cout << "chk" << endl;
 	}
-	
+
 	cout << (global.GetData("", "")) << endl;
 
 	global.AddData("x/", "y={ id = 1 name = \"country AAA\" }");
 
-	cout << (global.GetData("","")) << endl;
+	cout << (global.GetData("", "")) << endl;
 
 	global.AddData("", "player={ { x= 0 } }");
 	//global.AddData("player/ ", "z = { x = 1 }");
-	global.AddNoNameUserType("player/", "x=1" );
+	global.AddNoNameUserType("player/", "x=1");
 	cout << (global.GetData("player/", " ", "")) << endl;
 	cout << "------------------------------------" << endl;
-	cout << (global.GetData("","")) << endl;
+	cout << (global.GetData("", "")) << endl;
 
 	global.AddData("", "x={z=3}");
 
-	cout << (global.GetData("","")) << endl;
+	cout << (global.GetData("", "")) << endl;
 
 	global.AddData("", "x={ y= 1 }");
 
@@ -119,7 +120,7 @@ void eu4Test()
 			//_getch();
 		}
 
-		//LoadData::Remove("provinces/$/", "history", "NOTEQ = { core / \"RUS\" / }", 2); // Î™®Îì† Í≤ΩÏö∞Ïóê Îã§ Îã§Î•∏Îã§Î©¥?
+		//LoadData::Remove("provinces/$/", "history", "NOTEQ = { core / \"RUS\" / }", 2); // ∏µÁ ∞ÊøÏø° ¥Ÿ ¥Ÿ∏•¥Ÿ∏È?
 		global.Remove("provinces/$/", "history", "AND = { EQ = { core / \"RUS\" ~ 1 }"
 			"NOTEQ = { core / \"PLT\" ~ 2 } }");
 		// ToDo - global.Remove("provinces/$/history/", "AND = { ISDATE _COMP> = { 1899.12.31 }  });
@@ -127,8 +128,8 @@ void eu4Test()
 
 		cout << global.GetItemListNamesData("root/countries/C60/map_color", "TRUE") << endl;
 
-		cout << global.GetUserTypeListNamesData("root/provinces/-100", "TRUE") << endl; 
-		 
+		cout << global.GetUserTypeListNamesData("root/provinces/-100", "TRUE") << endl;
+
 		//cout << global.SearchUserType("history", "TRUE") << endl;
 
 		global.SaveWizDB("result.eu4", "1"); /// , 0
@@ -150,7 +151,7 @@ void stellarisTest()
 
 		//	cout << global.GetData("species/ /", "TRUE") << endl;
 
-			// cout << global.SearchItem("name", "TRUE") << endl;
+		// cout << global.SearchItem("name", "TRUE") << endl;
 		//cout << "chk" << endl;
 		//cout << global.GetData("species/ ",
 		//	"EQ = { portrait /identity \"human\" ~ 2 }") << endl;
@@ -172,7 +173,7 @@ public:
 	int no; /// for UserType that has same name.!, rename?
 public:
 	explicit MData(const bool isDir = false, const string& varName = "", const int no = 0) : isDir(isDir), varName(varName), no(no)
-	{ 
+	{
 
 	}
 };
@@ -193,7 +194,7 @@ void MStyleTest(const string& fileName)
 	bool isReDraw = true;
 	int sizeOfWindow = 30;
 	int Start = 0;
-	int End = 0; 
+	int End = 0;
 	int state = 0;
 
 	if (false == wiz::load_data::LoadData::LoadDataFromFile(fileName, utTemp))
@@ -201,7 +202,7 @@ void MStyleTest(const string& fileName)
 		cout << "fail to load data" << endl;
 		return;
 	}
-	
+
 	global.Push(&utTemp);
 
 	utVec.push_back(global);
@@ -209,7 +210,7 @@ void MStyleTest(const string& fileName)
 	utVec2.push_back(&utTemp);
 
 	system("cls");
-		
+
 	int count_userType = 0;
 	int count_item = 0;
 
@@ -225,7 +226,7 @@ void MStyleTest(const string& fileName)
 					if (mdTemp.varName.empty()) {
 						mdTemp.varName = " ";
 					}
-					
+
 					mdVec.push_back(mdTemp);
 					count_userType++;
 				}
@@ -268,7 +269,7 @@ void MStyleTest(const string& fileName)
 				gotoxy(0, idx - Start);
 
 				setcolor(0, 12);
-				cout << "‚óè";
+				cout << "°‹";
 				setcolor(0, 0);
 				gotoxy(0, 0);
 			}
@@ -284,7 +285,7 @@ void MStyleTest(const string& fileName)
 			if ('q' == ch) { return; }
 
 			// todo - add, remove, save
-			if ( strVec.empty() && Start <= End && idx > 0 && ('w' == ch || 'W' == ch))
+			if (strVec.empty() && Start <= End && idx > 0 && ('w' == ch || 'W' == ch))
 			{
 				// draw mdVec and cursor - chk!!
 				if (idx == Start) {
@@ -307,7 +308,7 @@ void MStyleTest(const string& fileName)
 					}
 					gotoxy(0, idx - Start);
 					setcolor(0, 12);
-					cout << "‚óè";
+					cout << "°‹";
 					setcolor(0, 0);
 				}
 				else {
@@ -318,21 +319,21 @@ void MStyleTest(const string& fileName)
 
 					gotoxy(0, idx - Start);
 					setcolor(0, 12);
-					cout << "‚óè";
+					cout << "°‹";
 					setcolor(0, 0);
 				}
 			}
 			else if (
-				strVec.empty() && Start <= End &&  ( idx < mdVec.size() - 1 )
-				&& ('s' == ch || 'S' == ch) 
-			)
+				strVec.empty() && Start <= End && (idx < mdVec.size() - 1)
+				&& ('s' == ch || 'S' == ch)
+				)
 			{
 				if (idx == End) {
 					system("cls");
 
 					int count = 0;
 					int newStart = End + 1;
-					int newEnd = min( newStart + sizeOfWindow - 1, mdVec.size()-1 );
+					int newEnd = min(newStart + sizeOfWindow - 1, mdVec.size() - 1);
 
 					Start = newStart; End = newEnd;
 					idx++;
@@ -346,7 +347,7 @@ void MStyleTest(const string& fileName)
 					}
 					gotoxy(0, 0);
 					setcolor(0, 12);
-					cout << "‚óè";
+					cout << "°‹";
 					setcolor(0, 0);
 				}
 				else {
@@ -357,7 +358,7 @@ void MStyleTest(const string& fileName)
 
 					gotoxy(0, idx - Start);
 					setcolor(0, 12);
-					cout << "‚óè";
+					cout << "°‹";
 					setcolor(0, 0);
 				}
 			}
@@ -382,7 +383,7 @@ void MStyleTest(const string& fileName)
 					}
 					gotoxy(0, idx - Start);
 					setcolor(0, 12);
-					cout << "‚óè";
+					cout << "°‹";
 					setcolor(0, 0);
 				}
 				else {
@@ -393,7 +394,7 @@ void MStyleTest(const string& fileName)
 
 					gotoxy(0, idx - Start);
 					setcolor(0, 12);
-					cout << "‚óè";
+					cout << "°‹";
 					setcolor(0, 0);
 				}
 			}
@@ -421,7 +422,7 @@ void MStyleTest(const string& fileName)
 					}
 					gotoxy(0, 0);
 					setcolor(0, 12);
-					cout << "‚óè";
+					cout << "°‹";
 					setcolor(0, 0);
 				}
 				else {
@@ -432,7 +433,7 @@ void MStyleTest(const string& fileName)
 
 					gotoxy(0, idx - Start);
 					setcolor(0, 12);
-					cout << "‚óè";
+					cout << "°‹";
 					setcolor(0, 0);
 				}
 			}
@@ -450,26 +451,26 @@ void MStyleTest(const string& fileName)
 					// usertypelist
 					braceNum++;
 					idxVec.push_back(idx); /// idx?
-					
+
 					if (braceNum >= utVec.size()) {
 						utVec.push_back(wiz::load_data::TypeArray<wiz::load_data::UserType*>());
 						utVec2.push_back(NULL);
 					}
 
 					wiz::load_data::TypeArray< wiz::load_data::UserType*> ref;
-					string strTemp = mdVec[idxVec[braceNum-1]].varName;
-					if (strTemp == " " ) 
+					string strTemp = mdVec[idxVec[braceNum - 1]].varName;
+					if (strTemp == " ")
 					{
 						strTemp = "";
 					}
 
-					if (utVec[braceNum - 1].Get(mdVec[idxVec[braceNum - 1]].no)->GetUserTypeItemRef(idxVec[braceNum-1], ref))
+					if (utVec[braceNum - 1].Get(mdVec[idxVec[braceNum - 1]].no)->GetUserTypeItemRef(idxVec[braceNum - 1], ref))
 					{
 						//
 					}
 					utVec[braceNum] = ref;
 
-					utVec2[braceNum - 1]->GetUserTypeItemRef(idxVec[braceNum-1], ref);
+					utVec2[braceNum - 1]->GetUserTypeItemRef(idxVec[braceNum - 1], ref);
 					utVec2[braceNum] = ref.Get(mdVec[idxVec[braceNum - 1]].no);
 
 					Start = 0;
@@ -478,11 +479,11 @@ void MStyleTest(const string& fileName)
 					isReDraw = true;
 				}
 				else
-				{	
+				{
 					if (
 						!mdVec.empty() &&
 						strVec.empty()
-						) 
+						)
 					{
 						setcolor(0, 0);
 						system("cls");
@@ -491,10 +492,10 @@ void MStyleTest(const string& fileName)
 						if (strTemp == " ") { strTemp = ""; }
 						const int count = 1; // utVec[braceNum].Get(mdVec[idx].no)->GetItem(strTemp).size();
 						setcolor(0, 7);
-						
+
 						for (int i = 0; i < count; ++i) {
-							setcolor(0, 7); 
-							
+							setcolor(0, 7);
+
 							auto x = utVec[braceNum].Get(mdVec[idx].no)->GetItemList(idx - count_userType);
 							string temp = x.Get(0);
 							cout << "  " << temp;
@@ -509,12 +510,12 @@ void MStyleTest(const string& fileName)
 						state = 1;
 
 						idxVec.push_back(idx);
-						
+
 						idx = 0;
 						Start = 0;
-						
+
 						setcolor(0, 12);
-						cout << "‚óè";
+						cout << "°‹";
 						setcolor(0, 0);
 					}
 					else if (state == 1) { /// cf) state = 2;
@@ -522,7 +523,7 @@ void MStyleTest(const string& fileName)
 						Start = idx;
 					}
 
-					
+
 					// idx = 0;
 					End = min(Start + sizeOfWindow - 1, strVec.size() - 1);
 					if (strVec.empty()) { End = Start - 1; }
@@ -603,11 +604,11 @@ void MStyleTest(const string& fileName)
 			else {
 				if ('q' == ch) { return; } // quit
 				else if ('b' == ch && braceNum > 0 && strVec.empty() && state == 0) {  // back
-					braceNum--; 
-					
-					setcolor(0, 0);  
-					system("cls"); 
-					
+					braceNum--;
+
+					setcolor(0, 0);
+					system("cls");
+
 					isFirst = true;
 					isReDraw = true;
 					//Start = idxVec.back();
@@ -640,7 +641,7 @@ void MStyleTest(const string& fileName)
 					setcolor(0, 0);
 					system("cls");
 					strVec.clear();
-					
+
 					isFirst = true;
 					isReDraw = true;
 				}
@@ -655,7 +656,7 @@ void MStyleTest(const string& fileName)
 					FFLUSH();
 
 					if ('a' == ch) { // add
-						int select=-1;
+						int select = -1;
 						string var;
 						string val;
 
@@ -675,7 +676,7 @@ void MStyleTest(const string& fileName)
 						}
 						// addd Item?
 						else if (2 == select) {
-							// var, val /// stateÏóê Îî∞Îùº?
+							// var, val /// stateø° µ˚∂Û?
 							cout << "var : ";
 							cin >> var;
 							cout << "val : ";
@@ -689,12 +690,12 @@ void MStyleTest(const string& fileName)
 						}
 					}
 					else if ('c' == ch && Start <= End) { // change var or value
-						// idx
+														  // idx
 						if (idx < count_userType) {
 							string temp;
 							setcolor(0, 7);
 							cout << "change userType name : ";
-							
+
 							FFLUSH();
 							getline(cin, temp);
 
@@ -711,14 +712,14 @@ void MStyleTest(const string& fileName)
 						else {
 							string temp;
 							setcolor(0, 7);
-							
+
 							string name, value;
 							if (1 == state) { // val
 								cout << "change val : " << endl;
 								getline(cin, temp);
-								
-								value = temp; 
-								
+
+								value = temp;
+
 								int count = 0;
 								int count_userType = 0;
 								for (int h = 0; h < utVec[braceNum].size(); ++h) {
@@ -828,7 +829,7 @@ void MStyleTest(const string& fileName)
 										if (count == idxVec.back()) {
 											string temp = mdVec[idxVec.back()].varName;
 											if (temp == " ") { temp = ""; }
-											
+
 											utVec[braceNum].Get(h)->GetItemList(count - count_ut).Remove(0);
 											if (utVec[braceNum].Get(h)->GetItemList(count - count_ut).size() == 0) {
 												utVec[braceNum].Get(h)->GetItemList(count - count_ut).Remove();
@@ -864,7 +865,7 @@ void MStyleTest(const string& fileName)
 
 						wiz::load_data::LoadData::SaveWizDB(utTemp, temp, "1");
 					}
-					
+
 					if (1 == state)
 					{
 						idxVec.back();
@@ -899,10 +900,10 @@ void MStyleTest(const string& fileName)
 					string temp;
 					FFLUSH();
 					getline(cin, temp);
-					
+
 					wiz::StringTokenizer tokenizer(temp, "|");
 					vector<string> strVecTemp;
-					
+
 					while (tokenizer.hasMoreTokens()) {
 						strVecTemp.push_back(tokenizer.nextToken());
 					}
@@ -962,19 +963,19 @@ void MStyleTest(const string& fileName)
 
 int main(void)
 {
-//	test2(); // load from string!
+	//test2(); // load from string!
 	//_getch();
-	 //eu4Test();
+	//eu4Test();
 	//stellarisTest();
-	
+
 	string fileName;
 
 	cout << "input name : ";
 	cin >> fileName;
-		
+
 	try {
 		MStyleTest(fileName);
 	}
 	catch (exception& e) { cout << e.what() << endl; }
-	return 0;	
+	return 0;
 }
