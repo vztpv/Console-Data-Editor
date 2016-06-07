@@ -14,6 +14,7 @@
                 
 # ToDo : 
                 1. File Open Fail Processing, fix bug, and speed up, and make new header file and etc.. 
+                2. Some HOI4(and etc..) db file is lua file! - so need process for new notation --  
                 
 # Using C++11, VisualStudio2015, Windows10
 
