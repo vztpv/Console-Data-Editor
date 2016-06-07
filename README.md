@@ -20,9 +20,11 @@
 
 # LoadData
  LoadData From File or std::string!
+ 
+# # is Notation!
 
 # Grammar(byacc style)
-LEFT { RIGHT }  EQ =
+LEFT { RIGHT }  EQ =  
 
 program:
     | program _list
