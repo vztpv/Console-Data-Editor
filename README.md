@@ -19,12 +19,12 @@
                 
 # Using C++11, VisualStudio2015, Windows10
 
-# LoadData:
+# LoadData
  LoadData From File or std::string!
  
 # # is comment delimiter!
 
-# Usage:
+# Usage
   1. Up : w or W
   2. Down : s or S
   
@@ -37,7 +37,7 @@
       ( add - a, change - c, remove - r, save - s )
   7. Text mode : t
   
-# Grammar(byacc style) :
+# Grammar(byacc style)
   LEFT { RIGHT }  EQ =  
 program:
     | program _list
