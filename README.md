@@ -15,15 +15,16 @@
 # ToDo : 
                 1. File Open Fail Processing, fix bug, and speed up, and make new header file and etc.. 
                 2. Some HOI4(and etc..) db file is lua file! - so need process for new notation --  
+                3. add information of text mode.
                 
 # Using C++11, VisualStudio2015, Windows10
 
-# LoadData
+# LoadData:
  LoadData From File or std::string!
  
 # # is comment delimiter!
 
-# Usage
+# Usage:
   1. Up : w or W
   2. Down : s or S
   
@@ -36,7 +37,7 @@
       ( add - a, change - c, remove - r, save - s )
   7. Text mode : t
   
-# Grammar(byacc style)
+# Grammar(byacc style) :
   LEFT { RIGHT }  EQ =  
 program:
     | program _list
