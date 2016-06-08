@@ -24,17 +24,18 @@
 # # is Notation!
 
 # Usage
-  Up : w or W
-  Down : s or S
+  1. Up : w or W
+  2. Down : s or S
   
-  Enter : Enter key
+  3. Enter : Enter key
   
-  Back : b
-  Quit : q
+  4. Back : b
+  5. Quit : q
   
-  Editor mode : e 
+  6. Editor mode : e 
     add - a, change - c, remove - r, save - s
-
+  7. Text mode : t
+  
 # Grammar(byacc style)
 LEFT { RIGHT }  EQ =  
 
