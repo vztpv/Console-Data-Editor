@@ -10,7 +10,7 @@
                 
                 3. need more speed up! ( ex) linear search -> binary search? )
                 
-                4. some notation is korean!.
+                4. some comment is korean!.
                 
 # ToDo : 
                 1. File Open Fail Processing, fix bug, and speed up, and make new header file and etc.. 
@@ -21,7 +21,7 @@
 # LoadData
  LoadData From File or std::string!
  
-# # is Notation!
+# # is comment Symbol!
 
 # Usage
   1. Up : w or W
@@ -35,7 +35,7 @@
   6. Editor mode : e 
       ( add - a, change - c, remove - r, save - s )
   7. Text mode : t
-  
+      ( To  Do ... )
 # Grammar(byacc style)
   LEFT { RIGHT }  EQ =  
 program:
