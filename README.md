@@ -1,7 +1,7 @@
 # Objective : 
               first time, load EU4(Paradox game) savedgame Data and change savedgame Data.
               now, load any data(satisfy following grammar) and change data and save data.
-              ( For EU4, DHR, Stellaris(gamestate), HOI4(if save_as_binary is no in settings.txt) )
+              ( For EU4, DHR, Stellaris(gamestate), HOI4(if save_as_binary is no in settings.txt and save) )
             
 # precautions :
                 1. this source code has maybe many bugs!. and maybe need many memory.
@@ -59,8 +59,8 @@ _val2: _val2 _var1
     | _val2 _var2 EQ _val1  
     | LEFT RIGHT 
     | _val2 LEFT RIGHT  
-    | LEFT _val2 RIGHT
-    | _val2 LEFT _val2 RIGHT
+    | _left _val2 _right
+    | _val2 _left _val2 _right
 
 _var1: STR
 
