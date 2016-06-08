@@ -35,7 +35,7 @@
   
   6. Editor mode : e 
       ( add - a, change - c, remove - r, save - s )
-  7. Text mode : t
+  7. Text mode : t ( only at main screen, first screen )
   
 # Grammar(byacc style)
   LEFT { RIGHT }  EQ =  
