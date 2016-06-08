@@ -33,7 +33,7 @@
   5. Quit : q
   
   6. Editor mode : e 
-    add - a, change - c, remove - r, save - s
+      ( add - a, change - c, remove - r, save - s )
   7. Text mode : t
   
 # Grammar(byacc style)
