@@ -110,11 +110,11 @@ namespace wiz {
 
 			if (Search(key, &index)) {
 				// shift.. and count--
-				for (int i = index + 1; i < count; i++) {
+				for (int i = index + 1; i < GetCount(); i++) {
 					arr[i - 1] = std::move(arr[i]);
 				}
-				arr[count - 1] = T();
-				count--;
+				arr[GetCount() - 1] = T();
+				arr.resize(arr.size() - 1);
 				return true;
 			}
 			else {
@@ -135,9 +135,9 @@ namespace wiz {
 		}
 	private:
 		void mini_insertSort() {
-			const T temp = std::move(arr[count - 1]);
+			const T temp = std::move(arr[GetCount() - 1]);
 
-			int current = count - 1;
+			int current = GetCount() - 1;
 			for (; (current > 0) && comp(temp, arr[current - 1]); current--) {
 				arr[current] = std::move(arr[current - 1]);
 			}
