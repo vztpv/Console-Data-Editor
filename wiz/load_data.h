@@ -110,7 +110,7 @@ namespace wiz {
 					}
 				}
 				inFile.close();
-				cout << "braceNum : " << braceNum << endl;
+				std::cout << "braceNum : " << braceNum << endl;
 			}
 			catch (char* err) {
 				inFile.close();  /// chk!
@@ -510,15 +510,15 @@ namespace wiz {
 						// for all, remove ^ in val
 						Utility::ReplaceAll(&globalTemp,'^', ' ');
 					}
-					cout << "remove ^ end" << endl;
+					std::cout << "remove ^ end" << endl;
 
 					inFile.close();
 				}
-				catch (Error e) { cout << e << endl; inFile.close(); return false; }
-				catch (const char* err) { cout << err << endl; inFile.close(); return false; }
-				catch (const string& e) { cout << e << endl; inFile.close(); return false; }
-				catch (exception e) { cout << e.what() << endl; inFile.close(); return false; }
-				catch (...) { cout << "not expected error" << endl; inFile.close(); return false; }
+				catch (Error e) { std::cout << e << endl; inFile.close(); return false; }
+				catch (const char* err) { std::cout << err << endl; inFile.close(); return false; }
+				catch (const string& e) { std::cout << e << endl; inFile.close(); return false; }
+				catch (exception e) { std::cout << e.what() << endl; inFile.close(); return false; }
+				catch (...) { std::cout << "not expected error" << endl; inFile.close(); return false; }
 				
 				global = move( globalTemp );
 				return true;
@@ -548,10 +548,10 @@ namespace wiz {
 					}
 					Utility::ReplaceAll(&utTemp, '^', ' ');
 				}
-				catch (Error& e) { cout << e << endl; return false; }
-				catch (const char* err) { cout << err << endl; return false; }
-				catch (exception& e) { cout << e.what() << endl; return false; }
-				catch (...) { cout << "not expected error" << endl; return  false; }
+				catch (Error& e) { std::cout << e << endl; return false; }
+				catch (const char* err) { std::cout << err << endl; return false; }
+				catch (exception& e) { std::cout << e.what() << endl; return false; }
+				catch (...) { std::cout << "not expected error" << endl; return  false; }
 
 				ut = move(utTemp);
 				return true;
@@ -791,7 +791,7 @@ namespace wiz {
 
 							if (cond.Now().size() != 1 || "TRUE" != cond.Now()[0] ) // || cond.Now().size()  != 1
 							{
-								//cout << cond.Now()[0] << endl;
+								//std::cout << cond.Now()[0] << endl;
 								continue;
 							}
 						}
@@ -839,7 +839,7 @@ namespace wiz {
 
 							if (cond.Now().size() != 1 || "TRUE" != cond.Now()[0])
 							{
-								//cout << cond.Now()[0] << endl;
+								//std::cout << cond.Now()[0] << endl;
 								continue;
 							}
 						}
@@ -913,13 +913,15 @@ namespace wiz {
 									else
 										_condition = wiz::String::replace(_condition, "~~", utName); //
 
+								//	cout << "condition is " << _condition << endl;
+
 									Condition cond(_condition, finded.second[i], &global);
 
 									while (cond.Next());
 
 									if (cond.Now().size() != 1 || "TRUE" != cond.Now()[0])
 									{
-										//cout << cond.Now()[0] << endl;
+										//std::cout << cond.Now()[0] << endl;
 										continue;
 									}
 								}
@@ -971,7 +973,7 @@ namespace wiz {
 
 									if (cond.Now().size() != 1 || "TRUE" != cond.Now()[0])
 									{
-										//	cout << cond.Now()[0] << endl;
+										//	std::cout << cond.Now()[0] << endl;
 										continue;
 									}
 								}
@@ -1005,7 +1007,7 @@ namespace wiz {
 								Min = min(a, b);
 								Max = max(a, b);
 							}
-							for (int x = Min; x <= Max; ++x) {
+							for (long long x = Min; x <= Max; ++x) {
 								if (strVec.size() == 2 && chkInt)
 								{
 									_varName = std::to_string(x);
@@ -1025,7 +1027,7 @@ namespace wiz {
 
 										if (cond.Now().size() != 1 || "TRUE" != cond.Now()[0])
 										{
-											//	cout << cond.Now()[0] << endl;
+											//	std::cout << cond.Now()[0] << endl;
 											continue;
 										}
 									}
@@ -1057,7 +1059,7 @@ namespace wiz {
 
 							if (cond.Now().size() != 1 || "TRUE" != cond.Now()[0])
 							{
-								//	cout << cond.Now()[0] << endl;
+								//	std::cout << cond.Now()[0] << endl;
 								continue;
 							}
 						}
@@ -1082,7 +1084,7 @@ namespace wiz {
 
 							if (cond.Now().size() != 1 || "TRUE" != cond.Now()[0])
 							{
-								//	cout << cond.Now()[0] << endl;
+								//	std::cout << cond.Now()[0] << endl;
 								continue;
 							}
 						}
@@ -1107,7 +1109,7 @@ namespace wiz {
 
 							if (cond.Now().size() != 1 || "TRUE" != cond.Now()[0])
 							{
-								//	cout << cond.Now()[0] << endl;
+								//	std::cout << cond.Now()[0] << endl;
 								continue;
 							}
 						}
@@ -1132,7 +1134,7 @@ namespace wiz {
 
 							if (cond.Now().size() != 1 || "TRUE" != cond.Now()[0])
 							{
-								//	cout << cond.Now()[0] << endl;
+								//	std::cout << cond.Now()[0] << endl;
 								continue;
 							}
 						}
@@ -1168,7 +1170,7 @@ namespace wiz {
 
 							if (cond.Now().size() != 1 || "TRUE" != cond.Now()[0])
 							{
-								//	cout << cond.Now()[0] << endl;
+								//	std::cout << cond.Now()[0] << endl;
 								continue;
 							}
 						}
@@ -1230,7 +1232,7 @@ namespace wiz {
 							Min = min(a, b);
 							Max = max(a, b);
 						}
-						for (int x = Min; x <= Max; ++x) {
+						for (long long x = Min; x <= Max; ++x) {
 							if (strVec.size() == 2 && chkInt)
 							{
 								_var = std::to_string(x);
@@ -1251,7 +1253,7 @@ namespace wiz {
 
 									if (cond.Now().size() != 1 || "TRUE" != cond.Now()[0])
 									{
-										// cout << cond.Now()[0] << endl;
+										// std::cout << cond.Now()[0] << endl;
 										continue;
 									}
 								}
@@ -1287,7 +1289,7 @@ namespace wiz {
 
 							if (cond.Now().size() != 1 || "TRUE" != cond.Now()[0])
 							{
-								// cout << cond.Now()[0] << endl;
+								// std::cout << cond.Now()[0] << endl;
 								continue;
 							}
 						}
@@ -1339,9 +1341,9 @@ namespace wiz {
 				UserType globalTemp = UserType("global");
 				// preprocessing
 				//Utility::PassSharp(fileName, "output.txt");
-				//cout << "PassSharp End" << endl;
+				//std::cout << "PassSharp End" << endl;
 				//Utility::AddSpace("output.txt", "output2.txt");
-				//cout << "AddSpace End" << endl;
+				//std::cout << "AddSpace End" << endl;
 				/*
 				{
 				ifstream inFile;
@@ -1385,7 +1387,7 @@ namespace wiz {
 				inFile.close();
 				outFile.close();
 				}
-				cout << "space in \"~\" -> ^ End" << endl;
+				std::cout << "space in \"~\" -> ^ End" << endl;
 				*/
 				/*	{
 				ifstream inFile;
@@ -1405,15 +1407,15 @@ namespace wiz {
 				}
 				}
 				inFile.close();
-				cout << count << " " << count2 << endl;
+				std::cout << count << " " << count2 << endl;
 				}
-				cout << "chk end" << endl;
+				std::cout << "chk end" << endl;
 				*/
 				//	getch();
 
 				// Scan + Parse  // output3.txt
 				if (false == LoadDataFromFile(fileName, globalTemp)) { return false; }
-				cout << "LoadData End" << endl;
+				std::cout << "LoadData End" << endl;
 
 				global = move(globalTemp);
 				return true;
@@ -1463,7 +1465,7 @@ namespace wiz {
 						if (count == temp.size()) { continue; }
 						if (inFile.eof()) { break; }
 						outFile << temp;
-						//cout << temp << endl;
+						//std::cout << temp << endl;
 						if (i < line_size - 1) {
 							outFile << "\n";
 						}
@@ -1492,7 +1494,7 @@ namespace wiz {
 
 							if (cond.Now().size() != 1 || "TRUE" != cond.Now()[0])
 							{
-								//	cout << cond.Now()[0] << endl;
+								//	std::cout << cond.Now()[0] << endl;
 								continue;
 							}
 						}

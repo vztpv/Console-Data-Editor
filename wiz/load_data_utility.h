@@ -6,6 +6,7 @@
 #include <vector>
 #include <fstream>
 #include <thread>
+#include <algorithm>
 using namespace std;
 
 namespace wiz {
@@ -421,10 +422,11 @@ namespace wiz {
 			{
 				vector< UserType* > temp;
 				if (position.empty()) { temp.push_back(global); return{ true, temp }; }
-				if (position == "..") { temp.push_back(global->GetParent());  return{ true, temp }; }
+				//if (position == "..") { temp.push_back(global->GetParent());  return{ global->GetParent() != NULL, temp }; }
+				
 				StringTokenizer tokenizer(position, "/");
 				vector<string> strVec;
-				Deck<pair< UserType*, int>> utDeck;
+				Deck<pair< UserType*, int >> utDeck;
 				pair<UserType*, int> utTemp;
 				utTemp.first = global;
 				utTemp.second = 0;
@@ -443,16 +445,38 @@ namespace wiz {
 						strVec[strVec.size() - 1] = "";
 					}
 				}
+
+				//
+				{
+					int count = 0;
+
+					for (int i = 0; i < strVec.size(); ++i) {
+						if (strVec[i] == "..") {
+							count++;
+						}
+						else {
+							break;
+						}
+					}
+
+					std::reverse(strVec.begin(), strVec.end());
+
+					for (int i = 0; i < count; ++i) {
+						if (utTemp.first == NULL) {
+							return{ false, vector< UserType* >() };
+						}
+						utTemp.first = utTemp.first->GetParent();
+						strVec.pop_back();
+					}
+					std::reverse(strVec.begin(), strVec.end());
+				}
+
 				utDeck.push_front(utTemp);
 
 				bool exist = false;
 				while (false == utDeck.empty()) {
 					utTemp = utDeck.pop_front();
 
-					//	if (false == exist && utDeck.empty() && utTemp.second < strVec.size()  && false == utTemp.first->GetUserTypeItemRef(strVec[utTemp.second], utTemp2))
-					//	{
-					//		return{ false, vector<UserType*>() };
-					//	}
 					if (utTemp.second < strVec.size() && strVec[utTemp.second] == "$")
 					{
 						for (int j = utTemp.first->GetUserTypeListSize() - 1; j >= 0; --j) {
@@ -462,9 +486,17 @@ namespace wiz {
 							}
 						}
 					}
-					else if (utTemp.second < strVec.size() && utTemp.first->GetLastUserTypeItemRef(strVec[utTemp.second], utTemp2)) {
-						for (int j = utTemp2.size() - 1; j >= 0; --j) {
-							utDeck.push_front(make_pair(utTemp2.Get(j), utTemp.second + 1));
+					else if (utTemp.second < strVec.size() && 
+						// isExist ( utTemp.first, strVec[utTemp.second] )
+						///utTemp.first->GetLastUserTypeItemRef(strVec[utTemp.second], utTemp2)) 
+						( utTemp.first->GetUserTypeItem(strVec[utTemp.second]).empty() == false) ) 
+					{
+						// for( int j = size ( utTemp.first, strVec[utTemp.second] )-1; j >= 0; --j )
+						///for (int j = utTemp2.size() - 1; j >= 0; --j) {
+						auto  x = utTemp.first->GetUserTypeItem(strVec[utTemp.second]);
+						for (int j = x.size()-1; j >= 0; --j) {
+							//utDeck.push_front(make_pair(utTemp2.Get(j), utTemp.second + 1));
+							utDeck.push_front(make_pair(x[j].Get(0), utTemp.second + 1));
 						}
 					}
 

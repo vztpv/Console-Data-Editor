@@ -47,6 +47,9 @@ public:
         void operator--() { left(); }
         T& operator*() { return _de->data; }
         const T& operator*()const { return _de->data; }
+
+		T* operator->() { return &(_de->data); }
+		const T* operator->()const { return &(_de->data); }
     };
     class ConstDiter // d iterator
     {
@@ -71,6 +74,7 @@ public:
         void operator--()  { left(); }
         ///T& operator*() { return _de->data; }
         const T& operator*()const { return _de->data; }
+		const T* operator->()const { return &(_de->data); }
     };
 public: /// ToDo
     Deck( const Deck<T>& deck )
