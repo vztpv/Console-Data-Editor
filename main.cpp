@@ -3,9 +3,11 @@
 #include <iostream>
 using namespace std;
 
+#include <conio.h>
+
 #include <wiz/load_data.h>
 
-#include <conio.h>
+
 #include <Windows.h>
 
 
