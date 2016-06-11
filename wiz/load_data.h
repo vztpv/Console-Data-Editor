@@ -508,7 +508,7 @@ namespace wiz {
 					/// ToDo - Change ^ to ' '
 					{
 						// for all, remove ^ in val
-						Utility::ReplaceAll(&globalTemp,'^', ' ');
+						UserType::ReplaceAll(&globalTemp,'^', ' ');
 					}
 					std::cout << "remove ^ end" << endl;
 
@@ -546,7 +546,7 @@ namespace wiz {
 					{
 						return true;
 					}
-					Utility::ReplaceAll(&utTemp, '^', ' ');
+					UserType::ReplaceAll(&utTemp, '^', ' ');
 				}
 				catch (Error& e) { std::cout << e << endl; return false; }
 				catch (const char* err) { std::cout << err << endl; return false; }
@@ -656,7 +656,7 @@ namespace wiz {
 			}
 			bool ChkData()
 			{
-				return Utility::ChkData(&global);
+				return UserType::ChkData(&global);
 			}
 			
 			/// ToDo - recursive function??
@@ -775,7 +775,7 @@ namespace wiz {
 				{
 					return false;
 				}
-				auto finded = Utility::Find(&global, position);
+				auto finded = UserType::Find(&global, position);
 				if (finded.first) {
 					for (int i = 0; i < finded.second.size(); ++i) {
 						int item_n = 0;
@@ -823,7 +823,7 @@ namespace wiz {
 				{
 					return false;
 				}
-				auto finded = Utility::Find(&global, position);
+				auto finded = UserType::Find(&global, position);
 				if (finded.first) {
 					for (int i = 0; i < finded.second.size(); ++i) {
 						int item_n = 0;
@@ -856,7 +856,7 @@ namespace wiz {
 			static bool AddUserType(UserType& global, const string& position, const string& var, const string& data, const string& condition = "")
 			{
 				bool isTrue = false;
-				auto finded = Utility::Find(&global, position);
+				auto finded = UserType::Find(&global, position);
 				if (finded.first) {
 					string temp = var;
 					if (temp == "") { temp = " "; }
@@ -944,7 +944,7 @@ namespace wiz {
 			// SetQuery
 			static bool SetData(UserType& global, const string& position, const string& varName, const string& data, const string& condition = "")
 			{
-				auto finded = Utility::Find(&global, position);
+				auto finded = UserType::Find(&global, position);
 				bool isTrue = false;
 
 				if (finded.first) {
@@ -1049,7 +1049,7 @@ namespace wiz {
 			/// 
 			static string GetData(UserType& global, const string& position, const string& condition) {
 				string str;
-				auto finded = Utility::Find(&global, position);
+				auto finded = UserType::Find(&global, position);
 				if (finded.first) {
 					for (int i = 0; i < finded.second.size(); ++i) {
 						if (false == condition.empty()) {
@@ -1074,7 +1074,7 @@ namespace wiz {
 			static string GetItemListData(UserType& global, const string& position, const string& condition)
 			{
 				string str;
-				auto finded = Utility::Find(&global, position);
+				auto finded = UserType::Find(&global, position);
 				if (finded.first) {
 					for (int i = 0; i < finded.second.size(); ++i) {
 						if (false == condition.empty()) {
@@ -1099,7 +1099,7 @@ namespace wiz {
 			static string GetItemListNamesData(UserType& global, const string& position, const string& condition)
 			{
 				string str;
-				auto finded = Utility::Find(&global, position);
+				auto finded = UserType::Find(&global, position);
 				if (finded.first) {
 					for (int i = 0; i < finded.second.size(); ++i) {
 						if (false == condition.empty()) {
@@ -1124,7 +1124,7 @@ namespace wiz {
 			static string GetUserTypeListNamesData(UserType& global, const string& position, const string& condition)
 			{
 				string str;
-				auto finded = Utility::Find(&global, position);
+				auto finded = UserType::Find(&global, position);
 				if (finded.first) {
 					for (int i = 0; i < finded.second.size(); ++i) {
 						if (false == condition.empty()) {
@@ -1155,7 +1155,7 @@ namespace wiz {
 				string _var = varName;
 				if (_var == " ") { _var = ""; }
 
-				auto finded = Utility::Find(&global, position);
+				auto finded = UserType::Find(&global, position);
 				if (finded.first) {
 					for (int i = 0; i < finded.second.size(); ++i) {
 						if (false == condition.empty()) {
@@ -1201,7 +1201,7 @@ namespace wiz {
 			}
 			*/
 			static bool Remove(UserType& global, const string& position, const string& var, const string& condition) {
-				auto finded = Utility::Find(&global, position);
+				auto finded = UserType::Find(&global, position);
 				bool isTrue = false;
 				
 				if (finded.first) {
@@ -1274,7 +1274,7 @@ namespace wiz {
 				}
 			}
 			static bool Remove(UserType& global, const string& position, const string& condition) {
-				auto finded = Utility::Find(&global, position);
+				auto finded = UserType::Find(&global, position);
 				bool isTrue = false;
 
 
@@ -1306,7 +1306,7 @@ namespace wiz {
 			
 			static bool RemoveNoNameItem(UserType& global, const string& position, const string& value)
 			{
-				auto finded = Utility::Find(&global, position);
+				auto finded = UserType::Find(&global, position);
 				bool isTrue = false;
 
 
@@ -1484,7 +1484,7 @@ namespace wiz {
 				string _var = varName;
 				if (_var == " ") { _var = ""; }
 
-				auto finded = Utility::Find(&global, position);
+				auto finded = UserType::Find(&global, position);
 				if (finded.first) {
 					for (int i = 0; i < finded.second.size(); ++i) {
 						if (false == condition.empty()) {
@@ -1505,7 +1505,7 @@ namespace wiz {
 			}
 			static bool ChkData(UserType& global)
 			{
-				return Utility::ChkData(&global);
+				return UserType::ChkData(&global);
 			}
 
 			/// ToDo - global, position, var, condition + var is " "!

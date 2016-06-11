@@ -8,6 +8,7 @@ using namespace std;
 
 #include <wiz/stacks.h>
 #include <wiz/load_data_types.h>
+#include <wiz/load_data_utility.h>
 
 namespace wiz {
 	namespace load_data {
@@ -28,7 +29,7 @@ namespace wiz {
 				Init(condition);
 			}
 		private:
-			string reverse(const string& str) {
+			string reverse(const string& str) { /// to std::reverse ?
 				string temp;
 				for (int i = str.size() - 1; i >= 0; --i) {
 					temp.push_back(str[i]);
@@ -159,7 +160,7 @@ namespace wiz {
 						utTemp = global;
 					}
 				}
-				return Utility::Find(utTemp, valTemp);
+				return UserType::Find(utTemp, valTemp);
 			}
 			string GetValue(const string& op, const string& var, const string& val, UserType* utPosition, UserType* global, const string& option = "0")
 			{
