@@ -542,7 +542,8 @@ namespace wiz {
 				}
 				try {
 					// empty string!
-					if (false == _LoadData(strVec, NoneReserver(), utTemp))
+					NoneReserver nonReserver;
+					if (false == _LoadData(strVec, nonReserver, utTemp))
 					{
 						return true;
 					}
