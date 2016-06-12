@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <string>
+#include <algorithm>
 using namespace std;
 
 #include <wiz/stacks.h>
@@ -29,12 +30,9 @@ namespace wiz {
 				Init(condition);
 			}
 		private:
-			string reverse(const string& str) { /// to std::reverse ?
-				string temp;
-				for (int i = str.size() - 1; i >= 0; --i) {
-					temp.push_back(str[i]);
-				}
-				return temp;
+			string reverse(string str) { /// to std::reverse ?
+				std::reverse(str.begin(), str.end());
+				return str;
 			}
 			
 			string GetType(const string& str) {
@@ -305,6 +303,32 @@ namespace wiz {
 					}
 					return "FALSE";
 				}
+				else if ("COMP<EQ" == op) {
+					if ("0" != option) { /// ToDo.. // 0. just 1-1, // 1. for any case // 2. for all case
+						for (int i = 0; i < value1.size(); ++i) {
+							for (int j = 0; j < value2.size(); ++j) {
+								string temp = Compare(value1[i].Get(0), value2[j].Get(0));
+									if (temp == "< 0" || temp == "== 0") {
+										if ("1" == option) { return "TRUE"; }
+									}
+									else {
+										if ("2" == option) { return "FALSE"; }
+									}
+							}
+						}
+						if ("1" == option) { return "FALSE"; }
+						else if ("2" == option) {
+							return "TRUE";
+						}
+					}
+					else {
+						string temp = Compare(value1[0].Get(0), value2[0].Get(0));
+						if (temp == "< 0" || temp == "== 0") {
+							return "TRUE";
+						}
+					}
+					return "FALSE";
+				}
 				else if ("COMP>" == op) {
 					if ("0" != option) { /// ToDo.. // 0. just 1-1, // 1. for any case // 2. for all case
 						for (int i = 0; i < value1.size(); ++i) {
@@ -324,6 +348,32 @@ namespace wiz {
 					}
 					else {
 						if (Compare(value1[0].Get(0), value2[0].Get(0)) == "> 0") {
+							return "TRUE";
+						}
+					}
+					return "FALSE";
+				}
+				else if ("COMP>EQ" == op) {
+					if ("0" != option) { /// ToDo.. // 0. just 1-1, // 1. for any case // 2. for all case
+						for (int i = 0; i < value1.size(); ++i) {
+							for (int j = 0; j < value2.size(); ++j) {
+								string temp = Compare(value1[i].Get(0), value2[j].Get(0));
+								if (temp == "> 0" || temp == "== 0") {
+									if ("1" == option) { return "TRUE"; }
+								}
+								else {
+									if ("2" == option) { return "FALSE"; }
+								}
+							}
+						}
+						if ("1" == option) { return "FALSE"; }
+						else if ("2" == option) {
+							return "TRUE";
+						}
+					}
+					else {
+						string temp = Compare(value1[0].Get(0), value2[0].Get(0));
+						if (temp == "> 0" || temp == "== 0") {
 							return "TRUE";
 						}
 					}
@@ -436,9 +486,11 @@ namespace wiz {
 						else if ("}" == tokenVec[i]) {
 							braceNum--;
 
-							// COMP<, COMP>, EQ, NOTEQ
+							// COMP<, COMP<EQ, COMP>, COMP>EQ, EQ, NOTEQ
 							if (tokenStack.size() >= 6 && ("COMP<" == tokenStack[tokenStack.size() - 6]
+								|| "COMP<EQ" == tokenStack[tokenStack.size() - 6]
 								|| "COMP>" == tokenStack[tokenStack.size() - 6]
+								|| "COMP>EQ" == tokenStack[tokenStack.size() - 6]
 								|| "EQ" == tokenStack[tokenStack.size() - 6]
 								|| "NOTEQ" == tokenStack[tokenStack.size() - 6]))
 							{
