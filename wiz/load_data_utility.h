@@ -39,7 +39,7 @@ namespace wiz {
 						else return false;
 					}
 				}
-				return true;
+				return 1 == state; /// chk..
 			}
 			static bool IsDouble(const string& str) {
 				int state = 0;
@@ -66,12 +66,16 @@ namespace wiz {
 						else return false;
 						break;
 					case 2:
-						if (str[i] >= '0' && str[i] <= '9') { state = 2; }
+						if (str[i] >= '0' && str[i] <= '9') { state = 3; }
+						else return false;
+						break;
+					case 3:
+						if (str[i] >= '0' && str[i] <= '9') { state = 3; }
 						else return false;
 						break;
 					}
 				}
-				return true;
+				return 3 == state;
 			}
 			static bool IsDate(const string& str)
 			{
@@ -103,12 +107,16 @@ namespace wiz {
 						else return false;
 						break;
 					case 3:
-						if (str[i] >= '0' && str[i] <= '9') { state = 3; }
+						if (str[i] >= '0' && str[i] <= '9') { state = 4; }
+						else return false;
+						break;
+					case 4:
+						if (str[i] >= '0' && str[i] <= '9') { state = 4; }
 						else return false;
 						break;
 					}
 				}
-				return true;
+				return 4 == state;
 			}
 			static bool IsMinus(const string& str)
 			{
