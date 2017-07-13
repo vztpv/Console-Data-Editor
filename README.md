@@ -1,4 +1,4 @@
-# NOW NO UPDATE!! but, ClauText includes Console-Data-File-Editor!( as look at $edit_mode in ClauText function? )
+# NOW NO UPDATE!! but, ClauText includes Console-Data-File-Editor!( look at $edit_mode in ClauText function? )
 # Objective : 
               first time, load EU4(Paradox game) savedgame Data and change savedgame Data.
               now, load any data(satisfy following grammar) and change data and save data.
